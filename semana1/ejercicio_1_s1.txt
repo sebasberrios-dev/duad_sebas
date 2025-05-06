@@ -1,0 +1,46 @@
+# Ejercicio 1
+
+1. Inicio
+2. Encender mi dispositivo:
+    1. **Si** tengo una computadora:
+        1. Presiono el botón de encendido de la computadora
+    2. **Sino**, **si** tengo un smartphone **o** una tableta:
+        1. Desbloqueo el dispositivo con su respectivo patrón o contraseña
+    3. **Sino**, **si** tengo un Smart TV:
+        1. Agarro el control del televisor
+        2. Presiono el botón de encendido en el control
+    4. **Sino**:
+        1. Busco alguna persona que tengo algún dispositivo de los anteriores y lo pido prestado
+    
+3. Entrar a YouTube:
+    1. **Si** tengo una computadora:
+        1. Busco mi navegador de preferencia
+        2. En el buscador, escribo youtube.com
+        3. Presiono Enter
+    2. **Sino**, **si** tengo un smartphone **o** una tableta **o** un Smart TV:
+        1. Busco la aplicación de YouTube
+        2. Entro a la aplicación
+4. Seleccionar video:
+    1. **Mientras** esté dentro de YouTube:
+        1. **Si** sé el video específico que quiero ver:
+            - En el buscador, escribo el título del video que quiero ver
+            - Veo los resultados
+            - Selecciono el video que quiero ver
+        2. **Sino:**
+            - Navego por la pantalla principal de YouTube
+            - **Por** cada video que aparezca:
+                - Verifico que sea de mi interés
+                - Verifico que tenga una duración de menos de 15 minutos
+                - Decido si lo escojo
+                - **Si** escojo el video:
+                    - Hago clic en el video
+                - **Sino**:
+                    - Busco otro video que me interese
+5. Ver el video
+6. Cerrar el video cuando haya finalizado
+7. Salir de YouTube:
+    1. **Si** tengo computadora:
+        1. Cierro el navegador
+    2. **Sino**, **si** tengo smartphone **o** tableta **o** Smart TV:
+        1. Salgo de la aplicación 
+8. Fin

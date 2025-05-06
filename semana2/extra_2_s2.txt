@@ -1,0 +1,10 @@
+- Ej extra 2
+    1. Inicio
+    2. Definir `kmh`
+    3. Definir `ms` 
+    4. Mostrar “Ingrese la velocidad en km/h”
+    5. Pedir `kmh` 
+    6. `ms`  = `kms` * 1000 / 3600
+    7. Mostrar “La velocidad convertida a m/s es”
+    8. Mostrar `ms` 
+    9. Fin

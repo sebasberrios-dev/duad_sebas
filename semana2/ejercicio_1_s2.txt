@@ -1,0 +1,16 @@
+- Ejercicio 1
+    1. Inicio
+    2. Definir `precio del producto`
+    3. Definir `descuento`
+    4. Definir `precio final`
+    5. Mostrar “Ingrese el precio del producto”
+    6. Pedir `precio del producto`
+    7. **Si** (`precio del producto` < 100) entonces:
+        1. `descuento` = `precio del producto` * 0.02
+    8. **Sino**:
+        1. `descuento` = `precio del producto` * 0.1
+    9. **FinSi**
+    10. `precio final` = `precio del producto` - `descuento` 
+    11. Mostrar “El precio final del producto con el descuento es de“
+    12. Mostrar `precio final` 
+    13. Fin

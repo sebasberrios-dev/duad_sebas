@@ -1,0 +1,19 @@
+- Ejercicio 2
+    1. Inicio
+    2. Definir `diez_minutos` 
+    3. Definir `segundos` 
+    4. Definir `restante`
+    5. `diez_minutos` = 600
+    6. Mostrar “Ingrese los segundos“
+    7. Pedir `segundos` 
+    8. **Si** (`segundos` < `diez_minutos`) entonces:
+        1. `restante` = `diez_minutos` - `segundos` 
+        2. Mostrar “La cantidad de segundos que faltan para llegar 10 minutos es”
+        3. Mostrar `restante` 
+    9. **Sino**:
+        1. **Si** (`segundos` > `diez_minutos`) entonces:
+            1. Mostrar “Mayor”
+        2. **Sino**:
+            1. Mostrar “Igual”
+    10. **FinSI**
+    11. Fin
