@@ -1,0 +1,27 @@
+1. Inicio
+2. Definir `contador`
+3. Definir `sexo`
+4. Definir `hombres`
+5. Definir `mujeres`
+6. Definir `porcentaje_hombres`
+7. Definir `procentaje_mujeres` 
+8. `contador` = 1
+9. `hombres` = 0
+10. `mujeres`= 0
+11. **Mientras** que (`contador` ≤ 6 ) repetir:
+    1. Mostrar “Ingrese el sexo de la persona (1 = mujer, 2 = hombre)
+    2. Pedir `sexo` 
+    3. **Si** (`sexo` == 1) entonces:
+        1. `mujeres` = `mujeres` + 1
+    4. **Sino**:
+        1. `hombres` = `hombres` + 1
+    5. **FinSi**
+    6. `contador` = `contador` + 1
+12. **FinMientras**
+13. `porcentaje_mujeres` = `mujeres` * 100 / 6
+14. `porcentaje_hombres` = `hombres` * 100 / 6
+15. Mostrar “Porcentaje de mujeres”
+16. Mostrar `porcentaje_mujeres` 
+17. Mostrar “Porcentaje de hombres”
+18. Mostrar `porcentaje_hombres` 
+19. Fin

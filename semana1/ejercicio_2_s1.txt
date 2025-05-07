@@ -1,0 +1,72 @@
+# Ejercicio 2
+
+1. Inicio
+2. Me despierto a las 6 am
+3. Bajo la escaleras para preparar el desayuno
+4. Abro el refrigerador:
+    1. **Si** hay huevos:
+        1. Preparo huevos revueltos
+    2. **Sino**:
+        1. Preparo un sándwich de jamón y queso
+5. Me como el desayuno que preparé
+6. Me cepillo los dientes
+7. Me doy un baño de agua fría
+8. Me alisto para ir al gimnasio
+9. Pido prestado el carro de mi mamá:
+    1. **Si** me lo presta:
+        1. Entro al carro
+        2. Arranco el carro
+        3. Me voy al gimnasio
+    2. **Sino** me voy en Uber:
+        1. Pido el Uber en la aplicación 
+        2. Espero a que llegue
+        3. Me voy al gimnasio
+        
+    
+10. Llego al gimnasio
+11. Preparo mi entrenamiento:
+    1. **Si** es lunes **o** jueves:
+        1. Hago entrenamiento de pierna
+    2. **Sino**, **si** es martes **o** viernes:
+        1. Hago entrenamiento de tracción
+    3. **Sino**:
+        1. Hago entrenamiento de empujes
+12. Finalizo mi entrenamiento:
+    1. **Si** llegué en carro:
+        1. Salgo del gimnasio
+        2. Entro al carro
+        3. Arranco el carro
+        4. Me voy a mi casa
+    2. **Sino**, **si** llegué en Uber:
+        1. Salgo del gimnasio
+        2. Pido el Uber en la aplicación
+        3. Me voy a mi casa
+13. Llego a mi casa
+14. Preparo el almuerzo
+15. Almuerzo
+16. Prendo la computadora
+17. Entro a Notion 
+18. Me preparo para trabajar dos semanas del plan de acción:
+    1. **Por** cada semana:
+        1. Veo los videos de la materia
+        2. Hago los ejercicios asistidos
+        3. Repaso de nuevo, haciendo lectura
+        4. Hago los ejercicios 
+        5. Los subo en los entregables
+19. **Mientras** esté en curso lectivo de la universidad:
+    1. Me preparo para trabajar:
+        1. **Si** es semana de entregables:
+            1. Reviso instrucciones
+            2. Preparo material para realizar los ejercicios 
+            3. Realizo los ejercicios
+        2. **Sino**:
+            1. Reviso la materia de la semana
+            2. Estudio con el material brindado
+20. Apago la computadora
+21. Bajo las escaleras para cenar
+22. Preparo la cena
+23. Ceno
+24. Me cepillo los dientes
+25. Preparo la cama
+26. Me duermo
+27. Fin

@@ -1,0 +1,19 @@
+- Ej extra 1
+    1. Inicio
+    2. Definir `primero` 
+    3. Definir `segundo` 
+    4. Definir `orden` 
+    5. Mostrar “Ingrese el primer número”
+    6. Pedir `primero`
+    7. Mostrar “Ingrese el segundo número”
+    8. Pedir `segundo` 
+    9. **Si** (`primero` < `segundo`) entonces:
+        1. Mostrar `primero` 
+        2. Mostrar `segundo` 
+    10. **Sino**:
+        1. **Si** (`primero` > `segundo`) entonces:
+            1. Mostrar `segundo` 
+            2. Mostrar `primero` 
+        2. **Sino**:
+            1. Mostrar “Los números son iguales”
+    11. Fin
