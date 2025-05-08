@@ -2,18 +2,7 @@
 from modules.actions import view_students, get_top_students, get_student_data, view_top_students, get_course_average
 from modules.data import export_students_data, import_students_data
 
-# Variables globales 
-students = [] 
-file_name = 'estudiantes.csv'
-headers = (
-    'Nombre',
-    'Apellido',
-    'Sección',
-    'Notas',
-    'Promedio'
-)
-
-def get_menu():
+def get_menu(students, file_name, headers):
     while True:
         try:
             print("\nSistema de Control de Estudiantes")
@@ -50,6 +39,9 @@ def get_menu():
                 print("Saliendo del sistema...")
                 break
             
+            elif opt == '8':
+                print(students)
+                
             else:
                 print("Opción no válida. Intente nuevamente.")
         

@@ -1,5 +1,3 @@
-# Librerías necesarias 
-import csv 
 
 # Funciones para el ingreso de datos de los estudiantes, sus notas y promedios 
 def check_valid_grade(grade):

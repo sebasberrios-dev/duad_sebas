@@ -30,6 +30,7 @@ def import_students_data(file_name, students):
     with open(file_name, 'r', encoding='utf-8') as file:
         reader = csv.DictReader(file, delimiter='\t')
         for row in reader: 
+            row['Promedio'] = float(row['Promedio'])
             if row not in students:
                students.append(row)
             
