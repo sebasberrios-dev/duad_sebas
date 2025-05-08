@@ -38,10 +38,7 @@ def get_menu(students, file_name, headers):
             elif opt == '7':
                 print("Saliendo del sistema...")
                 break
-            
-            elif opt == '8':
-                print(students)
-                
+
             else:
                 print("Opción no válida. Intente nuevamente.")
         
