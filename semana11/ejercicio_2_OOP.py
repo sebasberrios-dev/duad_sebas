@@ -1,19 +1,20 @@
-class Person():
+class Person:
     def __init__(self, name):
         self.name = name
     
-class Bus():
+class Bus:
     max_passangers = 20
-    passangers = []
+
+    def __init__(self):
+        self.passangers = []  
 
     def add_passanger(self, person):
         if len(self.passangers) < self.max_passangers:
             self.passangers.append(person)
             print(f'{person.name} ha subido al bus!.')
-        
         else:
-            print('El bus está lleno!.')
-        
+            print('¡El bus está lleno!.')
+
     def rm_passanger(self, person=None):
         if not self.passangers:
             print('El bus va vacío.')
@@ -30,7 +31,6 @@ class Bus():
             print(f'{removed.name} ha bajado del bus.')
 
 my_bus = Bus()
-
 p1 = Person('Sebas')
 
 my_bus.add_passanger(p1)
