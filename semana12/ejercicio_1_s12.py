@@ -1,5 +1,6 @@
 class BankAccount:
-    balance = 0
+    def __init__(self):
+        self.balance = 0
 
     def add_amount(self, amount):
         self.balance += amount
@@ -23,10 +24,10 @@ class SavingAccount(BankAccount):
 
 
     def verify_balance(self):
-        if self.balance < self.min_balance:
-            print(f'\nError: El balance de la cuenta es menor al mínimo. Saldo actual {self.balance}')
+        if self.balance - amount < self.min_balance:
+            print(f'\nError: El balance queda por debajo del mínimo.')
             return True
-                
+        
         else:
             return False
     

@@ -2,11 +2,11 @@ from abc import ABC, abstractmethod
 import math
 class Shape(ABC):
     @abstractmethod
-    def calculate_perimeter():
+    def calculate_perimeter(self):
         pass
 
     @abstractmethod
-    def calculate_area():
+    def calculate_area(self):
         pass
 
 
@@ -35,7 +35,7 @@ class Square(Shape):
     def calculate_area(self):
         return self.side ** 2
 
-class Rectangule(Shape):
+class Rectangle(Shape):
     def __init__(self, length, width):
         self.length = length
         self.width = width
@@ -70,7 +70,7 @@ print(f'Área del cuadrado: {square.calculate_area()}\n'
 length = int(input('Ingrese el largo del rectángulo: '))
 width = int(input('Ingrese el ancho del rectangulo: '))
 
-rectangule = Rectangule(length, width)
+rectangle = Rectangle(length, width)
 
-print(f'Área del rectángulo: {rectangule.calculate_area()}\n'
-      f'Perímetro del rectángulo: {rectangule.calculate_perimeter()}')
+print(f'Área del rectángulo: {rectangle.calculate_area()}\n'
+      f'Perímetro del rectángulo: {rectangle.calculate_perimeter()}')
