@@ -1,3 +1,4 @@
+# Algoritmo bubble sort
 def bubble_sort(list_to_sort):
     if not isinstance(list_to_sort, list):
         raise TypeError('Error: la entrada debe ser una lista.')
