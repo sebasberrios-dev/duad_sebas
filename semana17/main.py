@@ -35,7 +35,7 @@ def update_table():
     # Obtiene todas las transacciones para mostrar en la tabla
     data = [[tx.title, tx.amount, tx.category.name, tx.type_] for tx in fm.get_transactions()]
     if not data:
-        data = [['', '', '', '']]  # Si no hay datos, muestra linea vacía
+        data = [['', '', '', '']]  # Si no hay datos, muestra línea vacía
     window['-TABLE-'].update(values=data)  # Actualiza la tabla con datos
 
 update_table()  # Mostrar los datos cargados al iniciar
@@ -53,37 +53,35 @@ while True:
     if event == 'Agregar Categoría':
         # Solicita nombre de nueva categoría y la añade
         name = sg.popup_get_text('Nombre de la categoría:')
-        if name:
-            try:
-                fm.add_category(name)
-                sg.popup('Categoría agregada correctamente.')
-            except ValueError as e:
-                sg.popup(f'Error: {str(e)}')
+        try:
+            fm.add_category(name)
+            sg.popup('Categoría agregada correctamente.')
+        except (ValueError, TypeError) as e:
+            sg.popup(f'Error: {e}')
 
     if event == 'Agregar Ingreso':
         # Solicita datos del ingreso y lo añade
         title = sg.popup_get_text('Título del ingreso:')
         amount = sg.popup_get_text('Monto del ingreso:')
         category = sg.popup_get_text('Categoría del ingreso:')
-        if title and amount and category:
-            try:
-                fm.add_income(title, float(amount), category)
-                sg.popup('Ingreso agregado correctamente.')
-                update_table()  # Actualiza la tabla para mostrar nuevo ingreso
-            except ValueError as e:
-                sg.popup(f'Error: {str(e)}')
+        try:
+            fm.add_income(title, amount, category)
+            sg.popup('Ingreso agregado correctamente.')
+            update_table()  # Actualiza la tabla para mostrar nuevo ingreso
+        except (ValueError, TypeError) as e:
+            sg.popup(f'Error: {e}')
 
     if event == 'Agregar Gasto':
         # Solicita datos del gasto y lo añade
         title = sg.popup_get_text('Título del gasto:')
         amount = sg.popup_get_text('Monto del gasto:')
         category = sg.popup_get_text('Categoría del gasto:')
-        if title and amount and category:
-            try:
-                fm.add_expense(title, float(amount), category)
-                sg.popup('Gasto agregado correctamente.')
-                update_table()  # Actualiza la tabla para mostrar nuevo gasto
-            except ValueError as e:
-                sg.popup(f'Error: {str(e)}')
+        try:
+            fm.add_expense(title, amount, category)
+            sg.popup('Gasto agregado correctamente.')
+            update_table()  # Actualiza la tabla para mostrar nuevo gasto
+        except (ValueError, TypeError) as e:
+            sg.popup(f'Error: {e}')
 
 window.close()
+
