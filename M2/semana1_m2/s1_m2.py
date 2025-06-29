@@ -1,33 +1,39 @@
 from flask import Flask, request, jsonify
+import json
 
 app = Flask(__name__)
+DATA_FILE = 'tasks.json'
 
-tasks_list = [
-    {
-    'id' : 1,
-    'title': 'Lavar platos',
-    'description': 'Lavar los platos de la cena',
-    'status': 'Completada'
-    },
 
-]
+def load_tasks():
+    try:
+        with open(DATA_FILE, 'r') as file:
+            return json.load(file)
+    except (FileNotFoundError, json.JSONDecodeError):
+        return []
 
-@app.route('/show', methods=['GET'])
+
+def save_tasks(tasks):
+    with open(DATA_FILE, 'w') as file:
+        json.dump(tasks, file, indent=4)
+
+
+
+@app.route('/tasks', methods=['GET'])
 def show_tasks():
-    filtered_tasks = tasks_list
+    tasks_list = load_tasks()
     status_filter = request.args.get('status')
     if status_filter:
-        filtered_tasks = list(
-            filter(lambda task: task['status'] == status_filter, filtered_tasks)
+        tasks_list = list(
+            filter(lambda task: task['status'] == status_filter, tasks_list)
         )
-    return {'tasks': filtered_tasks}, 200
+    return {'tasks': tasks_list}, 200
 
-@app.route('/create', methods=['POST'])
+@app.route('/tasks', methods=['POST'])
 def create_task():
     try:
-        if 'id' in tasks_list:
-            raise ValueError('El campo id ya existe')
-        
+        tasks_list = load_tasks()
+
         if 'title' not in request.json:
             raise ValueError('El campo title es obligatorio')
         
@@ -40,12 +46,16 @@ def create_task():
         if request.json['status'] not in ['Por Hacer', 'En Progreso', 'Completada']:
             raise ValueError('El campo status debe ser Por Hacer, En Progreso o Completada')
         
+        new_id = max([task['id'] for task in tasks_list], default=0) + 1
+
         tasks_list.append({
-            'id': len(tasks_list) + 1,
+            'id': new_id,
             'title': request.json['title'],
             'description': request.json['description'],
             'status': request.json['status']
         })
+
+        save_tasks(tasks_list)
     
     except ValueError as e:
         return jsonify(message=str(e)), 400
@@ -53,14 +63,15 @@ def create_task():
         print(f"Error inesperado: {e}")
         return jsonify(message='Error al crear la tarea'), 500
     
-    return jsonify(message='Tarea creada correctamente'), 200
+    return jsonify(message='Tarea creada correctamente'), 201
 
-@app.route('/update/<int:task_id>', methods=['PUT'])
+@app.route('/tasks/<int:task_id>', methods=['PUT'])
 def update_task(task_id):
     try:
+        tasks_list = load_tasks()
         task = next((task for task in tasks_list if task['id'] == task_id), None)
         if not task:
-            return jsonify(message='Tarea no encontrada'), 400
+            return jsonify(message='Tarea no encontrada'), 404
         
         if 'title' in request.json:
             task['title'] = request.json['title']
@@ -72,6 +83,8 @@ def update_task(task_id):
             if request.json['status'] not in ['Por Hacer', 'En Progreso', 'Completada']:
                 raise ValueError('El campo status debe ser Por Hacer, En Progreso o Completada')
             task['status'] = request.json['status']
+        
+        save_tasks(tasks_list)
     
     except ValueError as e:
         return jsonify(message=str(e)), 400
@@ -81,14 +94,16 @@ def update_task(task_id):
     
     return jsonify(message='Tarea actualizada correctamente'), 200
 
-@app.route('/delete/<int:task_id>', methods=['DELETE'])
+@app.route('/tasks/<int:task_id>', methods=['DELETE'])
 def delete_task(task_id):
     try:
+        tasks_list = load_tasks()
         task = next((task for task in tasks_list if task['id'] == task_id), None)
         if not task:
-            return jsonify(message='Tarea no encontrada'), 400
+            return jsonify(message='Tarea no encontrada'), 404
         
         tasks_list.remove(task)
+        save_tasks(tasks_list)
     
     except Exception as e:
         print(f"Error inesperado: {e}")
