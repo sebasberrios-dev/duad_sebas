@@ -3,27 +3,37 @@ import json
 
 app = Flask(__name__)
 DATA_FILE = 'tasks.json'
-
+VALID_STATUSES = ['Por Hacer', 'En Progreso', 'Completada']
 
 def load_tasks():
     try:
         with open(DATA_FILE, 'r') as file:
             return json.load(file)
-    except (FileNotFoundError, json.JSONDecodeError):
+    except FileNotFoundError:
+        print('Advertencia: Archivo de tareas no encontrado, se usará lista vacía.')
+        return []
+    except json.JSONDecodeError:
+        print('Error: El archivo de tareas no tiene un formato JSON válido.')
         return []
 
-
 def save_tasks(tasks):
-    with open(DATA_FILE, 'w') as file:
-        json.dump(tasks, file, indent=4)
+    try:
+        with open(DATA_FILE, 'w') as file:
+            json.dump(tasks, file, indent=4)
+    except Exception as e:
+        print(f'Error al guardar las tareas: {e}')
+        raise
 
-
+def find_task_by_id(task_id, tasks_list):
+    return next((task for task in tasks_list if task['id'] == task_id), None)
 
 @app.route('/tasks', methods=['GET'])
 def show_tasks():
     tasks_list = load_tasks()
     status_filter = request.args.get('status')
     if status_filter:
+        if status_filter not in VALID_STATUSES:
+            return jsonify(message='El valor del filtro status no es válido'), 400
         tasks_list = list(
             filter(lambda task: task['status'] == status_filter, tasks_list)
         )
@@ -43,7 +53,7 @@ def create_task():
         if 'status' not in request.json:
             raise ValueError('El campo status es obligatorio')
         
-        if request.json['status'] not in ['Por Hacer', 'En Progreso', 'Completada']:
+        if request.json['status'] not in VALID_STATUSES:
             raise ValueError('El campo status debe ser Por Hacer, En Progreso o Completada')
         
         new_id = max([task['id'] for task in tasks_list], default=0) + 1
@@ -69,7 +79,7 @@ def create_task():
 def update_task(task_id):
     try:
         tasks_list = load_tasks()
-        task = next((task for task in tasks_list if task['id'] == task_id), None)
+        task = find_task_by_id(task_id, tasks_list)
         if not task:
             return jsonify(message='Tarea no encontrada'), 404
         
@@ -80,7 +90,7 @@ def update_task(task_id):
             task['description'] = request.json['description']
         
         if 'status' in request.json:
-            if request.json['status'] not in ['Por Hacer', 'En Progreso', 'Completada']:
+            if request.json['status'] not in VALID_STATUSES:
                 raise ValueError('El campo status debe ser Por Hacer, En Progreso o Completada')
             task['status'] = request.json['status']
         
@@ -98,7 +108,7 @@ def update_task(task_id):
 def delete_task(task_id):
     try:
         tasks_list = load_tasks()
-        task = next((task for task in tasks_list if task['id'] == task_id), None)
+        task = find_task_by_id(task_id, tasks_list)
         if not task:
             return jsonify(message='Tarea no encontrada'), 404
         
@@ -113,3 +123,4 @@ def delete_task(task_id):
 
 if __name__ == '__main__':
     app.run(host='localhost', debug=True)
+
