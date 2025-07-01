@@ -29,7 +29,11 @@ def find_task_by_id(task_id, tasks_list):
 
 @app.route('/tasks', methods=['GET'])
 def show_tasks():
-    tasks_list = load_tasks()
+    try:
+        tasks_list = load_tasks()
+    except Exception:
+        return jsonify(message='No se pudo cargar el archivo de tareas.'), 400
+
     status_filter = request.args.get('status')
     if status_filter:
         if status_filter not in VALID_STATUSES:
@@ -38,6 +42,7 @@ def show_tasks():
             filter(lambda task: task['status'] == status_filter, tasks_list)
         )
     return {'tasks': tasks_list}, 200
+
 
 @app.route('/tasks', methods=['POST'])
 def create_task():
