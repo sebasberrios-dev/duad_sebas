@@ -67,7 +67,7 @@ ALTER TABLE invoices
 SELECT name FROM products;
 SELECT name FROM products WHERE price > 50000;
 SELECT id FROM invoice_products WHERE product_id = 1;
-SELECT product_id, quantity FROM invoice_products ORDER BY product_id;
+SELECT product_id, SUM(amount) FROM invoice_products GROUP BY product_id;
 SELECT * FROM invoices WHERE email = 'sberrios@gmail.com';
 SELECT * FROM invoices ORDER BY total DESC;
 SELECT * FROM invoices WHERE id = 1;
