@@ -20,7 +20,7 @@ CREATE TABLE IF NOT EXISTS rents(
     costumer_id INT REFERENCES costumers(id),
     state CHAR(8) NOT NULL DEFAULT 'ON TIME');
 
-INSERT INTO authors (name) VALUES 
+/* INSERT INTO authors (name) VALUES 
 ('Miguel de Cervantes'), 
 ('Dante Alighieri'), 
 ('Takehiko Inoue'), 
@@ -44,7 +44,7 @@ INSERT INTO rents (book_id, costumer_id, state) VALUES
 (2, 2, 'Returned'),
 (1, 1, 'On time'),
 (3, 1, 'On time'),
-(2, 2, 'Overdue');
+(2, 2, 'Overdue'); */
 
 SELECT b.title, a.name
 FROM books AS b
@@ -60,10 +60,12 @@ FROM authors AS a
 LEFT JOIN books AS b ON a.id = b.author_id  
 WHERE b.id IS NULL;
 
-SELECT b.title
+/* Se cuenta cuantas veces se rentaron los libros con la función de agregación COUNT() */
+SELECT b.title, COUNT(r.id) AS total_rentas
 FROM books AS b
 INNER JOIN rents AS r ON b.id = r.book_id
 GROUP BY b.title;
+
 
 SELECT b.title
 FROM books AS b
