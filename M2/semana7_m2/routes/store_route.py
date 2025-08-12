@@ -20,14 +20,14 @@ def create_product():
     entry_date = data.get('entry_date')
     quantity = data.get('quantity')
 
-    if not name or not price or not entry_date or not quantity:
-        return Response(status=400)
+    if name is None or price is None or entry_date is None or quantity is None:
+        return jsonify({"error": "Faltan datos para crear el producto"}), 404
 
     try:
         if product_repo.create(name, price, entry_date, quantity):
             return jsonify({"message": "Producto creado correctamente."}), 201
         else:
-            return jsonify({"error": "No se pudo crear el producto"}), 400
+            return jsonify({"error": "No se pudo crear el producto"}), 404
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
@@ -39,12 +39,11 @@ def get_products():
         filtered_products = product_repo.read()
         id_filter = request.args.get('id')
 
-        if filtered_products:
-            if id_filter:
-                filtered_products = [dict(p) for p in filtered_products if str(p.id) == id_filter]
+        if filtered_products and id_filter:
+            filtered_products = [dict(p) for p in filtered_products if str(p.id) == id_filter]
 
         if not filtered_products:
-            return jsonify({"error": "No hay productos disponibles"}), 400
+            return jsonify({"error": "No hay productos disponibles"}), 404
 
         return jsonify([dict(p) for p in filtered_products])
     except Exception as e:
@@ -66,19 +65,23 @@ def buy():
         if product is None:
             return jsonify({"error": "Producto no encontrado"}), 404
         
-        total = product["price"] * quantity
+        elif product["quantity"] < quantity:
+            return jsonify({"error": "Stock insuficiente en inventario"}), 404
+        
+        else:
+            total = product["price"] * quantity
 
-        invoice = invoice_repo.create(
-            request.user['id'],
-            product_id,
-            total=total,
-            date_created=datetime.now().date()
-        )
-        if invoice is None:
-            return jsonify({"error": "No se pudo crear la factura"}), 400
+            invoice = invoice_repo.create(
+                request.user['id'],
+                product_id,
+                total=total,
+                date_created=datetime.now().date()
+            )
+            if invoice is None:
+                return jsonify({"error": "No se pudo crear la factura"}), 404
 
-        return jsonify({"message": "Factura creada correctamente.", 
-                        "invoice": dict(invoice)}), 201
+            return jsonify({"message": "Factura creada correctamente.", 
+                            "invoice": dict(invoice)}), 201
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
@@ -89,7 +92,7 @@ def get_invoices():
     try:
         invoices = invoice_repo.read()
         if invoices is None:
-            return jsonify({"error": "No hay facturas disponibles"}), 400
+            return jsonify({"error": "No hay facturas disponibles"}), 404
         return jsonify([dict(invoice) for invoice in invoices])
     except Exception as e:
         return jsonify({"error": str(e)}), 500

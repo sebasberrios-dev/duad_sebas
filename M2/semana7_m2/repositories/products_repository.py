@@ -28,12 +28,12 @@ class ProductRepository:
         with self.db_manager.engine.connect() as conn:
             result = conn.execute(stmt)
             products = result.mappings().all()          
-            return products if products else None
+            return products or None
         
 
     def read_by_id(self, product_id):
         stmt = select(product_table).where(product_table.c.id == product_id)
         with self.db_manager.engine.connect() as conn:
             result = conn.execute(stmt)
-            row = result.mappings().all()
-            return row if row else None
+            row = result.mappings().first()
+            return row or None

@@ -18,7 +18,7 @@ class InvoiceRepository:
                 result = conn.execute(stmt)
                 conn.commit()
                 row = result.mappings().first()
-                return row if row else None
+                return row or None
         except Exception as e:
             print(f"Error creando la factura {e}")
             return None
@@ -29,11 +29,11 @@ class InvoiceRepository:
         with self.db_manager.engine.connect() as conn:
             result = conn.execute(stmt)
             invoices = result.mappings().all()
-            return invoices if invoices else None
+            return invoices or None
             
     def read_by_user_id(self, user_id):
         stmt = select(invoice_table).where(invoice_table.c.user_id == user_id)
         with self.db_manager.engine.connect() as conn:
             result = conn.execute(stmt)
             invoice = result.mappings().all()
-            return invoice if invoice else None
+            return invoice or None 

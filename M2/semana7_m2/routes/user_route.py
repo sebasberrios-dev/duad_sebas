@@ -21,8 +21,12 @@ def register():
     role = data.get('role', 'user')  # por defecto 'user'
 
     if not username or not password:
-        return Response(status=400)
-
+        return jsonify({"error": "Faltan datos para el registro"}), 400
+    if user_repo.read(username=username, password=password):
+        return jsonify({"error": "El usuario ya existe"}), 409
+    if role not in ['admin', 'user']:
+        return jsonify({"error": "Rol no válido"}), 400
+    
     result = user_repo.create(username, password, role)
     user_id = result[0]
 
@@ -36,12 +40,12 @@ def login():
     password = data.get('password')
 
     if not username or not password:
-        return Response(status=400)
+        return jsonify({"error": "Faltan datos para el inicio de sesión"}), 400
 
     result = user_repo.read(username=username, password=password)
 
     if result is None:
-        return Response(status=403)
+        return jsonify({"error": "Credenciales inválidas"}), 403
 
     user = result[0] 
     user_id = user['id']
@@ -57,6 +61,11 @@ def me():
     try:
         user_id = request.user['id']
         user = user_repo.read_by_id(user_id)
-        return jsonify(id=user_id, username=user[1], role=user[3])
-    except Exception:
-        return Response(status=500)
+        user_dict = {
+            'id': user[0],
+            'username': user[1],
+            'role': user[3]
+        }
+        return jsonify(id=user_dict['id'], username=user_dict['username'], role=user_dict['role'])
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500

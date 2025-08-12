@@ -4,7 +4,8 @@ from sqlalchemy import Table, Column, Integer, Float, String, Date, ForeignKey
 
 class DBManager:
     def __init__(self):
-        self.engine = create_engine("postgresql://postgres:sebas0408@localhost:5432/postgres", echo=True)
+        url = "postgresql://postgres:sebas0408@localhost:5432/postgres"
+        self.engine = create_engine(url, echo=False)
         metadata_obj.create_all(self.engine)
 
 

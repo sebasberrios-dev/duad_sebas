@@ -29,7 +29,7 @@ class UserRepository:
         with self.db_manager.engine.connect() as conn:
             result = conn.execute(stmt)
             users = result.mappings().all()
-            return users if users else None
+            return users or None
 
 
     def read_by_id(self, user_id):
@@ -37,7 +37,7 @@ class UserRepository:
         with self.db_manager.engine.connect() as conn:
             result = conn.execute(stmt)
             user = result.fetchone()
-            return user if user else None
+            return user or None
             
             
     
