@@ -4,12 +4,16 @@ from jwt_manager import JWTManager
 from datetime import datetime
 from flask import request, jsonify, Blueprint, Response
 from authorization import require_auth, require_role
+from cache.cache_manager import CacheManager
+import json
 
 store_bp = Blueprint('store_bp', __name__)
 product_repo = ProductRepository()
 invoice_repo = InvoiceRepository()
 jwt_manager = JWTManager('trespatitos', 'HS256')
-
+cache_manager = CacheManager(host="redis-18528.c92.us-east-1-3.ec2.redns.redis-cloud.com", 
+                             port=18528, 
+                             password="sKSyD3t1MqdmhCBmuF6LRZOuvV46BSfR")
 
 @store_bp.route("/create_product", methods=['POST'])
 @require_role('admin')
@@ -25,6 +29,8 @@ def create_product():
 
     try:
         if product_repo.create(name, price, entry_date, quantity):
+            # Elimina los datos de productos en cache para que se actualicen 
+            cache_manager.delete_data("products")
             return jsonify({"message": "Producto creado correctamente."}), 201
         else:
             return jsonify({"error": "No se pudo crear el producto"}), 404
@@ -36,6 +42,12 @@ def create_product():
 @require_auth
 def get_products():
     try:
+        # Si hay datos en cache, los devuelve
+        cached_data = cache_manager.get_data("products")
+        if cached_data:
+            return jsonify(json.loads(cached_data))
+        
+        # Si no hay datos en cache, los obtiene de la base de datos
         filtered_products = product_repo.read()
         id_filter = request.args.get('id')
 
@@ -45,7 +57,12 @@ def get_products():
         if not filtered_products:
             return jsonify({"error": "No hay productos disponibles"}), 404
 
-        return jsonify([dict(p) for p in filtered_products])
+        products_list = [dict(p) for p in filtered_products]
+        
+        # Almacena los datos en cache por 60 segundos
+        cache_manager.store_data("products", json.dumps(products_list, default=str))
+        return jsonify(products_list)
+    
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
