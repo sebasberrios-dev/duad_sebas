@@ -4,12 +4,16 @@ from jwt_manager import JWTManager
 from datetime import datetime
 from flask import request, jsonify, Blueprint, Response
 from authorization import require_auth, require_role
+from cache.cache_manager import CacheManager
+import json
 
 store_bp = Blueprint('store_bp', __name__)
 product_repo = ProductRepository()
 invoice_repo = InvoiceRepository()
 jwt_manager = JWTManager('trespatitos', 'HS256')
-
+cache_manager = CacheManager(host="redis-18528.c92.us-east-1-3.ec2.redns.redis-cloud.com", 
+                             port=18528, 
+                             password="sKSyD3t1MqdmhCBmuF6LRZOuvV46BSfR")
 
 @store_bp.route("/create_product", methods=['POST'])
 @require_role('admin')
@@ -21,10 +25,12 @@ def create_product():
     quantity = data.get('quantity')
 
     if name is None or price is None or entry_date is None or quantity is None:
-        return jsonify({"error": "Faltan datos para crear el producto"}), 404
+        return jsonify({"error": "Faltan datos para crear el producto"}), 400
 
     try:
         if product_repo.create(name, price, entry_date, quantity):
+            # Elimina los datos de productos en cache para que se actualicen 
+            cache_manager.delete_data("products")
             return jsonify({"message": "Producto creado correctamente."}), 201
         else:
             return jsonify({"error": "No se pudo crear el producto"}), 404
@@ -36,16 +42,39 @@ def create_product():
 @require_auth
 def get_products():
     try:
-        filtered_products = product_repo.read()
-        id_filter = request.args.get('id')
-
-        if filtered_products and id_filter:
-            filtered_products = [dict(p) for p in filtered_products if str(p.id) == id_filter]
-
-        if not filtered_products:
+        # Obtiene datos cacheados si existen
+        cache_key = "products:all"
+        cached_data = cache_manager.get_data(cache_key)
+        if cached_data:
+            return jsonify(json.loads(cached_data))
+        
+        products = [dict(p) for p in product_repo.read()]
+        if not products:
             return jsonify({"error": "No hay productos disponibles"}), 404
+        
+        cache_manager.store_data(cache_key, json.dumps(products, default=str))
+        return jsonify(products), 201
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
 
-        return jsonify([dict(p) for p in filtered_products])
+
+@store_bp.route("/products/<int:product_id>", methods=['GET'])
+@require_auth
+def get_product(product_id):
+    try:
+        # Obtiene datos cacheados si existen
+        cache_key = f"products:{product_id}"
+        cached_data = cache_manager.get_data(cache_key)
+        if cached_data:
+            return jsonify(json.loads(cached_data)), 201
+        
+        product = product_repo.read_by_id(product_id)
+        if not product:
+            return jsonify({"error": "Producto no encontrado"}), 404
+        
+        product_dict = dict(product)
+        cache_manager.store_data(cache_key, json.dumps(product_dict, default=str))
+        return jsonify(product_dict), 201
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
@@ -66,7 +95,7 @@ def buy():
             return jsonify({"error": "Producto no encontrado"}), 404
         
         elif product["quantity"] < quantity:
-            return jsonify({"error": "Stock insuficiente en inventario"}), 404
+            return jsonify({"error": "Stock insuficiente en inventario"}), 409
         
         else:
             total = product["price"] * quantity
@@ -79,7 +108,7 @@ def buy():
             )
             if invoice is None:
                 return jsonify({"error": "No se pudo crear la factura"}), 404
-
+            cache_manager.delete_data("invoices")
             return jsonify({"message": "Factura creada correctamente.", 
                             "invoice": dict(invoice)}), 201
     except Exception as e:
@@ -90,10 +119,19 @@ def buy():
 @require_role('admin')
 def get_invoices():
     try:
+        cache_key = "invoices"
+        cached_data = cache_manager.get_data(cache_key)
+        if cached_data:
+            return jsonify(json.loads(cached_data)), 201
+        
         invoices = invoice_repo.read()
-        if invoices is None:
+        if not invoices:
             return jsonify({"error": "No hay facturas disponibles"}), 404
-        return jsonify([dict(invoice) for invoice in invoices])
+        
+        invoices_list = [dict(invoice) for invoice in invoices]
+        cache_manager.store_data("invoices", json.dumps(invoices_list, default=str), expiration=60)
+        
+        return jsonify(invoices_list), 201
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
@@ -103,10 +141,19 @@ def get_invoices():
 @require_auth
 def get_invoices_by_user(user_id):
     try:
+        cache_key = f"invoices_user_{user_id}"
+        cached_data = cache_manager.get_data(cache_key)
+        if cached_data:
+            return jsonify(json.loads(cached_data))
+
         invoices = invoice_repo.read_by_user_id(user_id)
-        if invoices is None:
+        if not invoices:
             return jsonify({"error": "No hay facturas para este usuario"}), 404
-        return jsonify([dict(invoice) for invoice in invoices])
+        
+        invoices_list = [dict(invoice) for invoice in invoices]
+        cache_manager.store_data(cache_key, json.dumps(invoices_list, default=str), expiration=60)
+
+        return jsonify(invoices_list), 201
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
