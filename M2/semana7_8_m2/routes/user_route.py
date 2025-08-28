@@ -64,15 +64,18 @@ def login():
 def me():
     try:
         user_id = request.user['id']
-        cache_key = f"user_{user_id}_me"
-        cached_data = cache_manager.get_data(cache_key)
-        if cached_data:
-            return jsonify(json.loads(cached_data)), 201
 
-        user = user_repo.read_by_id(user_id)
-        user_data = dict(id=user['id'], username=user['username'], role=user['role'])
+        def query_db():
+            user = user_repo.read_by_id(user_id)
+            if user:
+                return dict(id=user['id'], username=user['username'], role=user['role'])
+            return None
 
-        cache_manager.store_data(cache_key, json.dumps(user_data, default=str), expiration=300)
-        return jsonify(user_data), 201
+        user_data = cache_manager.cache_or_query(f"user:{user_id}", query_db, expiration=300)
+
+        if user_data is None:
+            return jsonify({"error": "Usuario no encontrado"}), 404
+
+        return jsonify(user_data), 200
     except Exception as e:
         return jsonify({"error": str(e)}), 500

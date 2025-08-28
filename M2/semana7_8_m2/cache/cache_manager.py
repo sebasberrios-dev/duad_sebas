@@ -1,4 +1,5 @@
 import redis 
+import json 
 
 class CacheManager:
     def __init__(self, host, port, password, *args, **kwargs):
@@ -9,9 +10,8 @@ class CacheManager:
             *args, 
             **kwargs
         )
-        connection_status = self.redis_client.ping()
-        if connection_status:
-            print("Conexión a Redis creada exitosamente.")
+        if self.redis_client.ping():
+            print("Conexión a Redis exitosa.")
         
     def store_data(self, key, value, expiration=None):
         try:
@@ -74,6 +74,19 @@ class CacheManager:
                 self.delete_data(key)
         except redis.RedisError as e:
             print(f"Error al eliminar claves con el patrón '{pattern}': {e}")
-            
 
-        
+    def cache_or_query(self, key, query, expiration=None):
+        try:
+            cached = self.get_data(key)
+            if cached:
+                return json.loads(cached)
+            
+            result = query()
+            if result is not None:
+                self.store_data(key, json.dumps(result), expiration)
+            
+            return result
+
+        except Exception as e:
+            print(f"Error en cache_or_query: {e}")
+            return None
