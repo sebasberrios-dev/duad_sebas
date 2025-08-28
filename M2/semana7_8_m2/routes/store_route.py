@@ -63,28 +63,6 @@ def get_products():
         return jsonify({"error": str(e)}), 500
 
 
-@store_bp.route("/products/<int:product_id>", methods=['GET'])
-@require_auth
-def get_product(product_id):
-    try:
-        def query_db():
-            product = product_repo.read_by_id(product_id)
-            if product:
-                return dict(product)
-            return None
-        
-        cache_key = f"product:{product_id}"
-        product_data = cache_manager.cache_or_query(cache_key, query_db, expiration=120)
-
-        if product_data is None:
-            return jsonify({"error": "Producto no encontrado"}), 404
-
-        return jsonify(product_data), 200
-    
-    except Exception as e:
-        return jsonify({"error": str(e)}), 500
-
-
 @store_bp.route("/buy", methods=['POST'])
 @require_auth
 def buy():
