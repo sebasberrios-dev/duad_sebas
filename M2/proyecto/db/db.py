@@ -6,7 +6,7 @@ from datetime import datetime
 
 class DBManager:
     def __init__(self):
-        url = "postgresql://postgres:sebas0408@localhost:5432/postgres"
+        url = "PLACEHOLDER_FOR_DATABASE_URL"
         self.engine = create_engine(url, echo=False)
         metadata_obj.create_all(self.engine)
 

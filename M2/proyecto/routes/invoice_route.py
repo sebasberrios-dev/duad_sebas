@@ -10,9 +10,9 @@ invoice_bp = Blueprint('invoice_bp', __name__)
 invoice_repo = InvoiceRepository()
 cart_repo = CartRepository()
 product_repo = ProductRepository()
-cache_manager = CacheManager(host="redis-18124.c12.us-east-1-4.ec2.redns.redis-cloud.com",
-                             port=18124,
-                             password="cPX3Emufi5iaWiPKT9hSaOUH14W5nUdD")
+cache_manager = CacheManager(host="PLACEHOLDER_FOR_HOST",
+                             port="PLACEHOLDER_FOR_PORT",
+                             password="PLACEHOLDER_FOR_PASSWORD")
 
 @invoice_bp.route("/checkout", methods=['POST'])
 @require_auth

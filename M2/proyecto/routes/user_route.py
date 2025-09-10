@@ -8,9 +8,9 @@ from cache.cache_manager import CacheManager
 user_bp = Blueprint('user_bp', __name__)
 user_repo = UserRepository()
 jwt_manager = JWTManager('trespatitos', 'HS256')
-cache_manager = CacheManager(host="redis-18124.c12.us-east-1-4.ec2.redns.redis-cloud.com",
-                             port=18124,
-                             password="cPX3Emufi5iaWiPKT9hSaOUH14W5nUdD")
+cache_manager = CacheManager(host="PLACEHOLDER_FOR_HOST",
+                             port="PLACEHOLDER_FOR_PORT",
+                             password="PLACEHOLDER_FOR_PASSWORD")
 
 @user_bp.route("/liveness")
 def liveness():
