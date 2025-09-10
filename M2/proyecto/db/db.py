@@ -6,7 +6,7 @@ from datetime import datetime
 
 class DBManager:
     def __init__(self):
-        url = "PLACEHOLDER_FOR_DB_URL"
+        url = "postgresql://postgres:sebas0408@localhost:5432/postgres"
         self.engine = create_engine(url, echo=False)
         metadata_obj.create_all(self.engine)
 
@@ -29,7 +29,7 @@ product_table = Table(
     Column("name", String(100), nullable=False),
     Column("price", Float, nullable=False),
     Column("stock", Integer, nullable=False),
-    Column("entry_date", DateTime, nullable=False, default=datetime.now())
+    Column("entry_date", DateTime, nullable=False, default=datetime.now)
 )
 
 cart_table = Table(
@@ -37,7 +37,7 @@ cart_table = Table(
     metadata_obj,
     Column("id", Integer, primary_key=True),
     Column("user_id", ForeignKey("users.id"), nullable=False),
-    Column("creation_date", DateTime, nullable=False, default=datetime.now()),
+    Column("creation_date", DateTime, nullable=False, default=datetime.now),
     Column("status", String(20), nullable=False)
 )
 
@@ -57,6 +57,6 @@ invoice_table = Table(
     Column("cart_id", ForeignKey("carts.id"), nullable=False),
     Column("address", String(255), nullable=False),
     Column("payment_details", BigInteger, nullable=False),
-    Column("issue_date", DateTime, nullable=False, default=datetime.now()),
+    Column("issue_date", DateTime, nullable=False, default=datetime.now),
     Column("total", Float, nullable=False)
 )

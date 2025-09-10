@@ -2,12 +2,15 @@ from flask import request, jsonify, Blueprint
 from authorization.jwt_manager import JWTManager
 from authorization.auth import require_auth, require_role
 from repositories.product_repository import ProductRepository
+from routes.controller import Controller
 from cache.cache_manager import CacheManager
 
 product_bp = Blueprint('product_bp', __name__)
 product_repo = ProductRepository()
 jwt_manager = JWTManager('trespatitos', 'HS256')
-cache_manager = CacheManager("PLACEHOLDER_FOR_REDIS_URL")
+cache_manager = CacheManager(host="redis-18124.c12.us-east-1-4.ec2.redns.redis-cloud.com",
+                             port=18124,
+                             password="cPX3Emufi5iaWiPKT9hSaOUH14W5nUdD")
 
 @product_bp.route("/create_product", methods=['POST'])
 @require_role('admin')
@@ -38,15 +41,9 @@ def get_products():
             products = product_repo.read()
             if not products:
                 return None
-            products_list = []
-            for p in products:
-                prod_dict = dict(p)
-                if "entry_date" in prod_dict and hasattr(prod_dict["entry_date"], "strftime"):
-                    prod_dict["entry_date"] = prod_dict["entry_date"].strftime("%Y-%m-%d")
-                products_list.append(prod_dict)
-            if id_filter:
-                products_list = [p for p in products_list if str(p['id']) == id_filter]
-            return products_list if products_list else None
+            products_list = Controller.serialize_list(products, date_fields=["entry_date"])
+            products_list = Controller.filter_by_id(products_list, id_filter)
+            return products_list or None
         products = cache_manager.cache_or_query("products", query_db, expiration=120)
         if products is None:
             return jsonify({"error": "No products available"}), 404

@@ -3,13 +3,16 @@ from authorization.auth import require_auth, require_role
 from repositories.invoice_repository import InvoiceRepository
 from repositories.cart_repository import CartRepository
 from repositories.product_repository import ProductRepository
+from routes.controller import Controller
 from cache.cache_manager import CacheManager
 
 invoice_bp = Blueprint('invoice_bp', __name__)
 invoice_repo = InvoiceRepository()
 cart_repo = CartRepository()
 product_repo = ProductRepository()
-cache_manager = CacheManager("PLACEHOLDER_FOR_REDIS_URL")
+cache_manager = CacheManager(host="redis-18124.c12.us-east-1-4.ec2.redns.redis-cloud.com",
+                             port=18124,
+                             password="cPX3Emufi5iaWiPKT9hSaOUH14W5nUdD")
 
 @invoice_bp.route("/checkout", methods=['POST'])
 @require_auth
@@ -57,13 +60,8 @@ def get_invoices():
             invoices = invoice_repo.read()
             if not invoices:
                 return None
-            invoices_list = []
-            for inv in invoices:
-                inv_dict = dict(inv)
-                if "issue_date" in inv_dict and hasattr(inv_dict["issue_date"], "strftime"):
-                    inv_dict["issue_date"] = inv_dict["issue_date"].strftime("%Y-%m-%d")
-                invoices_list.append(inv_dict)
-            return invoices_list if invoices_list else None
+            invoices_list = Controller.serialize_list(invoices, date_fields=["issue_date"])
+            return invoices_list or None
         invoices = cache_manager.cache_or_query("invoices", query_db, expiration=120)
         if invoices is None:
             return jsonify({"error": "No invoices found"}), 404
@@ -79,10 +77,8 @@ def get_invoice(invoice_id):
         def query_db():
             invoice = invoice_repo.read_by_id(invoice_id)
             if invoice:
-                invoice = dict(invoice)
-                if "issue_date" in invoice and hasattr(invoice["issue_date"], "strftime"):
-                    invoice["issue_date"] = invoice["issue_date"].strftime("%Y-%m-%d")
-            return invoice if invoice else None
+                return Controller.serialize_row(invoice, date_fields=["issue_date"])
+            return None
         invoice = cache_manager.cache_or_query(f"invoice_{invoice_id}", query_db, expiration=120)
         if invoice is None:
             return jsonify({"error": "Invoice not found"}), 404
@@ -118,8 +114,7 @@ def refund_invoice(invoice_id):
         for product in products:
             product_id = product.get('product_id')
             quantity = product.get('quantity', 1)
-            stock = product_repo.read_by_id(product_id)
-            if stock:
+            if stock := product_repo.read_by_id(product_id):
                 product_repo.update(product_id, {"stock": stock['stock'] + quantity})
         new_status = {"status": "refunded"}
         cart_repo.update(cart_id, new_status)

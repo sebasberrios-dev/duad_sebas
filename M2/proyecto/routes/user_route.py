@@ -2,12 +2,15 @@ from flask import request, jsonify, Blueprint
 from authorization.jwt_manager import JWTManager
 from authorization.auth import require_auth, require_role
 from repositories.user_repository import UserRepository
+from routes.controller import Controller
 from cache.cache_manager import CacheManager
 
 user_bp = Blueprint('user_bp', __name__)
 user_repo = UserRepository()
 jwt_manager = JWTManager('trespatitos', 'HS256')
-cache_manager = CacheManager("PLACEHOLDER_FOR_REDIS_URL")
+cache_manager = CacheManager(host="redis-18124.c12.us-east-1-4.ec2.redns.redis-cloud.com",
+                             port=18124,
+                             password="cPX3Emufi5iaWiPKT9hSaOUH14W5nUdD")
 
 @user_bp.route("/liveness")
 def liveness():
@@ -69,7 +72,7 @@ def me():
         def query_db():
             user = user_repo.read_by_id(user_id)
             if user:
-                return dict(user)
+                return Controller.serialize_row(user)
             return None
         user_data = cache_manager.cache_or_query(f"user:{user_id}", query_db, expiration=120)
         if user_data is None:
