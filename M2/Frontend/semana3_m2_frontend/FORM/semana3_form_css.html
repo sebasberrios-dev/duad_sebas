@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Formulario con CSS</title>
+    <link rel="stylesheet" href="style_form.css" />
+  </head>
+  <body>
+    <div class="form-container">
+      <h1 class="title">Contact Us!</h1>
+      <p class="message">Got something to say? Fire away!</p>
+      <form action="https://www.dummyjson.com/test">
+        <div class="field-container">
+          <div class="field">
+            <input
+              type="text"
+              id="firstName"
+              name="firstName"
+              placeholder="First Name *"
+            />
+          </div>
+          <div class="field">
+            <input
+              type="text"
+              id="lastName"
+              name="lastName"
+              placeholder="Last Name *"
+            />
+          </div>
+          <div class="field">
+            <input
+              type="text"
+              id="email"
+              name="email"
+              placeholder="Email address *"
+            />
+          </div>
+          <div class="field">
+            <select id="type" name="type">
+              <option hidden>What's your message about?</option>
+              <option value="feedback">Feedback</option>
+              <option value="inquiry">Inquiry</option>
+              <option value="other">Other</option>
+            </select>
+          </div>
+          <div class="field">
+            <textarea
+              id="fireaway"
+              name="fireaway"
+              placeholder="Fire away! *"
+            ></textarea>
+          </div>
+          <button type="submit" class="send-button">Send my message</button>
+        </div>
+      </form>
+      <div class="footer">
+        <p class="footer-text">Powered by NetHunt CRM</p>
+      </div>
+    </div>
+  </body>
+</html>

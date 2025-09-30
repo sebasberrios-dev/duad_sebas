@@ -1,0 +1,131 @@
+* {
+  box-sizing: border-box;
+  background-color: lightgray;
+}
+body {
+  font-family: Helvetica, Arial, sans-serif;
+  margin: 100px;
+  padding: 2px;
+  font-size: 10px;
+}
+
+.title-container {
+  text-align: center;
+  margin: auto;
+}
+
+.title h1 {
+  font-size: 2em;
+  font-weight: bold;
+}
+
+.title-line {
+  background-color: #f3f3f3e1;
+  color: #e6e5e5e1;
+  font-size: 10px;
+  padding: 0 150px;
+  margin-inline: 10px;
+  vertical-align: middle;
+}
+
+.subtitle {
+  font-size: 0.6em;
+  font-weight: bold;
+  margin: auto;
+}
+
+.chart {
+  width: 690px;
+  margin: 0 auto;
+  border-collapse: collapse;
+  background-color: white;
+}
+
+.chart th {
+  border: 1px solid #183ea7;
+  background-color: #183ea7;
+  color: #e6e5e5fb;
+  font-size: 1.1em;
+  padding: 10px;
+  text-align: center;
+}
+
+.chart .none {
+  color: #183ea7;
+}
+
+.chart td {
+  border-block-end: #bebebe 1px solid;
+  padding: 0;
+}
+
+.pos {
+  border: 1px solid black;
+  border-block-end: #747474 1px solid;
+  width: 5%;
+  text-align: center;
+  color: white;
+  font-weight: bold;
+  background-color: black;
+  font-size: 2em;
+}
+
+.cover {
+  text-align: left;
+  background-color: white;
+}
+
+.cover img {
+  width: 100px;
+  height: 100px;
+  display: block;
+}
+
+.song-artist {
+  background-color: white;
+}
+.song-artist strong {
+  text-align: left;
+  font-size: 1.7em;
+  font-weight: bold;
+  background-color: white;
+}
+.song-artist small {
+  text-align: left;
+  padding-left: 10px;
+  font-size: 1.5em;
+  font-weight: normal;
+  background-color: white;
+}
+
+.more {
+  text-align: center;
+  font-size: 2em;
+  font-weight: bold;
+  color: gray;
+  background-color: white;
+}
+
+.award {
+  text-align: center;
+  font-size: 2em;
+  padding-left: 10px;
+}
+
+.award .icon-star {
+  position: relative;
+  top: -3px;
+  right: -2px;
+}
+
+.last-week,
+.wks-on-chart {
+  text-align: center;
+  font-size: 1.5em;
+  background-color: white;
+}
+
+.peak-pos {
+  text-align: center;
+  font-size: 1.5em;
+}
