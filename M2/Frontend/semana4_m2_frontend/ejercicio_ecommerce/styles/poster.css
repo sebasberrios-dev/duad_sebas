@@ -1,0 +1,58 @@
+.poster {
+  background-color: #fceae8 !important;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: space-between;
+  align-items: center;
+  margin: 3.5rem 19rem;
+  border-radius: 8px;
+  .poster-image {
+    height: 35rem;
+    margin: 0;
+  }
+  .poster-content {
+    width: 60%;
+    display: flex;
+    flex-wrap: nowrap;
+    flex-direction: column;
+    justify-content: center;
+    p {
+      margin: 0.8rem;
+    }
+  }
+  .sup-text {
+    font-size: 2rem;
+    font-weight: bold;
+  }
+
+  .main-text {
+    font-size: 1rem;
+    width: 90%;
+    line-height: 1.5rem;
+  }
+  .price-text {
+    margin: 0.5rem;
+    color: #ff418c;
+    font-size: 2rem;
+    font-weight: bold;
+  }
+
+  .buy-button {
+    font-size: 0.9rem;
+    margin: 0 0.5rem;
+    width: 8rem;
+    height: 2.5rem;
+    background-color: #ff418c;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+  }
+  .buy-button:hover {
+    color: black;
+  }
+  .buy-button:active {
+    background-color: #dd014ec4;
+  }
+}
