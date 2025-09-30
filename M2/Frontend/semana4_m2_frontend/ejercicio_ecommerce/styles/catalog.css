@@ -1,0 +1,127 @@
+.catalog {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  .shoes-title,
+  .backpacks-title {
+    margin: 1rem 18rem;
+    font-size: 1.7rem;
+    font-weight: normal;
+  }
+  .shoe-rows,
+  .backpack-rows {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    margin: 0 17rem;
+    gap: 1rem;
+  }
+  .shoe {
+    width: 30%;
+    display: flex;
+    flex-direction: column;
+    border: none;
+    border-radius: 5px;
+    box-shadow: 0 2px 30px rgba(0, 0, 0, 0.15);
+    align-items: center;
+    margin: 0 0.7rem 1rem 0;
+    .shoe-image {
+      width: 100%;
+    }
+    .shoe-col {
+      padding: 0.5rem 1rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      width: 100%;
+    }
+    .shoe-title {
+      font-size: 1.3rem;
+      font-weight: normal;
+    }
+    .shoe-description {
+      font-size: 0.9rem;
+      color: black;
+      margin-top: 0.8rem;
+      font-weight: lighter;
+      line-height: 1.5rem;
+    }
+    .shoe-price {
+      font-size: 1.2rem;
+      font-weight: normal;
+      margin-top: 0.5rem;
+    }
+    .shoe-button {
+      font-size: 0.9rem;
+      margin: 0.8rem 0;
+      width: 30%;
+      height: 2.5rem;
+      background-color: #ff418c;
+      color: white;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+    }
+    .shoe-button:hover {
+      color: black;
+    }
+    .shoe-button:active {
+      background-color: #ee0255c4;
+    }
+  }
+
+  .backpack {
+    width: 30%;
+    display: flex;
+    flex-direction: column;
+    border: none;
+    border-radius: 5px;
+    box-shadow: 0 2px 30px rgba(0, 0, 0, 0.15);
+    align-items: center;
+    margin: 0 0.7rem 1rem 0;
+    .backpack-image {
+      width: 100%;
+    }
+    .backpack-col {
+      padding: 0.5rem 1rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      width: 100%;
+    }
+    .backpack-title {
+      font-size: 1.3rem;
+      font-weight: normal;
+    }
+    .backpack-description {
+      font-size: 0.9rem;
+      color: black;
+      margin-top: 0.8rem;
+      font-weight: lighter;
+      line-height: 1.5rem;
+    }
+    .backpack-price {
+      font-size: 1.2rem;
+      font-weight: normal;
+      margin-top: 0.5rem;
+    }
+    .backpack-button {
+      font-size: 0.9rem;
+      margin: 0.8rem 0;
+      width: 30%;
+      height: 2.5rem;
+      background-color: #ff418c;
+      color: white;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+    }
+    .backpack-button:hover {
+      color: black;
+    }
+    .backpack-button:active {
+      background-color: #ee0255c4;
+    }
+  }
+}
