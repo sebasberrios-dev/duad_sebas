@@ -1,0 +1,45 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  line-height: 1.6;
+}
+
+#button {
+  margin: 10px;
+  font-size: 16px;
+  padding: 10px;
+}
+
+#text {
+  font-size: 20px;
+  margin: 10px;
+  padding: 10px;
+}
+
+.text-red {
+  background-color: red;
+}
+
+.text-blue {
+  background-color: blue;
+}
+
+.text-green {
+  background-color: green;
+}
+
+.text-yellow {
+  background-color: yellow;
+}
+
+.text-cyan {
+  background-color: cyan;
+}
+
+.text-pink {
+  background-color: pink;
+}
