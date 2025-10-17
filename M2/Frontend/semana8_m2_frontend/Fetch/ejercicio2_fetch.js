@@ -22,10 +22,12 @@ const createUser = async (name, email, password, address) => {
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
-    console.log("User created successfully.");
+
+    const data = await response.json();
+    console.log("User created successfully:", data);
   } catch (error) {
     console.error("Error creating user:", error);
   }
 };
 
-createUser("John Doe", "john.doe@example.com", "password123", "123 Main St");
+//createUser("John Doe", "john.doe@example.com", "password123", "123 Main St");
