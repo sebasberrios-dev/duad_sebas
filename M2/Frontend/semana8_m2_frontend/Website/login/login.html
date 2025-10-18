@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="login.css" />
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+  </head>
+  <body>
+    <form id="login-form">
+      <h2 class="form-title">Acceso</h2>
+      <p class="form-subtitle">Inicia sesión en tu cuenta</p>
+      <div class="form-inputs">
+        <label class="form-label">
+          <input
+            type="text"
+            placeholder="ID del usuario"
+            id="userId"
+            class="form-input"
+          />
+        </label>
+        <label class="form-label">
+          <input
+            type="password"
+            placeholder="Contraseña"
+            id="password"
+            class="form-input"
+          />
+        </label>
+      </div>
+      <input type="submit" value="INICIAR SESION" class="form-button" />
+      <div class="form-links">
+        <span class="form-link">¿No tienes una cuenta?</span>
+        <a
+          href="/M2/Frontend/semana8_m2_frontend/Website/Register/register.html"
+          class="form-link"
+          >Regístrate aquí</a
+        >
+      </div>
+    </form>
+    <script src="/M2/Frontend/semana8_m2_frontend/Website/security/auth.js"></script>
+    <script src="/M2/Frontend/semana8_m2_frontend/Website/security/verify.js"></script>
+    <script src="login.js"></script>
+  </body>
+</html>
