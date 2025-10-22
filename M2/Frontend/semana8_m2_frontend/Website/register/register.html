@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Register</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="register.css" />
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+  </head>
+  <body>
+    <form id="register-form">
+      <h2 class="form-title">Registrarse</h2>
+      <p class="form-subtitle">Crea una cuenta gratuita</p>
+      <div class="form-inputs">
+        <label class="form-label">
+          <input
+            type="text"
+            placeholder="Nombre Completo"
+            id="name"
+            class="form-input"
+          />
+        </label>
+        <label class="form-label">
+          <input
+            type="email"
+            placeholder="Correo Electrónico"
+            id="email"
+            class="form-input"
+          />
+        </label>
+        <label class="form-label">
+          <input
+            type="password"
+            placeholder="Contraseña"
+            id="password"
+            class="form-input"
+          />
+        </label>
+        <label class="form-label">
+          <input
+            type="text"
+            placeholder="Dirección"
+            id="address"
+            class="form-input"
+          />
+        </label>
+      </div>
+      <input type="submit" value="REGISTRAR" class="form-button" />
+      <div class="form-links">
+        <span class="form-link">¿Ya tienes una cuenta?</span>
+        <a
+          href="/M2/Frontend/semana8_m2_frontend/Website/login/login.html"
+          class="form-link"
+          >Inicia sesión aquí</a
+        >
+      </div>
+    </form>
+    <script src="/M2/Frontend/semana8_m2_frontend/Website/security/auth.js"></script>
+    <script src="register.js"></script>
+  </body>
+</html>
