@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>To-Do List</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="css/styles.css" />
+    <link rel="stylesheet" href="css/todo.css" />
+  </head>
+  <body>
+    <div class="navbar-container">
+      <nav class="navbar">
+        <a href="todo.html" class="nav-link">To-Do List</a>
+        <a href="about.html" class="nav-link">About</a>
+        <a href="index.html" class="nav-link">Cerrar Sesión</a>
+      </nav>
+    </div>
+    <div class="container">
+      <h1 class="title">Tareas</h1>
+      <div class="filter-controls">
+        <button class="filter-btn active" data-filter="all">Todas</button>
+        <button class="filter-btn" data-filter="todo">Por Hacer</button>
+        <button class="filter-btn" data-filter="completed">Completadas</button>
+      </div>
+      <div class="todo-container">
+        <h2 class="subtitle">Por Hacer</h2>
+        <form class="todo-form">
+          <input type="text" class="todo-input" placeholder="Añadir tarea..." />
+          <button type="submit" class="todo-button">Añadir</button>
+        </form>
+        <ul class="todo-list">
+          <li class="todo-item">
+            <input type="checkbox" class="todo-checkbox" /> Tarea pendiente
+          </li>
+          <li class="todo-item">
+            <input type="checkbox" class="todo-checkbox" /> Tarea pendiente
+          </li>
+          <div class="todo-actions">
+            <button class="todo-button">Completar Tarea</button>
+            <button class="todo-button">Editar</button>
+            <button class="todo-button">Eliminar</button>
+          </div>
+        </ul>
+      </div>
+      <div class="done-container">
+        <h2 class="subtitle">Tareas Completadas</h2>
+        <ul class="done-list">
+          <li class="done-item">
+            <input type="checkbox" class="done-checkbox" checked /> Tarea
+            completada
+          </li>
+          <div class="done-actions">
+            <button class="done-button">Eliminar</button>
+          </div>
+        </ul>
+      </div>
+    </div>
+  </body>
+</html>
