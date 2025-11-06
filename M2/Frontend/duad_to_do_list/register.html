@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Registrate</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="css/register.css" />
+    <link rel="stylesheet" href="css/styles.css" />
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+  </head>
+  <body>
+    <form id="register-form">
+      <h2 class="form-title">Regístrate</h2>
+      <p class="form-subtitle">Crea una cuenta gratuita</p>
+      <div class="form-inputs">
+        <label class="form-label">
+          <input
+            type="text"
+            placeholder="Nombre Completo"
+            id="name"
+            class="form-input"
+          />
+        </label>
+        <label class="form-label">
+          <input
+            type="text"
+            placeholder="Nombre de Usuario"
+            id="username"
+            class="form-input"
+          />
+        </label>
+        <label class="form-label">
+          <input
+            type="email"
+            placeholder="Correo Electrónico"
+            id="email"
+            class="form-input"
+          />
+        </label>
+        <label class="form-label">
+          <input
+            type="password"
+            placeholder="Contraseña"
+            id="password"
+            class="form-input"
+          />
+        </label>
+      </div>
+      <button type="submit" class="form-button">CREAR CUENTA</button>
+      <div class="form-links">
+        <span class="form-link">¿Ya tienes una cuenta?</span>
+        <a href="/M2/Frontend/duad_to_do_list/index.html" class="form-link"
+          >Inicia sesión aquí</a
+        >
+      </div>
+    </form>
+    <script src="js/api.js"></script>
+    <script src="js/register.js"></script>
+    <script src="js/storage.js"></script>
+    <script src="js/utils.js"></script>
+  </body>
+</html>

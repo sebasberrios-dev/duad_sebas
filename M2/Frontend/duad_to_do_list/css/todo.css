@@ -1,0 +1,116 @@
+@import url(navbar.css);
+
+.container {
+  max-width: 600px;
+  margin: 50px auto;
+  padding: 2rem;
+  background-color: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.list-img {
+  width: 50px;
+  height: 50px;
+  object-fit: contain;
+}
+
+.list-header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.filter-controls {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.subtitle {
+  margin-bottom: 1rem;
+}
+
+.todo-container,
+.done-container {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 0.5rem;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.todo-form {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.todo-input {
+  flex: 1;
+  padding: 0.5rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.todo-button,
+.done-button,
+.filter-btn {
+  padding: 0.5rem 1rem;
+  border: none;
+  background-color: #3542ff;
+  color: white;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.todo-button:hover,
+.done-button:hover,
+.filter-btn:hover {
+  background-color: #2836ff;
+}
+
+.todo-list,
+.done-list {
+  padding-inline-start: 30px;
+}
+
+.empty-state {
+  padding: 1rem;
+}
+
+.priority-select {
+  padding: 8px;
+  margin-left: 8px;
+  border: none;
+  border-radius: 4px;
+  background-color: #f9f9f9;
+}
+
+.priority-select:hover {
+  border-color: #3542ff;
+  box-shadow: 0 0 5px rgba(53, 66, 255, 0.5);
+}
+
+.todo-item,
+.done-item {
+  display: flex;
+  padding: 0.5rem;
+}
+
+.todo-checkbox,
+.done-checkbox {
+  margin-right: 0.5rem;
+}
+
+.todo-actions,
+.done-actions {
+  display: flex;
+  gap: 0.8rem;
+  margin-top: 1rem;
+  margin-left: auto;
+}

@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>About</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="css/about.css" />
+    <link rel="stylesheet" href="css/styles.css" />
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+  </head>
+  <body>
+    <div class="navbar-container">
+      <nav class="navbar">
+        <a href="todo.html" class="nav-link">To-Do List</a>
+        <a href="about.html" class="nav-link">About</a>
+        <a href="index.html" class="nav-link">Cerrar Sesión</a>
+      </nav>
+    </div>
+    <div class="about-container">
+      <h1 class="title">About</h1>
+      <div class="card">
+        <h2 class="subtitle">To-Do List</h2>
+        <p class="description">
+          Este proyecto fue desarrollado por Sebastián Jesús Berríos Aguilera,
+          estudiante del programa Lyfter, cursando el Módulo 2: Plan del
+          Frontend. Es un To-Do List simple que permite a los usuarios gestionar
+          sus tareas diarias de manera eficiente.
+        </p>
+      </div>
+      <div class="card author-info">
+        <h2 class="subtitle">About Me</h2>
+        <div class="info-item">
+          <label>Correo Electrónico:</label>
+          <span>berriossebas92@gmail.com</span>
+        </div>
+        <div class="info-item">
+          <label>Teléfono:</label>
+          <span>(+506) 6324-0707</span>
+        </div>
+      </div>
+    </div>
+    <script src="js/api.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/storage.js"></script>
+    <script src="js/utils.js"></script>
+    <script src="js/ui.js"></script>
+    <script src="js/initialize.js"></script>
+  </body>
+</html>
