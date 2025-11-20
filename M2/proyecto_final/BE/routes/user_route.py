@@ -1,0 +1,109 @@
+import sys
+import os
+sys.path.append(os.path.join(os.path.dirname(__file__), '..', '..'))
+
+from flask import request, jsonify, Blueprint
+from BE.repositories.users_repo import UsersRepository
+from BE.authorization.jwt_manager import JWTManager
+from BE.authorization.auth import require_auth, require_role 
+from BE.utils.controller import Controller
+
+
+user_route = Blueprint("user_route", __name__)
+users_repo = UsersRepository()
+jwt_manager = JWTManager("your_secret_key", "HS256")
+controller = Controller()
+
+@user_route.route("/liveness")
+def liveness():
+    return "<p>Hello, World!</p>"
+
+@user_route.route("/register", methods=["POST"])
+def register():
+    data = request.get_json()
+    username = data.get("username")
+    email = data.get("email")
+    password = data.get("password")
+    role = data.get("role", "player") # Por defecto "player"
+
+    if not username or not email or not password:
+        return jsonify({"error": "data missing for registration"}), 400
+    
+    if role not in ["player", "dm", "admin"]:
+        return jsonify({"error": "invalid role"}), 400
+    
+    if users_repo.read(username=username, password=password):
+        return jsonify({"error": "user already exists"}), 409
+    
+    result = users_repo.create(username, email, password, role)
+
+    user_id = result[0]
+    token = jwt_manager.encode({"id": user_id, "role": role})
+
+    return jsonify(token=token)
+
+@user_route.route("/login", methods=["POST"])
+def login():
+    data = request.get_json()
+    username = data.get("username")
+    password = data.get("password")
+
+    if not username or not password:
+        return jsonify({"error": "data missing for login"}), 400
+    
+    result = users_repo.read(username=username, password=password)
+
+    if result is None:
+        return jsonify({"error": "invalid credentials"}), 403
+    
+    user = result[0]
+    user_id = user["id"]
+    user_role = user["role"]
+
+    token = jwt_manager.encode({"id": user_id, "role": user_role})
+
+    return jsonify(token=token)
+
+@user_route.route("/user/update/<int:user_id>", methods=["PUT"])
+@require_auth
+def update_user(user_id):
+    data = request.get_json()
+    updated_fields = {k: v for k, v in data.items() if v is not None}
+
+    if not updated_fields:
+        return jsonify({"error": "no fields to update"}), 400
+    
+    try:
+        users_repo.update(user_id, **updated_fields)
+        return jsonify({"message": f"User {user_id} updated successfully"}), 200
+    
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+    
+@user_route.route("/delete/<int:user_id>", methods=["DELETE"])
+@require_role("admin")
+def delete_user(user_id):
+    if users_repo.delete(user_id):
+        return jsonify({"message": f"User {user_id} deleted successfully"}), 200
+    else:
+        return jsonify({"error": "user not found"}), 404
+    
+@user_route.route("/me")
+@require_auth
+def me():
+    try:
+        user_id = request.user["id"]
+        user = users_repo.read_by_id(user_id)
+
+        if user is None:
+            return jsonify({"error": "user not found"}), 404
+        
+        user_data = controller.serialize_row(user)
+        return jsonify(user_data), 200
+    
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+
+
+
