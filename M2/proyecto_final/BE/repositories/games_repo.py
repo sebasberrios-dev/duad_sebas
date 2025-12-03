@@ -55,6 +55,16 @@ class GamesRepository:
             print(f"Error reading games by DM ID: {e}")
             return None
     
+    def read_by_link(self, link):
+        try:
+            stmt = select(games_table).where(games_table.c.link == link)
+            query = self.query_manager.execute_get(stmt)
+            game = query.mappings().first()
+            return game or None
+        except Exception as e:
+            print(f"Error reading game by link: {e}")
+            return None
+    
     def update(self, game_id, **kwargs):
         try:
             stmt = update(games_table).where(games_table.c.id == game_id).values(**kwargs)
@@ -72,16 +82,3 @@ class GamesRepository:
         except Exception as e:
             print(f"Error deleting game: {e}")
             return False
-        
-
-#games_repo.create(3, "Epic Adventure", "An epic journey through fantasy lands.", "http://example.com/game-link")
-
-#read = games_repo.read()
-#print(read)
-
-#read_by_id = games_repo.read_by_id(1)
-#print(read_by_id)
-
-#games_repo.update(1, is_active=False)
-
-#games_repo.delete(1)

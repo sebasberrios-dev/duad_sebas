@@ -16,7 +16,7 @@ controller = Controller()
 def get_characters():
     try:
         filterable_fields = ["id", "user_id", "name", "race", "class", "level"]
-        return controller.execute_get_method(characters_repo, filterable_fields, "characters")
+        return controller.execute_get_method(characters_repo, filterable_fields, "characters", date_fields=["created_at"])
     
     except Exception as e:
         return jsonify({"error": str(e)}), 500
@@ -32,7 +32,30 @@ def get_my_characters():
         if not characters:
             return jsonify({"error": "No characters available for this user"}), 404
         
-        return jsonify(characters), 200
+        serialized_characters = controller.serialize_list(characters, date_fields=["created_at"])
+        return jsonify(serialized_characters), 200
+    
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+
+@characters_route.route("/characters/<int:character_id>", methods=["GET"])
+@require_auth
+def get_character_by_id(character_id):
+    try:
+        user_id = request.user.get("id")
+        user_role = request.user.get("role")
+        
+        character = characters_repo.read_by_id(character_id)
+        if not character:
+            return jsonify({"error": "Character not found"}), 404
+        
+        # Verificar propiedad o rol admin
+        if character["user_id"] != user_id and user_role != "admin":
+            return jsonify({"error": "Unauthorized to view this character"}), 403
+        
+        serialized_character = controller.serialize_row(character, date_fields=["created_at"])
+        return jsonify(serialized_character), 200
     
     except Exception as e:
         return jsonify({"error": str(e)}), 500
@@ -51,21 +74,13 @@ def create_character():
         attributes = data.get("attributes")
         story = data.get("story")
 
-        required_fields = [name, race, char_class, level, attributes, story]
+        required_fields = ["user_id", "name", "race", "char_class", "level", "attributes", "story"]
 
         return controller.execute_post_method(
-            characters_repo,
-            required_fields,
-            "Character",
-            user_id=user_id,
-            name=name,
-            race=race,
-            char_class=char_class,
-            level=level,
-            attributes=attributes,
-            story=story
-        )
-        
+            characters_repo, required_fields, "character",
+            user_id=user_id, name=name, race=race, char_class=char_class,
+            level=level, attributes=attributes, story=story)
+    
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
@@ -73,6 +88,16 @@ def create_character():
 @require_auth
 def update_character(character_id):
     try:
+        user_id = request.user.get("id")
+        
+        # Verificar que el personaje existe y pertenece al usuario
+        character = characters_repo.read_by_id(character_id)
+        if not character:
+            return jsonify({"error": "Character not found"}), 404
+        
+        if character["user_id"] != user_id:
+            return jsonify({"error": "Unauthorized to update this character"}), 403
+        
         data = request.get_json()
         updated_fields = {k: v for k, v in data.items() if v is not None}
         
@@ -86,6 +111,16 @@ def update_character(character_id):
 @require_auth
 def delete_character(character_id):
     try:
+        user_id = request.user.get("id")
+        
+        # Verificar que el personaje existe y pertenece al usuario
+        character = characters_repo.read_by_id(character_id)
+        if not character:
+            return jsonify({"error": "Character not found"}), 404
+        
+        if character["user_id"] != user_id:
+            return jsonify({"error": "Unauthorized to delete this character"}), 403
+        
         return controller.execute_delete_method(characters_repo, character_id, "Character")
         
     except Exception as e:

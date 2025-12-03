@@ -11,7 +11,7 @@ from BE.utils.controller import Controller
 
 user_route = Blueprint("user_route", __name__)
 users_repo = UsersRepository()
-jwt_manager = JWTManager("your_secret_key", "HS256")
+jwt_manager = JWTManager("trespatitos", "HS256")
 controller = Controller()
 
 @user_route.route("/liveness")
@@ -40,7 +40,7 @@ def register():
     user_id = result[0]
     token = jwt_manager.encode({"id": user_id, "role": role})
 
-    return jsonify(token=token)
+    return jsonify({"message": "User registered successfully", "token": token}), 201
 
 @user_route.route("/login", methods=["POST"])
 def login():
@@ -56,31 +56,37 @@ def login():
     if result is None:
         return jsonify({"error": "invalid credentials"}), 403
     
-    user = result[0]
-    user_id = user["id"]
-    user_role = user["role"]
+    user_id = result["id"]
+    user_role = result["role"]
 
     token = jwt_manager.encode({"id": user_id, "role": user_role})
 
-    return jsonify(token=token)
+    return jsonify({"message": "Login successful", "token": token, "user_id": user_id, "role": user_role}), 200
 
 @user_route.route("/user/update/<int:user_id>", methods=["PUT"])
 @require_auth
 def update_user(user_id):
-    data = request.get_json()
-    updated_fields = {k: v for k, v in data.items() if v is not None}
-
-    if not updated_fields:
-        return jsonify({"error": "no fields to update"}), 400
-    
     try:
+        # Verificar que el usuario actualiza su propia información o es admin
+        current_user_id = request.user.get("id")
+        current_user_role = request.user.get("role")
+        
+        if current_user_id != user_id and current_user_role != "admin":
+            return jsonify({"error": "Unauthorized to update this user"}), 403
+        
+        data = request.get_json()
+        updated_fields = {k: v for k, v in data.items() if v is not None}
+
+        if not updated_fields:
+            return jsonify({"error": "no fields to update"}), 400
+        
         users_repo.update(user_id, **updated_fields)
         return jsonify({"message": f"User {user_id} updated successfully"}), 200
     
     except Exception as e:
         return jsonify({"error": str(e)}), 500
     
-@user_route.route("/delete/<int:user_id>", methods=["DELETE"])
+@user_route.route("/user/delete/<int:user_id>", methods=["DELETE"])
 @require_role("admin")
 def delete_user(user_id):
     if users_repo.delete(user_id):

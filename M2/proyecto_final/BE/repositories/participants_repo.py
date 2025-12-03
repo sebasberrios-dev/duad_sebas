@@ -15,10 +15,10 @@ class ParticipantsRepository:
             stmt = insert(participants_table).returning(participants_table.c.id).values({
                 "game_id": game_id,
                 "user_id": user_id,
-                "character_id": character_id
+                "character_id": character_id,
             })
             query = self.query_manager.execute_post(stmt)
-            return query
+            return query.fetchone()
         except Exception as e:
             print(f"Error creating participant: {e}")
             return None
@@ -52,6 +52,30 @@ class ParticipantsRepository:
             print(f"Error reading participants by user ID: {e}")
             return None
     
+    def read_by_game_id(self, game_id):
+        try:
+            stmt = select(participants_table).where(participants_table.c.game_id == game_id)
+            query = self.query_manager.execute_get(stmt)
+            participants = query.mappings().all()
+            return participants or []
+        except Exception as e:
+            print(f"Error reading participants by game ID: {e}")
+            return []
+    
+    def read_by_user_and_game(self, user_id, game_id):
+        # Para verificar si un usuario participa en una partida específica"""
+        try:
+            stmt = select(participants_table).where(
+                (participants_table.c.user_id == user_id) & 
+                (participants_table.c.game_id == game_id)
+            )
+            query = self.query_manager.execute_get(stmt)
+            participant = query.mappings().first()
+            return participant or None
+        except Exception as e:
+            print(f"Error reading participant by user and game: {e}")
+            return None
+    
     def update(self, part_id, **kwargs):
         try:
             stmt = update(participants_table).where(participants_table.c.id == part_id).values(**kwargs)
@@ -69,15 +93,3 @@ class ParticipantsRepository:
         except Exception as e:
             print(f"Error deleting participant: {e}")
             return False
-        
-participants_repo = ParticipantsRepository()
-
-#participants_repo.create(2, 2, 3)
-
-#read = participants_repo.read()
-#print(read)
-
-#read_by_id = participants_repo.read_by_id(1)
-#print(read_by_id)
-
-#participants_repo.update(1, character_id=4)

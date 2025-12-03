@@ -1,3 +1,7 @@
+import sys
+import os
+sys.path.append(os.path.join(os.path.dirname(__file__), '..', '..'))
+
 from sqlalchemy import insert, select, update, delete
 from BE.utils.query_manager import QueryManager
 from BE.database import darts_throws_table
@@ -6,11 +10,11 @@ class DartThrowRepository:
     def __init__(self):
         self.query_manager = QueryManager()
     
-    def create(self, game_id, part_id, dart_type, visible_to_dm, visible_to_players, throw_value):
+    def create(self, game_id, participant_id, dart_type, visible_to_dm, visible_to_players, throw_value):
         try:
             stmt = insert(darts_throws_table).returning(darts_throws_table.c.id).values({
                 "game_id": game_id,
-                "part_id": part_id,
+                "participant_id": participant_id,
                 "dart_type": dart_type,
                 "visible_to_dm": visible_to_dm,
                 "visible_to_players": visible_to_players,

@@ -3,7 +3,7 @@ import os
 sys.path.append(os.path.join(os.path.dirname(__file__), '..', '..'))
 
 from flask import request, jsonify
-from authorization.jwt_manager import JWTManager
+from BE.authorization.jwt_manager import JWTManager
 
 jwt_manager = JWTManager('trespatitos', 'HS256')
 

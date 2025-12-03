@@ -33,14 +33,15 @@ class Controller:
                 items = Controller.filter_by_field(items, field, field_value)
         return items
     
-    def execute_get_method(self, item_repo, fields_list, entity_name):
+    def execute_get_method(self, item_repo, fields_list, entity_name, date_fields=None):
         items = item_repo.read()
         filtered_data = self.filter_request_params(items, fields_list)
 
         if not filtered_data:
             return jsonify({"error": f"No {entity_name} available"}), 404
         
-        return jsonify(filtered_data), 200
+        serialized_data = self.serialize_list(filtered_data, date_fields)
+        return jsonify(serialized_data), 200
     
     def execute_post_method(self, item_repo, required_fields, entity_name, **data):
         for field in required_fields:
@@ -49,7 +50,7 @@ class Controller:
         
         new_item = item_repo.create(**data)
         if new_item:
-            return jsonify({"message": f"{entity_name} created successfully.", f"{entity_name.lower()}_id": new_item.id}), 201
+            return jsonify({"message": f"{entity_name.capitalize()} created successfully.", f"{entity_name}_id": new_item.id}), 201
         else:
             return jsonify({"error": f"could not create {entity_name}"}), 400
     
@@ -59,14 +60,14 @@ class Controller:
         
         success = item_repo.update(item_id, **updated_fields)
         if success:
-            return jsonify({"message": f"{entity_name} updated successfully."}), 200
+            return jsonify({"message": f"{entity_name.capitalize()} updated successfully."}), 200
         else:
             return jsonify({"error": f"Could not update {entity_name} with ID {item_id}"}), 400
         
     def execute_delete_method(self, item_repo, item_id, entity_name):
         success = item_repo.delete(item_id)
         if success:
-            return jsonify({"message": f"{entity_name} deleted successfully."}), 200
+            return jsonify({"message": f"{entity_name.capitalize()} deleted successfully."}), 200
         else:
             return jsonify({"error": f"could not delete {entity_name} with ID {item_id}"}), 400
         
