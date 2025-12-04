@@ -315,7 +315,7 @@ class TestCharacterRoutes:
         })
         assert response.status_code == 200
         
-        # Player no puede
+        # Jugador no puede
         response = client.get('/characters', headers={
             "Authorization": f"Bearer {player_token}"
         })

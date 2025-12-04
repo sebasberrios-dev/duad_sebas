@@ -64,15 +64,3 @@ class UsersRepository:
         except Exception as e:
             print(f"Error updating user: {e}")
             return False
-
-#users_repo.create("testUser", "test@example.com", "password123", "dm")
-
-#read = users_repo.read("testUser", "password123")
-#print(read)
-
-#read_by_id = users_repo.read_by_id(1)
-#print(read_by_id)
-
-#users_repo.update(1, password="newpassword456")
-
-#users_repo.delete(3)

@@ -74,17 +74,3 @@ class CharactersRepository:
         except Exception as e:
             print(f"Error deleting character: {e}")
             return False
-        
-characters_repo = CharactersRepository()
-
-#characters_repo.create(2, "Aragorn", "Human", "Ranger", 5, {"strength": 15, "dexterity": 12}, "A ranger from the north.")
-
-#read = characters_repo.read()
-#print(read)
-
-#read_by_id = characters_repo.read_by_id(2)
-#print(read_by_id)
-
-#characters_repo.update(2, level=6)
-
-characters_repo.delete(3)
