@@ -35,6 +35,7 @@ characters_table = Table(
     Column("race", String(50), nullable=False),
     Column("class", String(50), nullable=False),
     Column("level", Integer, nullable=False, default=1),
+    Column("xp", Integer, nullable=False, default=0),
     Column("attributes", JSON, nullable=False),
     Column("story", Text, nullable=False),
     Column("created_at", DateTime, nullable=False, default=utc_now),
@@ -44,7 +45,7 @@ games_table = Table(
     "games",
     metadata_obj,
     Column("id", Integer, primary_key=True),
-    Column("dm_id", Integer, ForeignKey("users.id"), nullable=False),
+    Column("user_id", Integer, ForeignKey("users.id"), nullable=False),
     Column("title", String(150), nullable=False),
     Column("description", Text, nullable=False),
     Column("link", String(255), nullable=True),
@@ -58,7 +59,7 @@ participants_table = Table(
     Column("id", Integer, primary_key=True),
     Column("game_id", Integer, ForeignKey("games.id"), nullable=False),
     Column("user_id", Integer, ForeignKey("users.id"), nullable=False),
-    Column("character_id", Integer, ForeignKey("characters.id"), nullable=False),
+    Column("character_id", Integer, ForeignKey("characters.id"), nullable=True),
     Column("joined_at", DateTime, nullable=False, default=utc_now),
 )
 
@@ -91,11 +92,11 @@ npcs_table = Table(
     Column("id", Integer, primary_key=True),
     Column("game_id", Integer, ForeignKey("games.id"), nullable=False),
     Column("name", String(100), nullable=False),
-    Column("race", String(50), nullable=False),
-    Column("class", String(50), nullable=False),
+    Column("role", String(50), nullable=False),
     Column("level", Integer, nullable=False, default=1),
     Column("description", Text, nullable=False),
     Column("attributes", JSON, nullable=False),
+    Column("hp", Integer, nullable=False, default=15),
     Column("created_at", DateTime, nullable=False, default=utc_now),
 )
 
@@ -116,6 +117,7 @@ inventories_table = Table(
     metadata_obj,
     Column("id", Integer, primary_key=True),
     Column("character_id", Integer, ForeignKey("characters.id"), nullable=False),
+    Column("game_id", Integer, ForeignKey("games.id"), nullable=False),
     Column("updated_at", DateTime, nullable=False, default=utc_now, onupdate=utc_now),
 )
 
@@ -138,5 +140,29 @@ notes_table = Table(
     Column("visible_for_players", Boolean, nullable=False, default=False),
     Column("visible_for_dm", Boolean, nullable=False, default=True),
     Column("content", Text, nullable=False),
+    Column("updated_at", DateTime, nullable=False, default=utc_now, onupdate=utc_now),
+)
+
+combat_state_table = Table(
+    "combat_state",
+    metadata_obj,
+    Column("id", Integer, primary_key=True),
+    Column("game_id", Integer, ForeignKey("games.id"), nullable=False),
+    Column("npc_id", Integer, ForeignKey("npcs.id"), nullable=False),
+    Column("npc_current_hp", Integer, nullable=False),
+    Column("npc_max_hp", Integer, nullable=False),
+    Column("max_rolls", Integer, nullable=False),
+    Column("current_rolls", Integer, nullable=False, default=0),
+    Column("is_active", Boolean, nullable=False, default=True),
+    Column("created_at", DateTime, nullable=False, default=utc_now),
+)
+
+coins_table = Table(
+    "coins",
+    metadata_obj,
+    Column("id", Integer, primary_key=True),
+    Column("character_id", Integer, ForeignKey("characters.id"), nullable=False),
+    Column("game_id", Integer, ForeignKey("games.id"), nullable=False),
+    Column("amount", Integer, nullable=False, default=0),
     Column("updated_at", DateTime, nullable=False, default=utc_now, onupdate=utc_now),
 )

@@ -1,0 +1,104 @@
+@import url(../body.css);
+@import url(../header.css);
+
+input {
+  font: inherit;
+}
+
+#login-form {
+  margin: 200px auto;
+  padding: 3rem 2rem;
+  background-color: rgba(20, 20, 20, 0.9);
+  width: min(400px, 90%);
+  border-radius: 8px;
+  border: 2px solid rgba(139, 0, 0, 0.6);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.8), 0 0 40px rgba(139, 0, 0, 0.3);
+}
+
+.form-title {
+  font-size: 2.5rem;
+  font-weight: 900;
+  color: white;
+  text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.8);
+  text-align: center;
+}
+
+.form-subtitle {
+  margin-top: 0.7rem;
+  color: #e7e7e7;
+  text-align: center;
+  font-size: 1rem;
+  opacity: 0.9;
+}
+
+.form-inputs {
+  margin: 2rem 0 1.5rem;
+  display: grid;
+  gap: 1.2rem;
+  color: #e7e7e7;
+}
+
+.form-label {
+  width: 100%;
+  display: grid;
+  grid-template-areas: "input";
+}
+
+.form-input {
+  grid-area: input;
+  width: 100%;
+  border-radius: 6px;
+  border: 2px solid rgba(139, 0, 0, 0.5);
+  background-color: rgba(40, 40, 40, 0.8);
+  padding: 0.9rem 1.5rem;
+  color: white;
+  font-size: 1rem;
+}
+
+.form-input:focus {
+  outline: none;
+  border-color: rgba(139, 0, 0, 0.9);
+  box-shadow: 0 0 10px rgba(139, 0, 0, 0.5);
+}
+
+.form-button {
+  display: inline-block;
+  width: 100%;
+  border-radius: 6px;
+  border: 2px solid white;
+  background-color: rgba(83, 12, 12, 0.85);
+  color: white;
+  padding: 1rem 2rem;
+  font-size: 1.1rem;
+  font-weight: 700;
+  text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.8);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.6);
+}
+
+.form-links {
+  margin-top: 1.5rem;
+  display: flex;
+  font-size: 0.95rem;
+  justify-content: space-between;
+  color: #e7e7e7;
+}
+
+.form-links a {
+  color: white;
+  text-decoration: none;
+}
+
+.form-links a:hover {
+  text-decoration: underline;
+  text-shadow: 0 0 10px rgba(255, 255, 255, 0.6);
+}
+
+.form-button:hover {
+  background-color: rgba(99, 15, 15, 0.95);
+  cursor: pointer;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.8);
+}
+
+.form-button:active {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.7);
+}

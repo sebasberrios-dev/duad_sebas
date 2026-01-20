@@ -134,8 +134,14 @@ class TestCharacterRoutes:
         response = client.get('/my_characters', headers={
             "Authorization": f"Bearer {other_player_token}"
         })
-        # Puede ser 200 con lista vacía o 404
-        assert response.status_code in [200, 404]
+        # Ahora devuelve 200 con objeto {message, characters: []}
+        assert response.status_code == 200
+        data = response.get_json()
+        # Puede ser lista vacía o objeto con 'characters'
+        if isinstance(data, dict):
+            assert data.get("characters") == []
+        else:
+            assert data == []
 
     def test_get_character_by_id_owner(self, client, player_token):
         ## Test de obtener personaje por ID siendo el dueño 
@@ -206,12 +212,13 @@ class TestCharacterRoutes:
         assert response.status_code == 200
 
     def test_get_character_not_found(self, client, player_token):
-        ## Test de personaje no encontrado
+        ## Test de personaje no encontrado - ahora devuelve 200 con character: null
         response = client.get('/characters/99999', headers={
             "Authorization": f"Bearer {player_token}"
         })
-        assert response.status_code == 404
-        assert b"Character not found" in response.data
+        assert response.status_code == 200
+        data = response.get_json()
+        assert data.get("character") is None or data.get("message") == "Character not found"
 
     def test_update_character_owner(self, client, player_token):
         ## Test de actualización por el dueño

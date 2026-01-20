@@ -11,6 +11,7 @@ chat_repo = ChatRepository()
 chat_route = Blueprint("chat_route", __name__)
 controller = Controller()
 
+# Obtiene todos los mensajes de chat del sistema (solo admins)
 @chat_route.route("/chat", methods=["GET"])
 @require_role('admin')
 def get_chat_messages():
@@ -21,6 +22,7 @@ def get_chat_messages():
     except Exception as e:
         return jsonify({"error": str(e)}), 500
     
+# Obtiene los mensajes de chat del usuario autenticado
 @chat_route.route("/my_chat_messages", methods=["GET"])
 @require_auth
 def get_my_chat_messages():
@@ -29,7 +31,7 @@ def get_my_chat_messages():
         chat_messages = chat_repo.read_by_user_id(user_id)
 
         if not chat_messages:
-            return jsonify({"error": "No chat messages available for this user"}), 404
+            return jsonify([]), 200
         
         serialized_messages = controller.serialize_list(chat_messages, date_fields=["sent_at"])
         return jsonify(serialized_messages), 200
@@ -37,14 +39,15 @@ def get_my_chat_messages():
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
+# Obtiene todos los mensajes de chat de una partida
 @chat_route.route("/game_chat_messages/<int:game_id>", methods=["GET"])
 @require_auth
 def get_game_chat_messages(game_id):
     try:
-        chat_messages = chat_repo.read_by_game_id(game_id)
+        chat_messages = chat_repo.read_by_game_id_with_username(game_id)
 
         if not chat_messages:
-            return jsonify({"error": "No chat messages available for this game"}), 404
+            return jsonify([]), 200
         
         serialized_messages = controller.serialize_list(chat_messages, date_fields=["sent_at"])
         return jsonify(serialized_messages), 200
@@ -52,6 +55,7 @@ def get_game_chat_messages(game_id):
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
+# Crea un nuevo mensaje de chat en una partida
 @chat_route.route("/chat/new", methods=["POST"])
 @require_auth
 def create_chat_message():
@@ -67,6 +71,7 @@ def create_chat_message():
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
+# Actualiza un mensaje de chat existente
 @chat_route.route("/chat/<int:message_id>", methods=["PUT"])
 @require_auth
 def update_chat_message(message_id):
@@ -79,6 +84,7 @@ def update_chat_message(message_id):
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
+# Elimina un mensaje de chat
 @chat_route.route("/chat/<int:message_id>", methods=["DELETE"])
 @require_auth
 def delete_chat_message(message_id):

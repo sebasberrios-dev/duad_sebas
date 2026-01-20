@@ -13,6 +13,7 @@ participants_repo = ParticipantsRepository()
 dart_throws_route = Blueprint("dart_throws_route", __name__)
 controller = Controller()
 
+# Obtiene todas las tiradas de dados del sistema (solo admins)
 @dart_throws_route.route("/throws", methods=["GET"])
 @require_role('admin')
 def get_throws():
@@ -24,32 +25,27 @@ def get_throws():
         return jsonify({"error": str(e)}), 500
 
 
+# Obtiene las tiradas de una partida (filtradas por visibilidad)
 @dart_throws_route.route("/game/<int:game_id>/throws", methods=["GET"])
 @require_auth
 def get_game_throws(game_id):
-    # Obtener todas las tiradas de una partida con filtrado por visibilidad y rol
     try:
         user_id = request.user.get("id")
         user_role = request.user.get("role")
         
-        # Verificar que el usuario participa en la partida o es DM
         if user_role != "dm":
             participant = participants_repo.read_by_user_and_game(user_id, game_id)
             if not participant:
                 return jsonify({"error": "User is not a participant in this game"}), 403
         
-        # Obtener todas las tiradas de la partida
         all_throws = dart_throw_repo.read_by_game_id(game_id)
         
         if not all_throws:
             return jsonify([]), 200
         
-        # Filtrar según el rol
         if user_role == "dm":
-            # DM ve todas las tiradas
             visible_throws = all_throws
         else:
-            # Players solo ven tiradas visibles para jugadores
             visible_throws = [throw for throw in all_throws if throw.get("visible_to_players", False)]
         
         serialized_throws = controller.serialize_list(visible_throws, date_fields=["thrown_at"])
@@ -59,6 +55,7 @@ def get_game_throws(game_id):
         return jsonify({"error": str(e)}), 500
 
 
+# Obtiene las tiradas del usuario autenticado en su partida actual
 @dart_throws_route.route("/my_throws", methods=["GET"])
 @require_auth
 def get_my_throws():
@@ -78,6 +75,8 @@ def get_my_throws():
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
+
+# Obtiene todas las tiradas de la partida del DM
 @dart_throws_route.route("/dm_throws", methods=["GET"])
 @require_role('dm')
 def get_dm_throws():
@@ -97,6 +96,8 @@ def get_dm_throws():
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
+
+# Crea una nueva tirada de dados (jugadores)
 @dart_throws_route.route("/throws/new", methods=["POST"])
 @require_auth
 def create_throw():
@@ -123,6 +124,8 @@ def create_throw():
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
+
+# Crea una nueva tirada de dados (solo DMs, puede ser oculta para jugadores)
 @dart_throws_route.route("/dm_throws/new", methods=["POST"])
 @require_role('dm')
 def create_dm_throw():
@@ -148,6 +151,8 @@ def create_dm_throw():
     except Exception as e:
         return jsonify({"error": str(e)}), 500
     
+
+# Actualiza una tirada existente
 @dart_throws_route.route("/throws/<int:dt_id>", methods=["PUT"])
 @require_auth
 def update_throw(dt_id):
@@ -160,6 +165,8 @@ def update_throw(dt_id):
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
+
+# Elimina una tirada
 @dart_throws_route.route("/throws/<int:dt_id>", methods=["DELETE"])
 @require_auth
 def delete_throw(dt_id):

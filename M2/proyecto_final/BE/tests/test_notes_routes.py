@@ -153,7 +153,10 @@ class TestNotesRoutes:
         })
         assert response.status_code == 200
         data = response.get_json()
-        assert isinstance(data, list)
+        # El endpoint ahora devuelve {notes: [...]}
+        assert "notes" in data
+        notes = data["notes"]
+        assert isinstance(notes, list)
         # DM debe ver ambas notas
 
     def test_get_game_notes_as_player(self, client, dm_token, player_token, game_id):
@@ -182,7 +185,10 @@ class TestNotesRoutes:
         })
         assert response.status_code == 200
         data = response.get_json()
-        assert isinstance(data, list)
+        # El endpoint ahora devuelve {notes: [...]}
+        assert "notes" in data
+        notes = data["notes"]
+        assert isinstance(notes, list)
 
     def test_get_my_notes(self, client, player_token, game_id):
         ## Test de obtener mis notas

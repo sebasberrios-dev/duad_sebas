@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Crea tu personaje</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="../css/create/create_char.css" />
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+  </head>
+  <body>
+    <header>
+      <nav class="navbar contain">
+        <div class="navbar-main">
+          <button class="navbar-item">Lyfter D&D</button>
+          <button class="navbar-item">Contactame</button>
+          <button class="navbar-item">Cerrar Sesión</button>
+        </div>
+      </nav>
+    </header>
+    <main>
+      <section class="create-character contain">
+        <div class="form-container">
+          <form id="create-character-form">
+            <h2 class="form-title">Crea tu personaje</h2>
+            <div class="form-inputs">
+              <label class="form-label">
+                <input
+                  type="text"
+                  placeholder="Nombre del Personaje"
+                  id="character-name"
+                  class="form-input"
+                />
+              </label>
+            </div>
+            <div class="form-inputs">
+              <label class="form-label">
+                <select name="race" id="race">
+                  <option value="" disabled selected>
+                    Selecciona una raza
+                  </option>
+                  <option value="human">Humano</option>
+                  <option value="elf">Elfo</option>
+                  <option value="dwarf">Enano</option>
+                  <option value="orc">Orco</option>
+                </select>
+              </label>
+            </div>
+            <div class="form-inputs">
+              <label class="form-label">
+                <select name="class" id="class">
+                  <option value="" disabled selected>
+                    Selecciona una clase
+                  </option>
+                  <option value="warrior">Guerrero</option>
+                  <option value="mage">Mago</option>
+                  <option value="rogue">Pícaro</option>
+                  <option value="cleric">Clérigo</option>
+                </select>
+              </label>
+            </div>
+            <div class="form-inputs">
+              <label class="form-label">
+                <textarea
+                  placeholder="Historia del Personaje"
+                  id="character-story"
+                  class="form-input"
+                  rows="5"
+                ></textarea>
+              </label>
+            </div>
+            <div class="form-inputs">
+              <button type="submit" class="form-button">CREAR PERSONAJE</button>
+            </div>
+          </form>
+        </div>
+      </section>
+    </main>
+    <script
+      type="module"
+      src="../js/renderization/render_create_char.js"
+    ></script>
+  </body>
+</html>

@@ -1,0 +1,360 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Partida</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="../css/game/game.css" />
+  </head>
+  <body>
+    <header>
+      <nav class="navbar">
+        <div class="navbar-main">
+          <button class="navbar-item">Lyfter D&D</button>
+          <button class="navbar-item">Mis Partidas</button>
+          <button class="navbar-item">Cerrar Sesión</button>
+        </div>
+      </nav>
+    </header>
+    <main>
+      <div class="game-layout">
+        <!-- Columna Izquierda: Notas -->
+        <div class="left-column">
+          <!-- Notas del Jugador -->
+          <section
+            id="player-notes-section"
+            class="notes-section"
+            style="display: block"
+          >
+            <h3 class="section-title">Mis Notas</h3>
+            <div class="notes-container">
+              <div class="notes-list">
+                <div class="note-item">
+                  <div class="note-header">
+                    <span class="note-date">30/12/2025 - 15:30</span>
+                    <button class="btn-delete-note">×</button>
+                  </div>
+                  <p class="note-content"></p>
+                </div>
+              </div>
+              <div class="note-input-container">
+                <textarea
+                  class="note-input"
+                  placeholder="Escribe una nota privada..."
+                  rows="3"
+                ></textarea>
+                <button class="btn-add-note">Agregar Nota</button>
+              </div>
+            </div>
+          </section>
+
+          <!-- Notas del DM -->
+          <section
+            id="dm-notes-section"
+            class="notes-section"
+            style="display: none"
+          >
+            <h3 class="section-title">Notas</h3>
+            <div class="notes-tabs">
+              <button class="note-tab active" data-tab="private">
+                Privadas
+              </button>
+              <button class="note-tab" data-tab="shared">Compartidas</button>
+            </div>
+            <div class="notes-container">
+              <!-- Notas Privadas -->
+              <div class="notes-list" id="dm-private-notes">
+                <div class="note-item private-note">
+                  <div class="note-header">
+                    <span class="note-date">30/12/2025 - 14:00</span>
+                    <button class="btn-delete-note">×</button>
+                  </div>
+                  <p class="note-content"></p>
+                </div>
+              </div>
+              <!-- Notas Compartidas -->
+              <div
+                class="notes-list"
+                id="dm-shared-notes"
+                style="display: none"
+              >
+                <div class="note-item shared-note">
+                  <div class="note-header">
+                    <span class="note-date">29/12/2025 - 18:45</span>
+                    <button class="btn-delete-note">×</button>
+                  </div>
+                  <p class="note-content"></p>
+                </div>
+              </div>
+              <div class="note-input-container">
+                <textarea
+                  class="note-input"
+                  placeholder="Escribe una nota..."
+                  rows="3"
+                ></textarea>
+                <div class="note-actions">
+                  <label class="note-visibility">
+                    <input type="checkbox" id="note-shared" />
+                    <span>Compartir con jugadores</span>
+                  </label>
+                  <button class="btn-add-note">Agregar Nota</button>
+                </div>
+              </div>
+            </div>
+          </section>
+        </div>
+
+        <!-- Columna Central: Narrativa y Acciones -->
+        <div class="center-column">
+          <!-- Encabezado de la Partida -->
+          <div class="game-header">
+            <h1 class="game-title">Nombre de la Partida</h1>
+            <p class="game-description">Descripción de la partida</p>
+          </div>
+
+          <!-- Sección de Narrativa -->
+          <section class="narrative-section">
+            <h2 class="section-title">Narrativa</h2>
+            <div class="narrative-display">
+              <div class="narrative-entry">
+                <span class="narrative-author">DM:</span>
+                <p class="narrative-text"></p>
+              </div>
+            </div>
+          </section>
+
+          <!-- Sección de Acciones del Jugador -->
+          <section
+            id="player-actions"
+            class="player-actions"
+            style="display: none"
+          >
+            <h3 class="subsection-title">Tus Acciones</h3>
+
+            <!-- Progreso del Personaje -->
+            <div class="player-progress">
+              <div class="player-level">
+                Nivel <span id="player-level-value">1</span>
+              </div>
+              <div class="xp-container">
+                <div class="xp-info">
+                  <span>XP</span>
+                  <span id="xp-text">0 / 100</span>
+                </div>
+                <div class="xp-bar-bg">
+                  <div id="xp-bar" class="xp-bar-fill"></div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Decisiones -->
+            <div class="action-group">
+              <label for="player-decision">Tomar Decisión:</label>
+              <textarea
+                id="player-decision"
+                class="decision-input"
+                placeholder="Describe tu acción..."
+                rows="3"
+              ></textarea>
+              <button class="btn-action">Tirar Dado</button>
+              <div class="dice-result">
+                <span class="result-label">Resultado:</span>
+                <span class="result-value">-</span>
+              </div>
+            </div>
+
+            <!-- Combate -->
+            <div class="combat-group">
+              <h4>Combate</h4>
+              <select class="attack-select">
+                <option value="">Selecciona tu ataque</option>
+                <option value="sword">Ataque con Espada</option>
+                <option value="bow">Disparo con Arco</option>
+                <option value="spell">Lanzar Hechizo</option>
+              </select>
+              <button class="btn-attack">Atacar (Tirar Dados)</button>
+              <div class="combat-result">
+                <span class="result-label">Daño:</span>
+                <span class="result-value">-</span>
+              </div>
+            </div>
+          </section>
+
+          <!-- Sección de Acciones del DM -->
+          <section id="dm-actions" class="dm-actions" style="display: none">
+            <!-- Gestión de NPCs -->
+            <div class="npc-management">
+              <button class="btn-create-npc">+ Crear Nuevo NPC</button>
+            </div>
+
+            <!-- Narrar -->
+            <div class="action-group">
+              <label for="dm-narrative">Narrar:</label>
+              <textarea
+                id="dm-narrative"
+                class="narrative-input"
+                placeholder="Escribe la narrativa..."
+                rows="4"
+              ></textarea>
+              <button class="btn-narrate">Enviar Narrativa</button>
+            </div>
+
+            <!-- Responder a Decisión del Jugador -->
+            <div class="action-group">
+              <h4>Responder a Decisión del Jugador</h4>
+              <p class="player-last-action">
+                Última acción del jugador: [Aquí aparecerá]
+              </p>
+              <button class="btn-dm-dice">Tirar Dado de Dificultad</button>
+              <div class="dice-result">
+                <span class="result-label">Dificultad:</span>
+                <span class="result-value">-</span>
+              </div>
+            </div>
+
+            <!-- Asignar Combate -->
+            <div class="combat-assignment">
+              <h4>Asignar Combate</h4>
+              <select class="npc-select">
+                <option value="">Selecciona un NPC</option>
+                <option value="npc-name">Nombre del NPC</option>
+              </select>
+              <button class="btn-assign-combat">Iniciar Combate</button>
+            </div>
+          </section>
+        </div>
+
+        <!-- Columna Derecha: Chat e Inventario -->
+        <div class="right-column">
+          <!-- Chat -->
+          <section class="chat-section">
+            <h3 class="section-title">Chat</h3>
+            <div class="chat-messages"></div>
+            <div class="chat-input-container">
+              <input
+                type="text"
+                class="chat-input"
+                placeholder="Escribe un mensaje..."
+              />
+              <button class="btn-send">Enviar</button>
+            </div>
+          </section>
+
+          <!-- Inventario (Solo Jugador) -->
+          <section
+            id="inventory-section"
+            class="inventory-section"
+            style="display: block"
+          >
+            <h3 class="section-title">Inventario</h3>
+            <button id="btn-open-shop" class="btn-open-shop">
+              Tienda de Items
+            </button>
+            <div class="inventory-grid"></div>
+          </section>
+        </div>
+      </div>
+
+      <!-- Modal para Crear NPC -->
+      <div id="npc-modal" class="modal-overlay" style="display: none">
+        <div class="modal-content">
+          <button class="modal-close">&times;</button>
+          <form id="create-npc-form">
+            <h2 class="form-title">Crea un NPC</h2>
+            <div class="form-inputs">
+              <label class="form-label">
+                <input
+                  type="text"
+                  placeholder="Nombre del NPC"
+                  id="npc-name"
+                  class="form-input"
+                />
+              </label>
+            </div>
+            <div class="form-inputs">
+              <label class="form-label">
+                <select name="npc-role" id="npc-role">
+                  <option value="" disabled selected>Selecciona un rol</option>
+                  <option value="merchant">Comerciante</option>
+                  <option value="villager">Aldeano</option>
+                  <option value="guard">Guardia</option>
+                  <option value="noble">Noble</option>
+                  <option value="enemy">Enemigo</option>
+                </select>
+              </label>
+            </div>
+            <div class="form-inputs">
+              <label class="form-label">
+                <input
+                  type="text"
+                  placeholder="Nivel del NPC (1-7)"
+                  id="npc-level"
+                  class="form-input"
+                />
+              </label>
+            </div>
+            <div class="form-inputs">
+              <label class="form-label">
+                <textarea
+                  placeholder="Descripción del NPC"
+                  id="npc-description"
+                  class="form-input"
+                  rows="5"
+                ></textarea>
+              </label>
+            </div>
+            <button type="submit" class="form-button">CREAR NPC</button>
+          </form>
+        </div>
+      </div>
+
+      <!-- Modal para Tienda de Items -->
+      <div id="shop-modal" class="modal-overlay" style="display: none">
+        <div class="modal-content">
+          <button class="modal-close" id="shop-modal-close">&times;</button>
+          <form id="shop-form">
+            <h2 class="form-title">Tienda de Items</h2>
+            <div class="shop-coins">
+              <span class="coins-label">Tus monedas:</span>
+              <span id="player-coins" class="coins-value">0</span>
+            </div>
+            <div class="form-inputs">
+              <label class="form-label">
+                <select name="shop-item" id="shop-item">
+                  <option value="" disabled selected>Selecciona un item</option>
+                  <option value="espada_acero|100">
+                    Espada de Acero - 100 monedas (+1 daño)
+                  </option>
+                  <option value="espada_reforzada|250">
+                    Espada Reforzada - 250 monedas (+2 daño, +1 decisión)
+                  </option>
+                  <option value="espada_maestra|500">
+                    Espada Maestra - 500 monedas (+3 daño, +2 decisión)
+                  </option>
+                  <option value="amuleto_sabio|200">
+                    Amuleto Sabio - 200 monedas (+2 decisión)
+                  </option>
+                  <option value="anillo_poder|200">
+                    Anillo de Poder - 200 monedas (+2 daño)
+                  </option>
+                </select>
+              </label>
+            </div>
+            <button type="submit" class="form-button">COMPRAR ITEM</button>
+          </form>
+        </div>
+      </div>
+    </main>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script
+      type="module"
+      src="../js/renderization/render_game_page_new.js"
+    ></script>
+  </body>
+</html>

@@ -96,8 +96,7 @@ class TestNPCRoutes:
             json={
                 "game_id": game_id,
                 "name": "Goblin Chief",
-                "race": "Goblin",
-                "class": "Warrior",
+                "role": "Goblin",
                 "level": 5,
                 "description": "Leader of the goblin tribe",
                 "attributes": {"strength": 14, "dexterity": 12}
@@ -113,8 +112,7 @@ class TestNPCRoutes:
             json={
                 "game_id": game_id,
                 "name": "Hacker NPC",
-                "race": "Human",
-                "class": "Thief",
+                "role": "Merchant",
                 "level": 1,
                 "description": "Should fail",
                 "attributes": {}
@@ -129,8 +127,7 @@ class TestNPCRoutes:
             json={
                 "game_id": game_id,
                 "name": "Wrong DM NPC",
-                "race": "Orc",
-                "class": "Barbarian",
+                "role": "Orc",
                 "level": 3,
                 "description": "Not my game",
                 "attributes": {"strength": 16}
@@ -147,8 +144,7 @@ class TestNPCRoutes:
             json={
                 "game_id": game_id,
                 "name": "Test NPC",
-                "race": "Elf",
-                "class": "Ranger",
+                "role": "Elf",
                 "level": 4,
                 "description": "Forest guardian",
                 "attributes": {"dexterity": 16}
@@ -186,8 +182,7 @@ class TestNPCRoutes:
             json={
                 "game_id": game_id,
                 "name": "Friendly NPC",
-                "race": "Human",
-                "class": "Merchant",
+                "role": "Merchant",
                 "level": 2,
                 "description": "Sells potions",
                 "attributes": {"charisma": 14}
@@ -219,8 +214,7 @@ class TestNPCRoutes:
             json={
                 "game_id": game_id,
                 "name": "To Update",
-                "race": "Dwarf",
-                "class": "Cleric",
+                "role": "Dwarf",
                 "level": 3,
                 "description": "Original",
                 "attributes": {"wisdom": 15}
@@ -243,8 +237,7 @@ class TestNPCRoutes:
             json={
                 "game_id": game_id,
                 "name": "Protected NPC",
-                "race": "Elf",
-                "class": "Wizard",
+                "role": "Elf",
                 "level": 6,
                 "description": "Protected",
                 "attributes": {"intelligence": 18}
@@ -268,8 +261,7 @@ class TestNPCRoutes:
             json={
                 "game_id": game_id,
                 "name": "To Delete",
-                "race": "Goblin",
-                "class": "Rogue",
+                "role": "Goblin",
                 "level": 2,
                 "description": "Will be deleted",
                 "attributes": {"dexterity": 14}
@@ -291,8 +283,7 @@ class TestNPCRoutes:
             json={
                 "game_id": game_id,
                 "name": "Cant Delete",
-                "race": "Orc",
-                "class": "Warrior",
+                "role": "Merchant",
                 "level": 4,
                 "description": "Protected",
                 "attributes": {"strength": 16}

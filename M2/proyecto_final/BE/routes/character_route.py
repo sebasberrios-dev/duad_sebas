@@ -11,6 +11,7 @@ characters_route = Blueprint("characters_route", __name__)
 characters_repo = CharactersRepository()
 controller = Controller()
 
+# Obtiene todos los personajes del sistema (solo admins)
 @characters_route.route("/characters", methods=["GET"])
 @require_role('admin')
 def get_characters():
@@ -22,6 +23,7 @@ def get_characters():
         return jsonify({"error": str(e)}), 500
 
 
+# Obtiene los personajes del usuario autenticado
 @characters_route.route("/my_characters", methods=["GET"])
 @require_auth
 def get_my_characters():
@@ -30,7 +32,7 @@ def get_my_characters():
         characters = characters_repo.read_by_user_id(user_id)
 
         if not characters:
-            return jsonify({"error": "No characters available for this user"}), 404
+            return jsonify({"message": "No characters available for this user", "characters": []}), 200
         
         serialized_characters = controller.serialize_list(characters, date_fields=["created_at"])
         return jsonify(serialized_characters), 200
@@ -39,6 +41,7 @@ def get_my_characters():
         return jsonify({"error": str(e)}), 500
 
 
+# Obtiene un personaje específico por ID (propio o admin)
 @characters_route.route("/characters/<int:character_id>", methods=["GET"])
 @require_auth
 def get_character_by_id(character_id):
@@ -48,7 +51,7 @@ def get_character_by_id(character_id):
         
         character = characters_repo.read_by_id(character_id)
         if not character:
-            return jsonify({"error": "Character not found"}), 404
+            return jsonify({"message": "Character not found", "character": None}), 200
         
         # Verificar propiedad o rol admin
         if character["user_id"] != user_id and user_role != "admin":
@@ -61,6 +64,7 @@ def get_character_by_id(character_id):
         return jsonify({"error": str(e)}), 500
 
 
+# Crea un nuevo personaje para el usuario autenticado
 @characters_route.route("/characters/new", methods=["POST"])
 @require_auth
 def create_character():
@@ -71,26 +75,27 @@ def create_character():
         race = data.get("race")
         char_class = data.get("class")
         level = data.get("level")
+        xp = data.get("xp", 0)
         attributes = data.get("attributes")
         story = data.get("story")
 
-        required_fields = ["user_id", "name", "race", "char_class", "level", "attributes", "story"]
-
+        required_fields = ["user_id", "name", "race", "char_class", "level", "xp", "attributes", "story"]
         return controller.execute_post_method(
             characters_repo, required_fields, "character",
             user_id=user_id, name=name, race=race, char_class=char_class,
-            level=level, attributes=attributes, story=story)
+            level=level, xp=xp, attributes=attributes, story=story)
     
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
+
+# Actualiza un personaje existente (solo el dueño)
 @characters_route.route("/characters/update/<int:character_id>", methods=["PUT"])
 @require_auth
 def update_character(character_id):
     try:
         user_id = request.user.get("id")
         
-        # Verificar que el personaje existe y pertenece al usuario
         character = characters_repo.read_by_id(character_id)
         if not character:
             return jsonify({"error": "Character not found"}), 404
@@ -107,13 +112,13 @@ def update_character(character_id):
         return jsonify({"error": str(e)}), 500
         
 
+# Elimina un personaje (solo el dueño)
 @characters_route.route("/characters/delete/<int:character_id>", methods=["DELETE"])
 @require_auth
 def delete_character(character_id):
     try:
         user_id = request.user.get("id")
         
-        # Verificar que el personaje existe y pertenece al usuario
         character = characters_repo.read_by_id(character_id)
         if not character:
             return jsonify({"error": "Character not found"}), 404

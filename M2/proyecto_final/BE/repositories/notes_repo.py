@@ -4,7 +4,7 @@ sys.path.append(os.path.join(os.path.dirname(__file__), '..', '..'))
 
 from sqlalchemy import insert, select, update, delete
 from BE.utils.query_manager import QueryManager
-from BE.database import notes_table
+from BE.database import notes_table, users_table
 
 class NotesRepository:
     def __init__(self):
@@ -53,6 +53,24 @@ class NotesRepository:
             return notes or []
         except Exception as e:
             print(f"Error reading notes by game ID: {e}")
+            return []
+    
+    def read_by_game_id_with_username(self, game_id):
+        """Obtiene las notas de un juego con el nombre de usuario del autor"""
+        try:
+            stmt = select(
+                notes_table,
+                users_table.c.username
+            ).join(
+                users_table,
+                notes_table.c.user_id == users_table.c.id
+            ).where(notes_table.c.game_id == game_id)
+            
+            query = self.query_manager.execute_get(stmt)
+            notes = query.mappings().all()
+            return notes or []
+        except Exception as e:
+            print(f"Error reading notes with username by game ID: {e}")
             return []
         
     def read_by_user_id(self, user_id):
