@@ -1,6 +1,4 @@
-/**
- * MANEJO DE ACCIONES DE JUGADOR Y DM
- */
+// MANEJO DE ACCIONES DE JUGADOR Y DM
 
 import { gameState } from "./game_state.js";
 import { GameSession } from "../logic/game_flow.js";
@@ -21,9 +19,7 @@ import {
 } from "./combat_utils.js";
 import { handleCombatVictory, handleCombatDefeat } from "./combat_rewards.js";
 
-/**
- * Jugador tira dado para decisión
- */
+// Jugador tira dado para decisión
 export const playerRollDecision = async () => {
   try {
     if (!gameState.session) {
@@ -80,9 +76,7 @@ export const playerRollDecision = async () => {
   }
 };
 
-/**
- * DM tira dado de dificultad y compara con la última tirada del jugador
- */
+// DM tira dado de dificultad y compara con la última tirada del jugador
 export const dmRollDifficulty = async () => {
   try {
     if (!gameState.session) {
@@ -156,9 +150,7 @@ export const dmRollDifficulty = async () => {
   }
 };
 
-/**
- * Jugador ataca
- */
+// Jugador ataca
 export const playerAttack = async () => {
   try {
     if (!gameState.session) {
@@ -216,54 +208,35 @@ export const playerAttack = async () => {
   }
 };
 
-/**
- * Realizar tiradas de ataque y calcular resultado
- */
+// Realizar tiradas de ataque y calcular resultado
 const performAttack = async (combat) => {
-  // DEBUG: Tiradas forzadas para ganar siempre
+  // Tirar dados
   const attackRoll = await gameState.session.throwDart("d20", true);
   const damageRoll = await gameState.session.throwDart("d12", true);
 
-  // Forzar valores altos para debug
-  const debugAttackRoll = 20; // Siempre crítico
-  const debugDamageRoll = 12; // Máximo daño
-
   // Obtener bonus de combate del inventario
   const combatBonus = await getCombatBonus();
-  const totalDamage = debugDamageRoll + combatBonus;
+  const totalDamage = damageRoll.throwValue + combatBonus;
 
   // Calcular defensa del NPC
   const npcDefense = calculateNpcDefense(combat.npc_max_hp);
 
-  // DEBUG: Siempre impacta
-  const hit = true;
+  // Verificar si el ataque impacta
+  const hit = attackRoll.throwValue >= npcDefense;
 
-  // Calcular daño real (DEBUG: siempre hace daño)
-  const damage = totalDamage;
+  // Calcular daño real (solo si impactó)
+  const damage = hit ? totalDamage : 0;
 
   const user = getAuthUser();
 
   // Registrar ataque en el backend
   const result = await attackNpc(gameState.gameId, damage);
 
-  console.log("DEBUG COMBAT:", {
-    attackRoll: debugAttackRoll,
-    damageRoll: debugDamageRoll,
-    combatBonus,
-    totalDamage,
-    npcDefense,
-    hit,
-    damage,
-    npcCurrentHP: result.npc_current_hp,
-    npcMaxHP: result.npc_max_hp,
-    result: result.result,
-  });
-
   return {
     hit,
     totalDamage,
-    attackRoll: debugAttackRoll,
-    damageRoll: debugDamageRoll,
+    attackRoll: attackRoll.throwValue,
+    damageRoll: damageRoll.throwValue,
     combatBonus,
     npcDefense,
     result,
@@ -271,9 +244,7 @@ const performAttack = async (combat) => {
   };
 };
 
-/**
- * Mostrar resultado del ataque en la UI
- */
+// Mostrar resultado del ataque en la UI
 const displayAttackResult = async (attackData) => {
   const resultValue = document.querySelector(".combat-result .result-value");
 
@@ -286,9 +257,7 @@ const displayAttackResult = async (attackData) => {
   resultValue.style.color = attackData.hit ? "#2ecc71" : "#e74c3c";
 };
 
-/**
- * Procesar resultado del combate (victoria/derrota/continuar)
- */
+// Procesar resultado del combate (victoria/derrota/continuar)
 const processCombatResult = async (result, combat, user, attackData) => {
   if (result.result === "victory") {
     await handleVictory(result, combat, user);
@@ -299,9 +268,7 @@ const processCombatResult = async (result, combat, user, attackData) => {
   }
 };
 
-/**
- * Manejar victoria en combate
- */
+// Manejar victoria en combate
 const handleVictory = async (result, combat, user) => {
   const participant = gameState.participants.find(
     (p) => p.user_id === gameState.userId,
@@ -324,9 +291,7 @@ const handleVictory = async (result, combat, user) => {
   }
 };
 
-/**
- * Mostrar resultado de ataque (impacto/fallo) cuando el combate continúa
- */
+// Mostrar resultado de ataque (impacto/fallo) cuando el combate continúa
 const showAttackOutcome = async (result, combat, attackData) => {
   const hit = attackData.hit;
 
@@ -362,9 +327,7 @@ const showAttackOutcome = async (result, combat, attackData) => {
   }
 };
 
-/**
- * DM asigna combate
- */
+// DM asigna combate
 export const assignCombat = async () => {
   try {
     if (!gameState.session) {

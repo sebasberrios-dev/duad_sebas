@@ -1,22 +1,16 @@
 import { gameState } from "./game_state.js";
 import { getMyInventory } from "../api/inventory_endpoints.js";
 
-/**
- * UTILIDADES PRIVADAS
- */
+// UTILIDADES PRIVADAS
 
-/**
- * Obtener participante del jugador actual
- */
+// Obtener participante del jugador actual
 function getPlayerParticipant() {
   return gameState.participants.find(
     (p) => p.user_id === gameState.userId && p.character_id,
   );
 }
 
-/**
- * Obtener inventario del jugador actual
- */
+// Obtener inventario del jugador actual
 async function getPlayerInventory() {
   const participant = getPlayerParticipant();
 
@@ -36,9 +30,7 @@ async function getPlayerInventory() {
   }
 }
 
-/**
- * Parsear atributos de un item (puede ser string JSON u objeto)
- */
+// Parsear atributos de un item (puede ser string JSON u objeto)
 function parseItemAttributes(attributes) {
   try {
     return typeof attributes === "string" ? JSON.parse(attributes) : attributes;
@@ -48,9 +40,7 @@ function parseItemAttributes(attributes) {
   }
 }
 
-/**
- * Calcular bonus total de un atributo específico del inventario
- */
+// Calcular bonus total de un atributo específico del inventario
 async function getInventoryBonus(attributeName) {
   const inventory = await getPlayerInventory();
 
@@ -70,9 +60,7 @@ async function getInventoryBonus(attributeName) {
   return totalBonus;
 }
 
-/**
- * Crear elemento HTML para un item del inventario
- */
+// Crear elemento HTML para un item del inventario
 function createInventoryItemElement(item) {
   const itemDiv = document.createElement("div");
   itemDiv.className = "inventory-item";
@@ -91,13 +79,9 @@ function createInventoryItemElement(item) {
   return itemDiv;
 }
 
-/**
- * FUNCIONES PÚBLICAS
- */
+// FUNCIONES PÚBLICAS
 
-/**
- * Cargar y renderizar inventario del jugador
- */
+// Cargar y renderizar inventario del jugador
 export async function loadAndRenderInventory() {
   const inventoryGrid = document.querySelector(".inventory-grid");
 
@@ -133,16 +117,12 @@ export async function loadAndRenderInventory() {
   });
 }
 
-/**
- * Obtener bonus total de combate del inventario
- */
+// Obtener bonus total de combate del inventario
 export async function getCombatBonus() {
   return await getInventoryBonus("combat_bonus");
 }
 
-/**
- * Obtener bonus total de decisión del inventario
- */
+// Obtener bonus total de decisión del inventario
 export async function getDecisionBonus() {
   return await getInventoryBonus("decision_bonus");
 }

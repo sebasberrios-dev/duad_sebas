@@ -1,8 +1,6 @@
 import { apiInstance } from "./api.js";
 
-/**
- * Iniciar un combate con un NPC
- */
+// Iniciar un combate con un NPC
 export const startCombat = async (gameId, npcId) => {
   try {
     const response = await apiInstance.post("/combat/start", {
@@ -19,9 +17,7 @@ export const startCombat = async (gameId, npcId) => {
   }
 };
 
-/**
- * Registrar un ataque al NPC
- */
+// Registrar un ataque al NPC
 export const attackNpc = async (gameId, damage) => {
   try {
     const response = await apiInstance.post("/combat/attack", {
@@ -38,9 +34,7 @@ export const attackNpc = async (gameId, damage) => {
   }
 };
 
-/**
- * Obtener el combate activo de un juego
- */
+// Obtener el combate activo de un juego
 export const getActiveCombat = async (gameId) => {
   try {
     const response = await apiInstance.get(`/combat/${gameId}/active`);

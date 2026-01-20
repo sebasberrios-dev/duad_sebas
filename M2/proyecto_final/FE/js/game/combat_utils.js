@@ -1,26 +1,18 @@
-/**
- * UTILIDADES DE COMBATE
- */
+// UTILIDADES DE COMBATE
 
-/**
- * Calcular defensa del NPC basado en HP máximo
- */
+// Calcular defensa del NPC basado en HP máximo
 export const calculateNpcDefense = (npcMaxHp) => {
   const estimatedLevel = Math.floor((npcMaxHp - 5) / 10);
   return 10 + estimatedLevel;
 };
 
-/**
- * Calcular XP ganado basado en HP del NPC
- */
+// Calcular XP ganado basado en HP del NPC
 export const calculateXpGained = (npcMaxHp) => {
   const estimatedLevel = Math.floor((npcMaxHp - 5) / 10);
   return estimatedLevel * 50;
 };
 
-/**
- * Formatear mensaje de resultado de ataque exitoso
- */
+// Formatear mensaje de resultado de ataque exitoso
 export const formatHitMessage = (
   attackRoll,
   npcDefense,
@@ -37,9 +29,7 @@ export const formatHitMessage = (
   return `✓ IMPACTO\nAtaque: ${attackRoll} vs Defensa: ${npcDefense}\nDaño: ${totalDamage}${bonusText}\nHP del NPC: ${newHP}/${maxHP}\nTiradas: ${currentRolls}/${maxRolls}`;
 };
 
-/**
- * Formatear mensaje de resultado de ataque fallido
- */
+// Formatear mensaje de resultado de ataque fallido
 export const formatMissMessage = (
   attackRoll,
   npcDefense,
@@ -51,9 +41,7 @@ export const formatMissMessage = (
   return `✗ FALLO\nAtaque: ${attackRoll} vs Defensa: ${npcDefense}\nHP del NPC: ${currentHP}/${maxHP}\nTiradas: ${currentRolls}/${maxRolls}`;
 };
 
-/**
- * Formatear mensaje de victoria con level up
- */
+// Formatear mensaje de victoria con level up
 export const formatLevelUpMessage = (
   xpGained,
   newLevel,
@@ -76,9 +64,7 @@ export const formatLevelUpMessage = (
   return `¡Has derrotado al NPC!\n+${xpGained} XP\n\n¡SUBISTE AL NIVEL ${newLevel}!\n+${stats.strength} Fuerza\n+${stats.dexterity} Destreza\n+${stats.intelligence} Inteligencia${coinsMsg}${levelCoinsMsg}${totalCoinsMsg}`;
 };
 
-/**
- * Formatear mensaje de victoria en nivel máximo
- */
+// Formatear mensaje de victoria en nivel máximo
 export const formatMaxLevelMessage = (coinsResult) => {
   const coinsMsg = coinsResult
     ? `\n\n💰 +${coinsResult.coinsAdded} monedas\nTotal: ${coinsResult.totalCoins} monedas`
@@ -86,9 +72,7 @@ export const formatMaxLevelMessage = (coinsResult) => {
   return `¡Has derrotado al NPC!\nYa alcanzaste el nivel máximo (7)${coinsMsg}`;
 };
 
-/**
- * Formatear mensaje de victoria sin level up
- */
+// Formatear mensaje de victoria sin level up
 export const formatVictoryMessage = (xpGained, xpResult, coinsResult) => {
   const coinsMsg = coinsResult
     ? `\n\n💰 +${coinsResult.coinsAdded} monedas\nTotal: ${coinsResult.totalCoins} monedas`

@@ -1,6 +1,4 @@
-/**
- * MANEJO DE RECOMPENSAS DE COMBATE
- */
+// MANEJO DE RECOMPENSAS DE COMBATE
 
 import { awardXP } from "./xp_handler.js";
 import { awardCombatVictoryCoins, awardLevelUpCoins } from "./coins_handler.js";
@@ -11,9 +9,7 @@ import {
   formatVictoryMessage,
 } from "./combat_utils.js";
 
-/**
- * Manejar victoria en combate: otorgar XP y monedas
- */
+// Manejar victoria en combate: otorgar XP y monedas
 export const handleCombatVictory = async (
   characterId,
   npcMaxHp,
@@ -85,9 +81,7 @@ export const handleCombatVictory = async (
   }
 };
 
-/**
- * Manejar derrota en combate (sin tiradas restantes)
- */
+// Manejar derrota en combate (sin tiradas restantes)
 export const handleCombatDefeat = async (username, session, loadNarrative) => {
   await session.addPublicNote(
     `[NARRATIVA]${username} no logró derrotar al NPC a tiempo. La partida ha terminado.`,

@@ -1,13 +1,9 @@
-/**
- * MANEJO DE CHAT
- */
+// MANEJO DE CHAT
 
 import { gameState } from "./game_state.js";
 import { createCM, getGameCMs } from "../api/chat_endpoints.js";
 
-/**
- * Envía mensaje de chat
- */
+// Envía mensaje de chat
 export const sendChatMessage = async () => {
   try {
     const chatInput = document.querySelector(".chat-input");
@@ -31,9 +27,7 @@ export const sendChatMessage = async () => {
   }
 };
 
-/**
- * Carga los mensajes del chat
- */
+// Carga los mensajes del chat
 export const loadChatMessages = async () => {
   try {
     const messages = await getGameCMs(gameState.gameId);
@@ -55,9 +49,7 @@ export const loadChatMessages = async () => {
   }
 };
 
-/**
- * Crea un elemento de mensaje de chat
- */
+// Crea un elemento de mensaje de chat
 const createChatMessageElement = (message) => {
   const messageDiv = document.createElement("div");
 

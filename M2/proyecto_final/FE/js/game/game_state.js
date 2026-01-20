@@ -1,6 +1,4 @@
-/**
- * ESTADO GLOBAL DE LA PARTIDA
- */
+// ESTADO GLOBAL DE LA PARTIDA
 
 export const gameState = {
   gameId: null,

@@ -6,19 +6,11 @@ export async function awardCombatVictoryCoins(characterId) {
   const COMBAT_VICTORY_COINS = 50;
 
   try {
-    console.log("DEBUG COINS: Otorgando monedas por victoria:", {
-      characterId,
-      gameId: gameState.gameId,
-      coins: COMBAT_VICTORY_COINS,
-    });
-
     const result = await addCoins(
       characterId,
       gameState.gameId,
       COMBAT_VICTORY_COINS,
     );
-
-    console.log("DEBUG COINS: Resultado de addCoins (victoria):", result);
 
     return {
       coinsAdded: COMBAT_VICTORY_COINS,
@@ -27,7 +19,6 @@ export async function awardCombatVictoryCoins(characterId) {
     };
   } catch (error) {
     console.error("Error al otorgar monedas por victoria:", error);
-    console.error("Stack:", error.stack);
     throw error;
   }
 }
@@ -37,20 +28,11 @@ export async function awardLevelUpCoins(characterId, newLevel) {
   const LEVEL_UP_COINS = 100;
 
   try {
-    console.log("DEBUG COINS: Otorgando monedas por level up:", {
-      characterId,
-      gameId: gameState.gameId,
-      coins: LEVEL_UP_COINS,
-      newLevel,
-    });
-
     const result = await addCoins(
       characterId,
       gameState.gameId,
       LEVEL_UP_COINS,
     );
-
-    console.log("DEBUG COINS: Resultado de addCoins (level up):", result);
 
     return {
       coinsAdded: LEVEL_UP_COINS,
@@ -60,7 +42,6 @@ export async function awardLevelUpCoins(characterId, newLevel) {
     };
   } catch (error) {
     console.error("Error al otorgar monedas por subir de nivel:", error);
-    console.error("Stack:", error.stack);
     throw error;
   }
 }
