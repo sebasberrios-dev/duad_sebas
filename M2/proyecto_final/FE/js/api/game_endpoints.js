@@ -1,11 +1,9 @@
 import { apiInstance } from "./api.js";
 
-const getAllGames = async () => {
+export const getAllGames = async () => {
   try {
     const response = await apiInstance.get("/games");
-    if (response.status === 404) {
-      throw new Error("No se encontraron juegos");
-    } else if (response.status === 200) {
+    if (response.status === 200) {
       return response.data;
     }
   } catch (error) {
@@ -14,7 +12,7 @@ const getAllGames = async () => {
   }
 };
 
-const getGameById = async (gameId) => {
+export const getGameById = async (gameId) => {
   try {
     const response = await apiInstance.get(`/games/${gameId}`);
     if (response.status === 404) {
@@ -28,7 +26,7 @@ const getGameById = async (gameId) => {
   }
 };
 
-const getGameByLink = async (inviteLink) => {
+export const getGameByLink = async (inviteLink) => {
   try {
     const response = await apiInstance.get(`/games/join/${inviteLink}`);
     if (response.status === 404) {
@@ -46,7 +44,7 @@ const getGameByLink = async (inviteLink) => {
   }
 };
 
-const getMyGames = async () => {
+export const getMyGames = async () => {
   try {
     const response = await apiInstance.get("/my_games");
     if (response.status === 404) {
@@ -60,7 +58,7 @@ const getMyGames = async () => {
   }
 };
 
-const createGame = async (gameData) => {
+export const createGame = async (gameData) => {
   try {
     const response = await apiInstance.post("/games/new", gameData);
     if (response.status === 400) {
@@ -74,7 +72,7 @@ const createGame = async (gameData) => {
   }
 };
 
-const updateGame = async (gameId, updatedData) => {
+export const updateGame = async (gameId, updatedData) => {
   try {
     const response = await apiInstance.put(`/games/${gameId}`, updatedData);
     if (response.status === 400) {
@@ -90,7 +88,7 @@ const updateGame = async (gameId, updatedData) => {
   }
 };
 
-const toogleGameStatus = async (gameId) => {
+export const toogleGameStatus = async (gameId) => {
   try {
     const response = await apiInstance.patch(`/games/${gameId}/toggle-active`);
     if (response.status === 404) {
@@ -104,7 +102,7 @@ const toogleGameStatus = async (gameId) => {
   }
 };
 
-const deleteGame = async (gameId) => {
+export const deleteGame = async (gameId) => {
   try {
     const response = await apiInstance.delete(`/games/${gameId}`);
     if (response.status === 404) {
@@ -116,15 +114,4 @@ const deleteGame = async (gameId) => {
     console.error("Error al eliminar el juego:", error);
     throw error;
   }
-};
-
-export {
-  getAllGames,
-  getGameById,
-  getGameByLink,
-  getMyGames,
-  createGame,
-  updateGame,
-  toogleGameStatus,
-  deleteGame,
 };

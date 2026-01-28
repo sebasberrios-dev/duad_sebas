@@ -11,17 +11,6 @@ notes_route = Blueprint("notes_route", __name__)
 notes_repo = NotesRepository()
 controller = Controller()
 
-# Obtiene todas las notas del sistema (solo admins)
-@notes_route.route("/notes", methods=["GET"])
-@require_role('admin')
-def get_notes():
-    try:
-        filterable_fields = ["id", "user_id", "content", "visible_for_players", "visible_for_dm"]
-        return controller.execute_get_method(notes_repo, filterable_fields, "notes", date_fields=["updated_at"])
-    
-    except Exception as e:
-        return jsonify({"error": str(e)}), 500
-
 # Obtiene todas las notas del usuario autenticado
 @notes_route.route("/my_notes", methods=["GET"])
 @require_auth

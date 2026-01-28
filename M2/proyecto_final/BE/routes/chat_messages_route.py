@@ -10,17 +10,6 @@ from BE.utils.controller import Controller
 chat_repo = ChatRepository()
 chat_route = Blueprint("chat_route", __name__)
 controller = Controller()
-
-# Obtiene todos los mensajes de chat del sistema (solo admins)
-@chat_route.route("/chat", methods=["GET"])
-@require_role('admin')
-def get_chat_messages():
-    try:
-        filterable_fields = ["id", "game_id", "user_id", "message"]
-        return controller.execute_get_method(chat_repo, filterable_fields, "chat_messages", date_fields=["sent_at"])
-    
-    except Exception as e:
-        return jsonify({"error": str(e)}), 500
     
 # Obtiene los mensajes de chat del usuario autenticado
 @chat_route.route("/my_chat_messages", methods=["GET"])

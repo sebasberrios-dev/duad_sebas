@@ -1,6 +1,6 @@
 import { getAuthUser } from "../storage/auth.js";
 
-const apiInstance = axios.create({
+export const apiInstance = axios.create({
   baseURL: "http://localhost:5000",
   headers: {
     "Content-Type": "application/json",
@@ -15,7 +15,7 @@ apiInstance.interceptors.request.use(
   (config) => {
     // Verificar si la ruta es pública
     const isPublicRoute = publicRoutes.some((route) =>
-      config.url.includes(route)
+      config.url.includes(route),
     );
 
     // Si es ruta pública, no verificar token
@@ -41,7 +41,7 @@ apiInstance.interceptors.request.use(
   },
   (error) => {
     return Promise.reject(error);
-  }
+  },
 );
 
 apiInstance.interceptors.response.use(
@@ -65,7 +65,5 @@ apiInstance.interceptors.response.use(
     }
 
     return Promise.reject(error);
-  }
+  },
 );
-
-export { apiInstance };

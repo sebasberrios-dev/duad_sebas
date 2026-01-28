@@ -56,7 +56,6 @@ class NotesRepository:
             return []
     
     def read_by_game_id_with_username(self, game_id):
-        """Obtiene las notas de un juego con el nombre de usuario del autor"""
         try:
             stmt = select(
                 notes_table,

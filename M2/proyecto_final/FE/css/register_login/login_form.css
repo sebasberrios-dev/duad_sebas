@@ -5,14 +5,17 @@ input {
   font: inherit;
 }
 
-#login-form {
+#login-form,
+#admin-login-form {
   margin: 200px auto;
   padding: 3rem 2rem;
   background-color: rgba(20, 20, 20, 0.9);
   width: min(400px, 90%);
   border-radius: 8px;
   border: 2px solid rgba(139, 0, 0, 0.6);
-  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.8), 0 0 40px rgba(139, 0, 0, 0.3);
+  box-shadow:
+    0 8px 30px rgba(0, 0, 0, 0.8),
+    0 0 40px rgba(139, 0, 0, 0.3);
 }
 
 .form-title {

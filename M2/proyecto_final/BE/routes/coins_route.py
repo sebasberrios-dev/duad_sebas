@@ -11,17 +11,6 @@ coins_repo = CoinsRepository()
 coins_route = Blueprint("coins_route", __name__)
 controller = Controller()
 
-# Obtiene todos los registros de monedas del sistema (solo admins)
-@coins_route.route("/coins", methods=["GET"])
-@require_role('admin')
-def get_coins():
-    try:
-        filterable_fields = ["id", "character_id", "game_id", "amount"]
-        return controller.execute_get_method(coins_repo, filterable_fields, "coins", date_fields=["updated_at"])
-    
-    except Exception as e:
-        return jsonify({"error": str(e)}), 500
-
 # Obtiene las monedas de un personaje en una partida específica
 @coins_route.route("/character/<int:character_id>/<int:game_id>/game_coins", methods=["GET"])
 @require_auth

@@ -1,3 +1,5 @@
+// MANEJO DE MONEDAS DEL JUGADOR
+
 import { addCoins, getCharacterCoins } from "../api/coins_endpoints.js";
 import { gameState } from "./game_state.js";
 

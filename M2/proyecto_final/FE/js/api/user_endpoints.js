@@ -1,6 +1,6 @@
 import { apiInstance } from "./api.js";
 
-const register = async (userData) => {
+export const register = async (userData) => {
   try {
     const response = await apiInstance.post("/register", userData);
     if (response.status === 400) {
@@ -16,7 +16,7 @@ const register = async (userData) => {
   }
 };
 
-const login = async (credentials) => {
+export const login = async (credentials) => {
   try {
     const response = await apiInstance.post("/login", credentials);
     if (response.status === 400) {
@@ -32,7 +32,7 @@ const login = async (credentials) => {
   }
 };
 
-const getUserProfile = async () => {
+export const getUserProfile = async () => {
   try {
     const response = await apiInstance.get("/me");
     if (response.status === 404) {
@@ -46,7 +46,19 @@ const getUserProfile = async () => {
   }
 };
 
-const updateUserProfile = async (updatedData) => {
+export const getAllUsers = async () => {
+  try {
+    const response = await apiInstance.get("/users");
+    if (response.status === 200) {
+      return response.data;
+    }
+  } catch (error) {
+    console.error("Error al obtener todos los usuarios:", error);
+    throw error;
+  }
+};
+
+export const updateUserProfile = async (updatedData) => {
   try {
     const response = await apiInstance.put("/me", updatedData);
     if (response.status === 403) {
@@ -62,7 +74,7 @@ const updateUserProfile = async (updatedData) => {
   }
 };
 
-const deleteUserAccount = async (userId) => {
+export const deleteUserAccount = async (userId) => {
   try {
     const response = await apiInstance.delete(`/user/delete/${userId}`);
     if (response.status === 404) {
@@ -74,12 +86,4 @@ const deleteUserAccount = async (userId) => {
     console.error("Error al eliminar la cuenta del usuario:", error);
     throw error;
   }
-};
-
-export {
-  register,
-  login,
-  getUserProfile,
-  updateUserProfile,
-  deleteUserAccount,
 };

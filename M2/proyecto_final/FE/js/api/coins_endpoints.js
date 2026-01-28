@@ -1,19 +1,5 @@
 import { apiInstance } from "./api.js";
 
-export const getAllCoins = async () => {
-  try {
-    const response = await apiInstance.get("/coins");
-    if (response.status === 404) {
-      throw new Error("No se encontraron monedas");
-    } else if (response.status === 200) {
-      return response.data;
-    }
-  } catch (error) {
-    console.error("Error al obtener las monedas:", error);
-    throw error;
-  }
-};
-
 export const getCharacterCoins = async (characterId, gameId) => {
   try {
     const response = await apiInstance.get(

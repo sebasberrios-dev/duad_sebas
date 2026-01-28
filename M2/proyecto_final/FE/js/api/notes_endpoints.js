@@ -1,20 +1,6 @@
 import { apiInstance } from "./api.js";
 
-const getAllNotes = async () => {
-  try {
-    const response = await apiInstance.get("/notes");
-    if (response.status === 404) {
-      throw new Error("No se encontraron notas");
-    } else if (response.status === 200) {
-      return response.data;
-    }
-  } catch (error) {
-    console.error("Error al obtener las notas:", error);
-    throw error;
-  }
-};
-
-const getMyNotes = async () => {
+export const getMyNotes = async () => {
   try {
     const response = await apiInstance.get("/my_notes");
     if (response.status === 200) {
@@ -29,7 +15,7 @@ const getMyNotes = async () => {
   }
 };
 
-const getGameNotes = async (gameId) => {
+export const getGameNotes = async (gameId) => {
   try {
     const response = await apiInstance.get(`/game/${gameId}/notes`);
     if (response.status === 200) {
@@ -42,7 +28,7 @@ const getGameNotes = async (gameId) => {
   }
 };
 
-const createNote = async (noteData) => {
+export const createNote = async (noteData) => {
   try {
     const response = await apiInstance.post("/notes/new", noteData);
     if (response.status === 400) {
@@ -56,7 +42,7 @@ const createNote = async (noteData) => {
   }
 };
 
-const updateNote = async (noteId, updatedData) => {
+export const updateNote = async (noteId, updatedData) => {
   try {
     const response = await apiInstance.put(`/notes/${noteId}`, updatedData);
     if (response.status === 404) {
@@ -70,7 +56,7 @@ const updateNote = async (noteId, updatedData) => {
   }
 };
 
-const deleteNote = async (noteId) => {
+export const deleteNote = async (noteId) => {
   try {
     const response = await apiInstance.delete(`/notes/${noteId}`);
     if (response.status === 404) {
@@ -82,13 +68,4 @@ const deleteNote = async (noteId) => {
     console.error("Error al eliminar la nota:", error);
     throw error;
   }
-};
-
-export {
-  getAllNotes,
-  getMyNotes,
-  getGameNotes,
-  createNote,
-  updateNote,
-  deleteNote,
 };

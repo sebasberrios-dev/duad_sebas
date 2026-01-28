@@ -1,7 +1,6 @@
 @import url(../body.css);
 @import url(../header.css);
 
-/* Layout Principal */
 .game-layout {
   display: grid;
   grid-template-columns: 1fr 2fr 1fr;
@@ -12,28 +11,24 @@
   color: white;
 }
 
-/* Columna Izquierda - Notas */
 .left-column {
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
 }
 
-/* Columna Central - Narrativa y Acciones */
 .center-column {
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
 }
 
-/* Columna Derecha - Chat e Inventario */
 .right-column {
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
 }
 
-/* Encabezado de la Partida */
 .game-header {
   background-color: rgba(20, 20, 20, 0.9);
   padding: 1.5rem;
@@ -75,7 +70,6 @@
   background: rgba(33, 150, 83, 1);
 }
 
-/* Secciones Generales */
 .narrative-section,
 .player-actions,
 .dm-actions,
@@ -133,7 +127,6 @@
   color: rgba(255, 255, 255, 0.9);
 }
 
-/* Acciones del Jugador */
 .action-group,
 .combat-group,
 .combat-assignment {
@@ -185,7 +178,6 @@ label {
   margin-bottom: 0.8rem;
 }
 
-/* Botones */
 .btn-action,
 .btn-attack,
 .btn-narrate,
@@ -221,7 +213,6 @@ label {
   background-color: rgba(178, 34, 34, 0.9);
 }
 
-/* Resultados de Dados */
 .dice-result,
 .combat-result {
   margin-top: 0.8rem;
@@ -243,7 +234,6 @@ label {
   color: rgba(218, 165, 32, 1);
 }
 
-/* Panel DM */
 .npc-management {
   margin-bottom: 1.5rem;
   padding: 1rem;
@@ -327,7 +317,6 @@ label {
   font-size: 0.9rem;
 }
 
-/* Notas */
 .notes-section {
   background-color: rgba(20, 20, 20, 0.9);
   padding: 1.5rem;
@@ -519,7 +508,6 @@ label {
   margin: 0;
 }
 
-/* Scrollbar para notas */
 .notes-list::-webkit-scrollbar {
   width: 8px;
 }
@@ -538,7 +526,6 @@ label {
   background: rgba(139, 0, 0, 0.8);
 }
 
-/* Chat */
 .chat-section {
   display: flex;
   flex-direction: column;
@@ -613,7 +600,6 @@ label {
   background-color: rgba(178, 34, 34, 0.9);
 }
 
-/* Scrollbar personalizado */
 .narrative-display::-webkit-scrollbar,
 .chat-messages::-webkit-scrollbar {
   width: 8px;
@@ -636,7 +622,6 @@ label {
   background: rgba(139, 0, 0, 0.8);
 }
 
-/* Sistema de XP */
 .player-progress {
   background-color: rgba(20, 20, 20, 0.9);
   padding: 15px;
@@ -678,7 +663,6 @@ label {
   background: linear-gradient(90deg, #4a90e2, #357abd);
 }
 
-/* Modal para Crear NPC */
 .modal-overlay {
   position: fixed;
   top: 0;
@@ -816,7 +800,6 @@ label {
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.7);
 }
 
-/* Estilos para el formulario de la tienda */
 #shop-form {
   width: 100%;
 }

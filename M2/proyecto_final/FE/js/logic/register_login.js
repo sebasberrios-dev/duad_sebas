@@ -3,15 +3,15 @@ import { setAuthUser } from "../storage/auth.js";
 
 // CONSTANTES
 const HOME_PAGE_URL = "/M2/proyecto_final/FE/html/home_page.html";
-const REGISTER_SUCCESS_MESSAGE = "Registro exitoso.";
-const LOGIN_SUCCESS_MESSAGE = "Inicio de sesión exitoso.";
-const REGISTER_ERROR_TEMPLATE = "Error en el registro: ";
-const LOGIN_ERROR_TEMPLATE = "Error en el inicio de sesión: ";
+export const REGISTER_SUCCESS_MESSAGE = "Registro exitoso.";
+export const LOGIN_SUCCESS_MESSAGE = "Inicio de sesión exitoso.";
+export const REGISTER_ERROR_TEMPLATE = "Error en el registro: ";
+export const LOGIN_ERROR_TEMPLATE = "Error en el inicio de sesión: ";
 
 // UTILIDADES PRIVADAS
 
 // Construir objeto de datos de usuario para registro
-function buildUserData(email, username, password, role) {
+export function buildUserData(email, username, password, role) {
   return {
     email: email,
     username: username,
@@ -21,7 +21,7 @@ function buildUserData(email, username, password, role) {
 }
 
 // Construir objeto de credenciales para login
-function buildCredentials(username, password) {
+export function buildCredentials(username, password) {
   return {
     username: username,
     password: password,
@@ -29,7 +29,7 @@ function buildCredentials(username, password) {
 }
 
 // Formatear mensaje de error
-function formatErrorMessage(template, errorMessage) {
+export function formatErrorMessage(template, errorMessage) {
   return `${template}${errorMessage}`;
 }
 

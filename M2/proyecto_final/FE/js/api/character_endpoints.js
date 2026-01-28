@@ -1,20 +1,6 @@
 import { apiInstance } from "./api.js";
 
-const getAllCharacters = async () => {
-  try {
-    const response = await apiInstance.get("/characters");
-    if (response.status === 404) {
-      throw new Error("No se encontraron personajes");
-    } else if (response.status === 200) {
-      return response.data;
-    }
-  } catch (error) {
-    console.error("Error al obtener los personajes:", error);
-    throw error;
-  }
-};
-
-const getMyCharacters = async () => {
+export const getMyCharacters = async () => {
   try {
     const response = await apiInstance.get("/my_characters");
     if (response.status === 200) {
@@ -29,7 +15,7 @@ const getMyCharacters = async () => {
   }
 };
 
-const getCharacterById = async (characterId) => {
+export const getCharacterById = async (characterId) => {
   try {
     const response = await apiInstance.get(`/characters/${characterId}`);
     if (response.status === 200) {
@@ -44,7 +30,7 @@ const getCharacterById = async (characterId) => {
   }
 };
 
-const createCharacter = async (characterData) => {
+export const createCharacter = async (characterData) => {
   try {
     const response = await apiInstance.post("/characters/new", characterData);
     if (response.status === 400) {
@@ -58,7 +44,7 @@ const createCharacter = async (characterData) => {
   }
 };
 
-const updateCharacter = async (characterId, updatedData) => {
+export const updateCharacter = async (characterId, updatedData) => {
   try {
     const response = await apiInstance.put(
       `/characters/update/${characterId}`,
@@ -75,7 +61,7 @@ const updateCharacter = async (characterId, updatedData) => {
   }
 };
 
-const deleteCharacter = async (characterId) => {
+export const deleteCharacter = async (characterId) => {
   try {
     const response = await apiInstance.delete(
       `/characters/delete/${characterId}`,
@@ -91,7 +77,7 @@ const deleteCharacter = async (characterId) => {
   }
 };
 
-const addXPToCharacter = async (characterId, xpAmount) => {
+export const addXPToCharacter = async (characterId, xpAmount) => {
   try {
     const character = await getCharacterById(characterId);
 
@@ -106,14 +92,4 @@ const addXPToCharacter = async (characterId, xpAmount) => {
     console.error("Error al agregar XP al personaje:", error);
     throw error;
   }
-};
-
-export {
-  getAllCharacters,
-  getMyCharacters,
-  getCharacterById,
-  createCharacter,
-  updateCharacter,
-  deleteCharacter,
-  addXPToCharacter,
 };

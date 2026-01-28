@@ -85,9 +85,6 @@ def create_game():
         description = data.get("description")
         link = data.get("link")
 
-        print(f"DEBUG - Creating game with user_id={user_id}, title={title}, description={description}, link={link}")
-        print(f"DEBUG - request.user={request.user}")
-
         required_fields = ["title", "description", "link"]
 
         return controller.execute_post_method(
@@ -129,16 +126,21 @@ def update_game(game_id):
 
 # Activa o desactiva una partida (solo el DM dueño)
 @game_route.route("/games/<int:game_id>/toggle-active", methods=["PATCH"])
-@require_role('dm')
+@require_auth
 def toggle_game_active(game_id):
     try:
         user_id = request.user.get("id")
         
         game = games_repo.read_by_id(game_id)
+
+        # Verificar que el usuario es dm o admin
+        if request.user.get("role") not in ["dm", "admin"]:
+            return jsonify({"error": "Only DMs or admins can toggle game status"}), 403
+        
         if not game:
             return jsonify({"error": "Game not found"}), 404
         
-        if game["user_id"] != user_id:
+        if request.user.get("role") == "dm" and game["user_id"] != user_id:
             return jsonify({"error": "You are not authorized to modify this game"}), 403
         
         new_status = not game.get("is_active", True)
@@ -151,19 +153,14 @@ def toggle_game_active(game_id):
         return jsonify({"error": str(e)}), 500
 
 
-# Elimina una partida (solo el DM dueño)
+# Elimina una partida 
 @game_route.route("/games/<int:game_id>", methods=["DELETE"])
-@require_role('dm')
+@require_role('admin')
 def delete_game(game_id):
-    try:
-        user_id = request.user.get("id")
-        
+    try:        
         game = games_repo.read_by_id(game_id)
         if not game:
             return jsonify({"error": "Game not found"}), 404
-        
-        if game["user_id"] != user_id:
-            return jsonify({"error": "You are not authorized to delete this game"}), 403
         
         return controller.execute_delete_method(games_repo, game_id, "game")
         

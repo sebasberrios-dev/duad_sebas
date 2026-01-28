@@ -13,18 +13,6 @@ participants_repo = ParticipantsRepository()
 dart_throws_route = Blueprint("dart_throws_route", __name__)
 controller = Controller()
 
-# Obtiene todas las tiradas de dados del sistema (solo admins)
-@dart_throws_route.route("/throws", methods=["GET"])
-@require_role('admin')
-def get_throws():
-    try:
-        filterable_fields = ["id", "game_id", "participant_id", "dart_type", "throw_value"]
-        return controller.execute_get_method(dart_throw_repo, filterable_fields, "darts_throws", date_fields=["thrown_at"])
-    
-    except Exception as e:
-        return jsonify({"error": str(e)}), 500
-
-
 # Obtiene las tiradas de una partida (filtradas por visibilidad)
 @dart_throws_route.route("/game/<int:game_id>/throws", methods=["GET"])
 @require_auth

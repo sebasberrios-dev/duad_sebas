@@ -1,11 +1,9 @@
 import { apiInstance } from "./api.js";
 
-const getGameNpcs = async (gameId) => {
+export const getGameNpcs = async (gameId) => {
   try {
     const response = await apiInstance.get(`/game/${gameId}/npcs`);
-    if (response.status === 404) {
-      throw new Error("No se encontraron NPCs para este juego");
-    } else if (response.status === 200) {
+    if (response.status === 200) {
       return response.data;
     }
   } catch (error) {
@@ -14,21 +12,7 @@ const getGameNpcs = async (gameId) => {
   }
 };
 
-const getAllNpcs = async () => {
-  try {
-    const response = await apiInstance.get("/npcs");
-    if (response.status === 404) {
-      throw new Error("No se encontraron NPCs");
-    } else if (response.status === 200) {
-      return response.data;
-    }
-  } catch (error) {
-    console.error("Error al obtener los NPCs:", error);
-    throw error;
-  }
-};
-
-const getNpcsById = async (npcId) => {
+export const getNpcsById = async (npcId) => {
   try {
     const response = await apiInstance.get(`/npcs/${npcId}`);
     if (response.status === 404) {
@@ -42,7 +26,7 @@ const getNpcsById = async (npcId) => {
   }
 };
 
-const createNpc = async (npcData) => {
+export const createNpc = async (npcData) => {
   try {
     const response = await apiInstance.post("/npcs/new", npcData);
     if (response.status === 404) {
@@ -58,7 +42,7 @@ const createNpc = async (npcData) => {
   }
 };
 
-const updateNpc = async (npcId, updatedData) => {
+export const updateNpc = async (npcId, updatedData) => {
   try {
     const response = await apiInstance.put(`/npcs/${npcId}`, updatedData);
     if (response.status === 404) {
@@ -74,7 +58,7 @@ const updateNpc = async (npcId, updatedData) => {
   }
 };
 
-const deleteNpc = async (npcId) => {
+export const deleteNpc = async (npcId) => {
   try {
     const response = await apiInstance.delete(`/npcs/${npcId}`);
     if (response.status === 404) {
@@ -86,13 +70,4 @@ const deleteNpc = async (npcId) => {
     console.error("Error al eliminar el NPC:", error);
     throw error;
   }
-};
-
-export {
-  getGameNpcs,
-  getAllNpcs,
-  getNpcsById,
-  createNpc,
-  updateNpc,
-  deleteNpc,
 };

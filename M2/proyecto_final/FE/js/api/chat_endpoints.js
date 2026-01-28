@@ -1,25 +1,11 @@
 import { apiInstance } from "./api.js";
 
-const getAllCMs = async () => {
-  try {
-    const response = await apiInstance.get("/chat");
-    if (response.status === 404) {
-      throw new Error("No se encontraron mensajes de chat");
-    } else if (response.status === 200) {
-      return response.data;
-    }
-  } catch (error) {
-    console.error("Error al obtener los mensajes de chat:", error);
-    throw error;
-  }
-};
-
-const getMyCMs = async () => {
+export const getMyCMs = async () => {
   try {
     const response = await apiInstance.get("/my_chat_messages");
     if (response.status === 404) {
       throw new Error(
-        "No se encontraron mensajes de chat para el usuario en este juego"
+        "No se encontraron mensajes de chat para el usuario en este juego",
       );
     } else if (response.status === 200) {
       return response.data;
@@ -30,7 +16,7 @@ const getMyCMs = async () => {
   }
 };
 
-const getGameCMs = async (gameId) => {
+export const getGameCMs = async (gameId) => {
   try {
     const response = await apiInstance.get(`/game_chat_messages/${gameId}`);
     if (response.status === 404) {
@@ -41,13 +27,13 @@ const getGameCMs = async (gameId) => {
   } catch (error) {
     console.error(
       "Error al obtener los mensajes de chat para el juego:",
-      error
+      error,
     );
     throw error;
   }
 };
 
-const createCM = async (messageData) => {
+export const createCM = async (messageData) => {
   try {
     const response = await apiInstance.post("/chat/new", messageData);
     if (response.status === 400) {
@@ -61,7 +47,7 @@ const createCM = async (messageData) => {
   }
 };
 
-const updateCM = async (messageId, updatedData) => {
+export const updateCM = async (messageId, updatedData) => {
   try {
     const response = await apiInstance.put(`/chat/${messageId}`, updatedData);
     if (response.status === 400) {
@@ -75,7 +61,7 @@ const updateCM = async (messageId, updatedData) => {
   }
 };
 
-const deleteCM = async (messageId) => {
+export const deleteCM = async (messageId) => {
   try {
     const response = await apiInstance.delete(`/chat/${messageId}`);
     if (response.status === 404) {
@@ -88,5 +74,3 @@ const deleteCM = async (messageId) => {
     throw error;
   }
 };
-
-export { getAllCMs, getMyCMs, getGameCMs, createCM, updateCM, deleteCM };

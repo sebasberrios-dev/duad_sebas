@@ -38,18 +38,6 @@ def get_game_npcs(game_id):
     
     except Exception as e:
         return jsonify({"error": str(e)}), 500
-
-
-# Obtiene todos los NPCs del sistema (solo admins)
-@npcs_route.route("/npcs", methods=["GET"])
-@require_role('admin')
-def get_npcs():
-    try:
-        filterable_fields = ["game_id", "name", "role", "level", "description", "hp"]
-        return controller.execute_get_method(npc_repo, filterable_fields, "npcs", date_fields=["created_at"])
-    
-    except Exception as e:
-        return jsonify({"error": str(e)}), 500
     
 # Obtiene un NPC específico por ID
 @npcs_route.route("/npcs/<int:npc_id>", methods=["GET"])

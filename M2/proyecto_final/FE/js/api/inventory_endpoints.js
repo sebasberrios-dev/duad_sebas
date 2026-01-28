@@ -1,21 +1,8 @@
 import { apiInstance } from "./api.js";
 
 // INVENTARIOS API ENDPOINTS
-const getAllInventories = async () => {
-  try {
-    const response = await apiInstance.get("/inventories");
-    if (response.status === 404) {
-      throw new Error("No se encontraron inventarios");
-    } else if (response.status === 200) {
-      return response.data;
-    }
-  } catch (error) {
-    console.error("Error al obtener los inventarios:", error);
-    throw error;
-  }
-};
 
-const getMyInventory = async (inventoryData) => {
+export const getMyInventory = async (inventoryData) => {
   try {
     const queryParams = new URLSearchParams(inventoryData).toString();
     const response = await apiInstance.get(`/my_inventory?${queryParams}`);
@@ -30,7 +17,7 @@ const getMyInventory = async (inventoryData) => {
   }
 };
 
-const createInventory = async (inventoryData) => {
+export const createInventory = async (inventoryData) => {
   try {
     const response = await apiInstance.post("/inventoriy/new", inventoryData);
     if (response.status === 400) {
@@ -48,7 +35,7 @@ const createInventory = async (inventoryData) => {
   }
 };
 
-const deleteInventory = async (inventoryId) => {
+export const deleteInventory = async (inventoryId) => {
   try {
     const response = await apiInstance.delete(`/inventory/${inventoryId}`);
     if (response.status !== 200) {
@@ -64,12 +51,10 @@ const deleteInventory = async (inventoryId) => {
 
 // CATALOGO DE ITEMS API ENDPOINTS
 
-const getItems = async () => {
+export const getItems = async () => {
   try {
     const response = await apiInstance.get("/items");
-    if (response.status === 404) {
-      throw new Error("No se encontraron items");
-    } else if (response.status === 200) {
+    if (response.status === 200) {
       return response.data;
     }
   } catch (error) {
@@ -78,7 +63,7 @@ const getItems = async () => {
   }
 };
 
-const createItem = async (itemData) => {
+export const createItem = async (itemData) => {
   try {
     const response = await apiInstance.post("/items/new", itemData);
     if (response.status === 400) {
@@ -93,7 +78,7 @@ const createItem = async (itemData) => {
   }
 };
 
-const updateItem = async (itemId, updatedData) => {
+export const updateItem = async (itemId, updatedData) => {
   try {
     const response = await apiInstance.put(`/items/${itemId}`, updatedData);
     if (response.status === 400) {
@@ -109,7 +94,7 @@ const updateItem = async (itemId, updatedData) => {
   }
 };
 
-const deleteItem = async (itemId) => {
+export const deleteItem = async (itemId) => {
   try {
     const response = await apiInstance.delete(`/items/${itemId}`);
     if (response.status !== 200) {
@@ -125,7 +110,7 @@ const deleteItem = async (itemId) => {
 
 // ITEMS EN INVENTARIO API ENDPOINTS
 
-const addQuantityOrItemToInventory = async (itemData) => {
+export const addQuantityOrItemToInventory = async (itemData) => {
   try {
     const response = await apiInstance.post("/inventory/add_item", itemData);
     if (response.status === 400) {
@@ -144,7 +129,7 @@ const addQuantityOrItemToInventory = async (itemData) => {
   }
 };
 
-const removeQuantityOrItemFromInventory = async (itemData) => {
+export const removeQuantityOrItemFromInventory = async (itemData) => {
   try {
     const response = await apiInstance.delete(
       "/inventory/remove_item",
@@ -161,18 +146,4 @@ const removeQuantityOrItemFromInventory = async (itemData) => {
     console.error("Error al eliminar el item del inventario:", error);
     throw error;
   }
-};
-
-export {
-  getAllInventories,
-  getMyInventory,
-  createInventory,
-  deleteInventory,
-  getItems,
-  createItem,
-  updateItem,
-  deleteItem,
-  addQuantityOrItemToInventory,
-  removeQuantityOrItemFromInventory,
-  addQuantityOrItemToInventory as addItemToInventory,
 };

@@ -269,7 +269,7 @@ const processCombatResult = async (result, combat, user, attackData) => {
 };
 
 // Manejar victoria en combate
-const handleVictory = async (result, combat, user) => {
+const handleVictory = async (combat, user) => {
   const participant = gameState.participants.find(
     (p) => p.user_id === gameState.userId,
   );
@@ -292,7 +292,7 @@ const handleVictory = async (result, combat, user) => {
 };
 
 // Mostrar resultado de ataque (impacto/fallo) cuando el combate continúa
-const showAttackOutcome = async (result, combat, attackData) => {
+const showAttackOutcome = async (result, attackData) => {
   const hit = attackData.hit;
 
   if (hit) {

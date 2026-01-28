@@ -7,7 +7,6 @@ import {
 
 // CONSTANTES
 const MAX_LEVEL = 7;
-const INITIAL_XP = 0;
 const MAX_XP_BAR_PERCENTAGE = 100;
 const MAX_LEVEL_TEXT = "NIVEL MÁXIMO";
 

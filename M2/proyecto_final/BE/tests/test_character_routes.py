@@ -313,17 +313,3 @@ class TestCharacterRoutes:
         })
         assert response.status_code == 403
         assert b"Unauthorized" in response.data
-
-    def test_get_all_characters_admin_only(self, client, admin_token, player_token):
-        ## Test de obtener todos los personajes solo admin
-        # Admin puede ver todos
-        response = client.get('/characters', headers={
-            "Authorization": f"Bearer {admin_token}"
-        })
-        assert response.status_code == 200
-        
-        # Jugador no puede
-        response = client.get('/characters', headers={
-            "Authorization": f"Bearer {player_token}"
-        })
-        assert response.status_code == 403

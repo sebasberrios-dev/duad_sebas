@@ -11,17 +11,6 @@ from BE.utils.controller import Controller
 part_repo = ParticipantsRepository()
 controller = Controller()
 part_route = Blueprint("part_route", __name__)
-
-# Obtiene todos los participantes del sistema (solo admins)
-@part_route.route("/participants", methods=["GET"])
-@require_role("admin")
-def get_participants():
-    try:
-        filterable_fields = ["id", "game_id", "user_id", "character_id"]
-        return controller.execute_get_method(part_repo, filterable_fields, "participants", date_fields=["joined_at"])
-    
-    except Exception as e:
-        return jsonify({"error": str(e)}), 500
     
 # Obtiene las participaciones del usuario autenticado
 @part_route.route("/my_participations", methods=["GET"])

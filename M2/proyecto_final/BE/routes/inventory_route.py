@@ -13,17 +13,6 @@ item_repo = ItemRepository()
 item_inventory_repo = ItemInventoryRepository()
 controller = Controller()
 
-# Obtiene todos los inventarios del sistema (solo admins)
-@inventory_route.route("/inventories", methods=["GET"])
-@require_role('admin')
-def get_inventories():
-    try:
-        filterable_fields = ["id", "character_id", "game_id"]
-        return controller.execute_get_method(inventory_repo, filterable_fields, "inventories", date_fields=["updated_at"])
-    
-    except Exception as e:
-        return jsonify({"error": str(e)}), 500
-
 @inventory_route.route("/my_inventory", methods=["GET"])
 @require_auth
 def get_my_inventory():

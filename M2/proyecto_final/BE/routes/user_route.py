@@ -116,6 +116,19 @@ def me():
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
-
-
-
+@user_route.route("/users", methods=["GET"])
+@require_role("admin")
+def get_all_users():
+    try:
+        users = users_repo.read_all()
+        if users is None:
+            return jsonify({"message": "no users found", "users": []}), 200
+        users_data = [controller.serialize_row(user) for user in users]
+        format_data = []
+        for user in users_data:
+            user_info = {k: v for k, v in user.items() if k != "password"}
+            format_data.append(user_info)
+        return jsonify(format_data), 200
+    
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500

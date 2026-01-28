@@ -2,7 +2,7 @@ import { registerUser, loginUser } from "../logic/register_login.js";
 import { registerLoginNavListeners } from "../utils/renderization_utils.js";
 
 // CONSTANTES
-const INCOMPLETE_FIELDS_MESSAGE =
+export const INCOMPLETE_FIELDS_MESSAGE =
   "Por favor, complete todos los campos obligatorios.";
 
 // UTILIDADES PRIVADAS

@@ -11,18 +11,6 @@ characters_route = Blueprint("characters_route", __name__)
 characters_repo = CharactersRepository()
 controller = Controller()
 
-# Obtiene todos los personajes del sistema (solo admins)
-@characters_route.route("/characters", methods=["GET"])
-@require_role('admin')
-def get_characters():
-    try:
-        filterable_fields = ["id", "user_id", "name", "race", "class", "level"]
-        return controller.execute_get_method(characters_repo, filterable_fields, "characters", date_fields=["created_at"])
-    
-    except Exception as e:
-        return jsonify({"error": str(e)}), 500
-
-
 # Obtiene los personajes del usuario autenticado
 @characters_route.route("/my_characters", methods=["GET"])
 @require_auth

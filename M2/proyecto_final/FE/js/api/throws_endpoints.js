@@ -1,25 +1,11 @@
 import { apiInstance } from "./api.js";
 
-const getAllDTs = async () => {
-  try {
-    const response = await apiInstance.get("/throws");
-    if (response.status === 404) {
-      throw new Error("No se encontraron lanzamientos de dados");
-    } else if (response.status === 200) {
-      return response.data;
-    }
-  } catch (error) {
-    console.error("Error al obtener los lanzamientos de dados:", error);
-    throw error;
-  }
-};
-
-const getGameDTs = async (gameId) => {
+export const getGameDTs = async (gameId) => {
   try {
     const response = await apiInstance.get(`/game/${gameId}/throws`);
     if (response.status === 400) {
       throw new Error(
-        "Error al obtener los lanzamientos de dados para el juego"
+        "Error al obtener los lanzamientos de dados para el juego",
       );
     } else if (response.status === 200) {
       return response.data;
@@ -27,18 +13,18 @@ const getGameDTs = async (gameId) => {
   } catch (error) {
     console.error(
       "Error al obtener los lanzamientos de dados para el juego:",
-      error
+      error,
     );
     throw error;
   }
 };
 
-const getPlayerDTs = async () => {
+export const getPlayerDTs = async () => {
   try {
     const response = await apiInstance.get("/my_throws");
     if (response.status === 404) {
       throw new Error(
-        "No se encontraron lanzamientos de dados para el usuario en este juego"
+        "No se encontraron lanzamientos de dados para el usuario en este juego",
       );
     } else if (response.status === 200) {
       return response.data;
@@ -46,18 +32,18 @@ const getPlayerDTs = async () => {
   } catch (error) {
     console.error(
       "Error al obtener los lanzamientos de dados del usuario:",
-      error
+      error,
     );
     throw error;
   }
 };
 
-const getDMDTs = async () => {
+export const getDMDTs = async () => {
   try {
     const response = await apiInstance.get("/dm_throws");
     if (response.status === 404) {
       throw new Error(
-        "No se encontraron lanzamientos de dados para el DM en este juego"
+        "No se encontraron lanzamientos de dados para el DM en este juego",
       );
     } else if (response.status === 200) {
       return response.data;
@@ -65,13 +51,13 @@ const getDMDTs = async () => {
   } catch (error) {
     console.error(
       "Error al obtener los lanzamientos de dados para el DM:",
-      error
+      error,
     );
     throw error;
   }
 };
 
-const createDT = async (dtData) => {
+export const createDT = async (dtData) => {
   try {
     const response = await apiInstance.post("/throws/new", dtData);
     if (response.status === 400) {
@@ -85,12 +71,12 @@ const createDT = async (dtData) => {
   }
 };
 
-const updateDT = async (dtId, dtData) => {
+export const updateDT = async (dtId, dtData) => {
   try {
     const response = await apiInstance.put(`/throws/${dtId}`, dtData);
     if (response.status === 400) {
       throw new Error(
-        "Datos inválidos para actualizar el lanzamiento de dados"
+        "Datos inválidos para actualizar el lanzamiento de dados",
       );
     } else if (response.status === 200) {
       return response.data;
@@ -101,7 +87,7 @@ const updateDT = async (dtId, dtData) => {
   }
 };
 
-const deleteDT = async (dtId) => {
+export const deleteDT = async (dtId) => {
   try {
     const response = await apiInstance.delete(`/throws/${dtId}`);
     if (response.status === 400) {
@@ -113,14 +99,4 @@ const deleteDT = async (dtId) => {
     console.error("Error al eliminar el lanzamiento de dados:", error);
     throw error;
   }
-};
-
-export {
-  getAllDTs,
-  getDMDTs,
-  getGameDTs,
-  getPlayerDTs,
-  createDT,
-  updateDT,
-  deleteDT,
 };

@@ -1,20 +1,6 @@
 import { apiInstance } from "./api.js";
 
-const getAllParticipants = async () => {
-  try {
-    const response = await apiInstance.get("/participants");
-    if (response.status === 404) {
-      throw new Error("No se encontraron participantes");
-    } else if (response.status === 200) {
-      return response.data;
-    }
-  } catch (error) {
-    console.error("Error al obtener los participantes:", error);
-    throw error;
-  }
-};
-
-const getUserParticipations = async () => {
+export const getUserParticipations = async () => {
   try {
     const response = await apiInstance.get("/my_participations");
     if (response.status === 404) {
@@ -28,7 +14,7 @@ const getUserParticipations = async () => {
   }
 };
 
-const getGameParticipants = async (gameId) => {
+export const getGameParticipants = async (gameId) => {
   try {
     const response = await apiInstance.get(`/game/${gameId}/participants`);
     if (response.status === 200) {
@@ -40,11 +26,11 @@ const getGameParticipants = async (gameId) => {
   }
 };
 
-const createParticipation = async (participationData) => {
+export const createParticipation = async (participationData) => {
   try {
     const response = await apiInstance.post(
       "/participants/new",
-      participationData
+      participationData,
     );
     if (response.status === 409) {
       throw new Error("El usuario ya está participando en este juego");
@@ -57,11 +43,11 @@ const createParticipation = async (participationData) => {
   }
 };
 
-const createParticipationToOwner = async (participationData) => {
+export const createParticipationToOwner = async (participationData) => {
   try {
     const response = await apiInstance.post(
       "/participants/new_owner",
-      participationData
+      participationData,
     );
     if (response.status === 409) {
       throw new Error("El usuario ya es el propietario de este juego");
@@ -74,11 +60,11 @@ const createParticipationToOwner = async (participationData) => {
   }
 };
 
-const updateParticipation = async (participationId, updatedData) => {
+export const updateParticipation = async (participationId, updatedData) => {
   try {
     const response = await apiInstance.put(
       `/participants/${participationId}`,
-      updatedData
+      updatedData,
     );
     if (response.status === 400) {
       throw new Error("Datos inválidos para actualizar el participante");
@@ -91,10 +77,10 @@ const updateParticipation = async (participationId, updatedData) => {
   }
 };
 
-const deleteParticipation = async (participationId) => {
+export const deleteParticipation = async (participationId) => {
   try {
     const response = await apiInstance.delete(
-      `/participants/${participationId}`
+      `/participants/${participationId}`,
     );
     if (response.status === 404) {
       throw new Error("Participante no encontrado");
@@ -105,14 +91,4 @@ const deleteParticipation = async (participationId) => {
     console.error("Error al eliminar la participación:", error);
     throw error;
   }
-};
-
-export {
-  getAllParticipants,
-  getUserParticipations,
-  getGameParticipants,
-  createParticipation,
-  createParticipationToOwner,
-  updateParticipation,
-  deleteParticipation,
 };

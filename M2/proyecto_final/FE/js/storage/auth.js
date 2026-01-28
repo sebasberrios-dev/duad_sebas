@@ -58,6 +58,17 @@ export const isAuthenticated = () => {
   }
 };
 
+// Verificar si el usuario autenticado es administrador
+export const isAdmin = () => {
+  try {
+    const user = getAuthUser();
+    return user && user.role === "admin";
+  } catch (error) {
+    console.error("Error checking admin status:", error);
+    return false;
+  }
+};
+
 // Limpiar usuario autenticado (logout)
 export const clearAuthUser = () => {
   try {
