@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Administración de Partidas</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="../../css/admin/admin_games.css" />
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+  </head>
+  <body>
+    <header>
+      <nav class="navbar contain">
+        <div class="navbar-main">
+          <button class="navbar-item" id="homeBtn">Lyfter D&D</button>
+          <button class="navbar-item" id="usersBtn">Usuarios</button>
+          <button class="navbar-item" id="logoutBtn">Cerrar Sesión</button>
+        </div>
+      </nav>
+    </header>
+    <main>
+      <div class="admin-container">
+        <h1 class="admin-title">Partidas</h1>
+
+        <!-- Filtros -->
+        <div class="filters-container">
+          <button class="filter-btn active" id="filter-all">Todas</button>
+          <button class="filter-btn" id="filter-active">Activas</button>
+          <button class="filter-btn" id="filter-finished">Terminadas</button>
+        </div>
+
+        <!-- Tabla de partidas -->
+        <div id="table-section" class="table-wrapper" style="display: none">
+          <table id="gamesTable">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Título</th>
+                <th>Dungeon Master</th>
+                <th>Estado</th>
+                <th>Acciones</th>
+              </tr>
+            </thead>
+            <tbody>
+              <!-- Las filas se cargan aquí -->
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Mensaje cuando no hay partidas -->
+        <div
+          id="no-games-message"
+          style="display: none; text-align: center; padding: 3rem"
+        >
+          <p style="font-size: 1.3rem; color: rgba(255, 255, 255, 0.7)">
+            No hay partidas en el sistema en este momento.
+          </p>
+        </div>
+      </div>
+    </main>
+
+    <!-- Template para fila de tabla -->
+    <template id="game-row-template">
+      <tr>
+        <td class="game-id"></td>
+        <td class="game-title"></td>
+        <td class="game-dm"></td>
+        <td>
+          <span class="game-status"></span>
+        </td>
+        <td>
+          <button class="btn-toggle"></button>
+        </td>
+      </tr>
+    </template>
+
+    <script
+      type="module"
+      src="../../js/admin/admin_render_games_page.js"
+    ></script>
+  </body>
+</html>

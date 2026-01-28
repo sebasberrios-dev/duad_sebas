@@ -10,15 +10,15 @@ class NPCRepository:
     def __init__(self):
         self.query_manager = QueryManager()
     
-    def create(self, game_id, name, race, npc_class, level, description, attributes):
+    def create(self, game_id, name, role, level, description, attributes, hp):
         try:
             stmt = insert(npcs_table).returning(npcs_table.c.id).values({
                 "game_id": game_id,
                 "name": name,
-                "race": race,
-                "class": npc_class,
+                "role": role,
                 "level": level,
                 "description": description,
+                "hp": hp,
                 "attributes": attributes
             })
             query = self.query_manager.execute_post(stmt)
@@ -31,8 +31,8 @@ class NPCRepository:
         try:
             stmt = select(npcs_table)
             query = self.query_manager.execute_get(stmt)
-            characters = query.mappings().all()
-            return characters or None
+            npcs = query.mappings().all()
+            return npcs or None
         except Exception as e:
             print(f"Error reading npcs: {e}")
             return None
@@ -41,8 +41,8 @@ class NPCRepository:
         try:
             stmt = select(npcs_table).where(npcs_table.c.id == npc_id)
             query = self.query_manager.execute_get(stmt)
-            character = query.mappings().first()
-            return character or None
+            npc = query.mappings().first()
+            return npc or None
         except Exception as e:
             print(f"Error reading npc by ID: {e}")
             return None

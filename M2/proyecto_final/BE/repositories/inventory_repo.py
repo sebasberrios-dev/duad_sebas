@@ -10,10 +10,11 @@ class InventoryRepository:
     def __init__(self):
         self.query_manager = QueryManager()
     
-    def create(self, character_id):
+    def create(self, character_id, game_id):
         try:
             stmt = insert(inventories_table).returning(inventories_table.c.id).values({
-                "character_id": character_id
+                "character_id": character_id,
+                "game_id": game_id
             })
             query = self.query_manager.execute_post(stmt)
             return query.fetchone()
@@ -31,23 +32,28 @@ class InventoryRepository:
             print(f"Error reading inventories: {e}")
             return None
         
-    def read_by_character_id(self, character_id):
+    def read_by_character_and_game(self, character_id, game_id):
+        """Obtiene el inventario específico de un personaje en un juego"""
         try:
-            stmt = select(inventories_table).where(inventories_table.c.character_id == character_id)
+            stmt = select(inventories_table).where(
+                inventories_table.c.character_id == character_id,
+                inventories_table.c.game_id == game_id
+            )
             query = self.query_manager.execute_get(stmt)
             inventory = query.mappings().first()
             return inventory or None
         except Exception as e:
-            print(f"Error reading inventory by character ID: {e}")
+            print(f"Error reading inventory by character and game: {e}")
             return None
     
-    def get_inventory_with_items(self, character_id):
-        """Obtiene el inventario completo con todos los items del personaje"""
+    def get_inventory_with_items(self, character_id, game_id):
+        """Obtiene el inventario completo con todos los items del personaje en un juego específico"""
         try:
             # JOIN entre inventories, inventory_items e items
             stmt = select(
                 inventories_table.c.id.label('inventory_id'),
                 inventories_table.c.character_id,
+                inventories_table.c.game_id,
                 items_table.c.id.label('item_id'),
                 items_table.c.name,
                 items_table.c.description,
@@ -63,7 +69,10 @@ class InventoryRepository:
                     items_table,
                     inventory_items_table.c.item_id == items_table.c.id
                 )
-            ).where(inventories_table.c.character_id == character_id)
+            ).where(
+                inventories_table.c.character_id == character_id,
+                inventories_table.c.game_id == game_id
+            )
             
             query = self.query_manager.execute_get(stmt)
             items = query.mappings().all()

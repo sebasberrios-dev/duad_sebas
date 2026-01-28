@@ -22,6 +22,20 @@ class ParticipantsRepository:
         except Exception as e:
             print(f"Error creating participant: {e}")
             return None
+        
+    def create_owner_participation(self, user_id, game_id):
+        try:
+            stmt = insert(participants_table).returning(participants_table.c.id).values({
+                "game_id": game_id,
+                "user_id": user_id,
+                "character_id": None,
+            })
+            query = self.query_manager.execute_post(stmt)
+            return query.fetchone()
+        
+        except Exception as e:
+            print(f"Error creating owner participation: {e}")
+            return None
     
     def read(self):
         try:

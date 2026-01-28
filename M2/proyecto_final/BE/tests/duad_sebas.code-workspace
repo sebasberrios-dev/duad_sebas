@@ -1,0 +1,14 @@
+{
+  "folders": [
+	{
+		"name": "duad_sebas",
+		"path": "../../../.."
+	}
+],
+  "settings": {
+    "python.testing.pytestArgs": ["M2"],
+    "python.testing.unittestEnabled": false,
+    "python.testing.pytestEnabled": true,
+    "liveServer.settings.port": 5502
+  }
+}

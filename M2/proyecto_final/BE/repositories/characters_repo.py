@@ -10,7 +10,7 @@ class CharactersRepository:
     def __init__(self):
         self.query_manager = QueryManager()
     
-    def create(self, user_id, name, race, char_class, level, attributes, story):
+    def create(self, user_id, name, race, char_class, level, xp, attributes, story):
         try:
             stmt = insert(characters_table).returning(characters_table.c.id).values({
                 "user_id": user_id,
@@ -18,6 +18,7 @@ class CharactersRepository:
                 "race": race,
                 "class": char_class,
                 "level": level,
+                "xp": xp,
                 "attributes": attributes,
                 "story": story
             })

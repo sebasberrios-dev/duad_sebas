@@ -14,17 +14,19 @@ users_repo = UsersRepository()
 jwt_manager = JWTManager("trespatitos", "HS256")
 controller = Controller()
 
+# Endpoint de verificación de estado del servidor
 @user_route.route("/liveness")
 def liveness():
     return "<p>Hello, World!</p>"
 
+# Registra un nuevo usuario y devuelve un token JWT
 @user_route.route("/register", methods=["POST"])
 def register():
     data = request.get_json()
     username = data.get("username")
     email = data.get("email")
     password = data.get("password")
-    role = data.get("role", "player") # Por defecto "player"
+    role = data.get("role", "player") 
 
     if not username or not email or not password:
         return jsonify({"error": "data missing for registration"}), 400
@@ -40,8 +42,9 @@ def register():
     user_id = result[0]
     token = jwt_manager.encode({"id": user_id, "role": role})
 
-    return jsonify({"message": "User registered successfully", "token": token}), 201
+    return jsonify({"message": "User registered successfully", "token": token, "user_id": user_id, "role": role, "username": username}), 201
 
+# Autentica un usuario y devuelve un token JWT
 @user_route.route("/login", methods=["POST"])
 def login():
     data = request.get_json()
@@ -54,15 +57,16 @@ def login():
     result = users_repo.read(username=username, password=password)
 
     if result is None:
-        return jsonify({"error": "invalid credentials"}), 403
+        return jsonify({"error": "invalid credentials"}), 401
     
     user_id = result["id"]
     user_role = result["role"]
 
     token = jwt_manager.encode({"id": user_id, "role": user_role})
 
-    return jsonify({"message": "Login successful", "token": token, "user_id": user_id, "role": user_role}), 200
+    return jsonify({"message": "Login successful", "token": token, "user_id": user_id, "role": user_role, "username": result["username"]}), 200
 
+# Actualiza la información de un usuario (propio o admin)
 @user_route.route("/user/update/<int:user_id>", methods=["PUT"])
 @require_auth
 def update_user(user_id):
@@ -86,6 +90,7 @@ def update_user(user_id):
     except Exception as e:
         return jsonify({"error": str(e)}), 500
     
+# Elimina un usuario del sistema (solo admins)
 @user_route.route("/user/delete/<int:user_id>", methods=["DELETE"])
 @require_role("admin")
 def delete_user(user_id):
@@ -94,7 +99,8 @@ def delete_user(user_id):
     else:
         return jsonify({"error": "user not found"}), 404
     
-@user_route.route("/me")
+# Obtiene la información del usuario autenticado
+@user_route.route("/me", methods=["GET"])
 @require_auth
 def me():
     try:
@@ -110,6 +116,19 @@ def me():
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
-
-
-
+@user_route.route("/users", methods=["GET"])
+@require_role("admin")
+def get_all_users():
+    try:
+        users = users_repo.read_all()
+        if users is None:
+            return jsonify({"message": "no users found", "users": []}), 200
+        users_data = [controller.serialize_row(user) for user in users]
+        format_data = []
+        for user in users_data:
+            user_info = {k: v for k, v in user.items() if k != "password"}
+            format_data.append(user_info)
+        return jsonify(format_data), 200
+    
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500

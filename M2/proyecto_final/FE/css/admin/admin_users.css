@@ -1,0 +1,110 @@
+@import url(../body.css);
+@import url(../header.css);
+
+.admin-container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 3rem 2rem;
+  color: white;
+}
+
+.admin-title {
+  font-size: 3rem;
+  font-weight: 900;
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.filters-container {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.filter-btn {
+  padding: 0.7rem 1.5rem;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  border: 2px solid rgba(139, 0, 0, 0.6);
+  background-color: rgba(20, 20, 20, 0.8);
+  color: white;
+}
+
+.filter-btn.active {
+  background-color: rgba(139, 0, 0, 0.6);
+  border-color: rgba(139, 0, 0, 0.8);
+}
+
+.filter-btn:hover {
+  opacity: 0.8;
+}
+
+.table-wrapper {
+  background-color: rgba(20, 20, 20, 0.9);
+  border: 2px solid rgba(139, 0, 0, 0.4);
+  border-radius: 8px;
+  padding: 2rem;
+  overflow-x: auto;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+thead {
+  background-color: rgba(139, 0, 0, 0.6);
+}
+
+th {
+  padding: 1rem;
+  text-align: left;
+  font-weight: 700;
+  text-transform: uppercase;
+  border-bottom: 2px solid rgba(139, 0, 0, 0.8);
+}
+
+td {
+  padding: 1rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+tbody tr:hover {
+  background-color: rgba(139, 0, 0, 0.2);
+}
+
+.role-admin {
+  color: #ffd700;
+  font-weight: 600;
+}
+
+.role-player {
+  color: #87ceeb;
+  font-weight: 600;
+}
+
+.role-dm {
+  color: #ff69b4;
+  font-weight: 600;
+}
+
+.btn-delete {
+  padding: 0.5rem 1.2rem;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  border: 2px solid rgba(139, 0, 0, 0.6);
+  background-color: rgba(139, 0, 0, 0.4);
+  color: white;
+}
+
+.btn-delete:hover {
+  opacity: 0.8;
+}
+
+.btn-delete:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}

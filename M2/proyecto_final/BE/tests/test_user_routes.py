@@ -66,9 +66,11 @@ class TestUserRoutes:
 
     def test_register_success(self, client):
         ## Test de registro exitoso
+        import time
+        unique_suffix = str(int(time.time() * 1000))  # Timestamp en milisegundos
         response = client.post('/register', json={
-            "username": "newuser",
-            "email": "newuser@test.com",
+            "username": f"newuser_{unique_suffix}",
+            "email": f"newuser_{unique_suffix}@test.com",
             "password": "newpass123",
             "role": "player"
         })
@@ -134,7 +136,8 @@ class TestUserRoutes:
             "username": "nonexistent",
             "password": "wrongpass"
         })
-        assert response.status_code == 403
+        # El endpoint ahora devuelve 401 para credenciales inválidas
+        assert response.status_code == 401
         assert b"invalid credentials" in response.data
 
     def test_login_missing_data(self, client):

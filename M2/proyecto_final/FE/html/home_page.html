@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Menú Principal</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="../css/home_page/home-page.css" />
+  </head>
+  <body>
+    <header>
+      <nav class="navbar contain">
+        <div class="navbar-main">
+          <button class="navbar-item">Lyfter D&D</button>
+          <button class="navbar-item">Crear Personaje</button>
+          <button class="navbar-item">Crear Partida</button>
+          <button class="navbar-item">Unirse a Partida</button>
+          <button class="navbar-item">Mis Partidas</button>
+          <button class="navbar-item">Contáctame</button>
+          <button class="navbar-item">Cerrar Sesión</button>
+        </div>
+      </nav>
+    </header>
+    <main>
+      <section class="home-page contain">
+        <h1 class="title">Inicio</h1>
+        <p class="description">
+          Bienvenido a Lyfter D&D. Aquí puedes crear y gestionar tus personajes,
+          NPCs y partidas. ¡Explora las opciones y comienza tu aventura!
+        </p>
+        <div class="guide-container">
+          <h2 class="guide-title">Guía de Juego</h2>
+          <p class="guide-description">
+            Para comenzar, selecciona una de las opciones del menú. Puedes crear
+            un nuevo personaje, unirte a una partida existente o crear tu propia
+            partida como Dungeon Master.
+          </p>
+          <h2 class="guide-rule-title">Reglas Básicas</h2>
+          <p class="guide-rule-description">
+            Lyfter DnD es una plataforma digital diseñada para facilitar y
+            mejorar la experiencia de juego de Dungeons & Dragons. A
+            continuación se presentan las reglas esenciales que definen cómo
+            interactúan los usuarios y cómo funcionan las partidas.
+          </p>
+          <h3 class="guide-rule-subtitle">Jugador</h3>
+          <ul class="guide-rule-list">
+            <li class="guide-rule-item">
+              Cada jugador puede crear y personalizar su propio personaje.
+            </li>
+            <li class="guide-rule-item">
+              Los jugadores pueden unirse a partidas creadas por Dungeon
+              Masters.
+            </li>
+            <li class="guide-rule-item">
+              Durante las partidas, los jugadores deben seguir las indicaciones
+              del Dungeon Master y respetar las reglas del juego.
+            </li>
+          </ul>
+          <h3 class="guide-rule-subtitle">Dungeon Master</h3>
+          <ul class="guide-rule-list">
+            <li class="guide-rule-item">
+              El Dungeon Master es responsable de crear y gestionar las
+              partidas.
+            </li>
+            <li class="guide-rule-item">
+              Puede crear NPCs y publicar notas compartidas para los jugadores.
+            </li>
+            <li class="guide-rule-item">
+              Sus tiradas de dados son visibles únicamente para él.
+            </li>
+          </ul>
+          <h2 class="guide-rule-title">Partida</h2>
+          <h3 class="guide-rule-subtitle">Jugador</h3>
+          <p class="guide-rule-description">
+            Antes de unirse a una partida, el jugador debe crear un personaje.
+            Elige su raza y clase, asignale una historia de fondo y define sus
+            atributos. Para unirse a una partida el jugador debe ingresar al
+            apartado "Unirse a Partida" e ingresar el enlace de invitación
+            proporcionado por el Dungeon Master, confirma su personaje e ingresa
+            a la partida.
+          </p>
+          <h3 class="guide-rule-subtitle">Dungeon Master</h3>
+          <p class="guide-rule-description">
+            Para crear una partida, el Dungeon Master debe dirigirse al apartado
+            "Crear Partida", ingresar un nombre para la partida, una descripción
+            y se genera un enlace de invitación que podrá compartir con los
+            jugadores.
+          </p>
+          <h2 class="guide-rule-title">Flujo de Juego</h2>
+          <p class="guide-rule-description">
+            Durante la partida, el Dungeon Master guía la narrativa y los
+            jugadores toman decisiones para sus personajes. El Dungeon Master
+            puede crear NPCs y publicar notas compartidas para los jugadores.
+            Las tiradas de dados se realizan a petición del jugador o el Dungeon
+            Master, el cual determina el resultado basado en las reglas del
+            juego. <br />
+            Narrar -> Decidir -> Tirar Dados -> Resolver -> Avanzar
+          </p>
+          <h2 class="guide-rule-title">Combate</h2>
+          <p class="guide-rule-description">
+            El DM declara el combate con un NPC. El jugador realiza tiradas de
+            dados para atacar al NPC. El NPC se defiende automáticamente. El
+            combate continúa hasta que el jugador derrote al NPC o agote sus
+            tiradas. Si el jugador pierde, la partida termina, si gana, se le
+            otorga XP y puede continuar su aventura.
+          </p>
+        </div>
+      </section>
+    </main>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script
+      type="module"
+      src="../js/renderization/render_home_page.js"
+    ></script>
+  </body>
+</html>

@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Crea tu partida</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="../css/create/create_game.css" />
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+  </head>
+  <body>
+    <header>
+      <nav class="navbar contain">
+        <div class="navbar-main">
+          <button class="navbar-item">Lyfter D&D</button>
+          <button class="navbar-item">Contáctame</button>
+          <button class="navbar-item">Cerrar Sesión</button>
+        </div>
+      </nav>
+    </header>
+    <main>
+      <section class="create-game contain">
+        <div class="form-container">
+          <form id="create-game-form">
+            <h2 class="form-title">Crea tu partida</h2>
+            <div class="form-inputs">
+              <label class="form-label">
+                <input
+                  type="text"
+                  placeholder="Nombre de la Partida"
+                  id="game-name"
+                  class="form-input"
+                />
+              </label>
+            </div>
+            <div class="form-inputs">
+              <label class="form-label">
+                <textarea
+                  placeholder="Descripción de la Partida"
+                  id="game-description"
+                  class="form-input"
+                  rows="5"
+                ></textarea>
+              </label>
+            </div>
+            <button type="submit" class="form-button">CREAR PARTIDA</button>
+          </form>
+        </div>
+      </section>
+    </main>
+    <script
+      type="module"
+      src="../js/renderization/render_create_game.js"
+    ></script>
+  </body>
+</html>

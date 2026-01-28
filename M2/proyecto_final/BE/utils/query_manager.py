@@ -28,10 +28,10 @@ class QueryManager:
                 conn.commit()
                 if result.rowcount > 0:
                     print(f"{operation_name} {entity_id} updated successfully.")
-                    return True
+                    return result
                 else:
                     print(f"{operation_name} {entity_id} not found.")
-                    return False
+                    return None
         except Exception as e:
             raise e
         

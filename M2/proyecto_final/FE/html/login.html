@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Iniciar Sesión</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="../css/register_login/login_form.css" />
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+  </head>
+  <body>
+    <header>
+      <nav class="navbar contain">
+        <div class="navbar-main">
+          <button class="navbar-item">Lyfter D&D</button>
+          <button class="navbar-item">Contactame</button>
+          <button class="navbar-item">Iniciar Sesión</button>
+        </div>
+      </nav>
+    </header>
+    <main>
+      <section class="login contain">
+        <div class="form-container">
+          <form id="login-form">
+            <h2 class="form-title">Iniciar Sesión</h2>
+            <p class="form-subtitle">Ingresa a tu cuenta</p>
+            <div class="form-inputs">
+              <label class="form-label">
+                <input
+                  type="text"
+                  placeholder="Nombre de Usuario"
+                  id="username"
+                  class="form-input"
+                />
+              </label>
+              <label class="form-label">
+                <input
+                  type="password"
+                  placeholder="Contraseña"
+                  id="password"
+                  class="form-input"
+                />
+              </label>
+            </div>
+            <button type="submit" class="form-button">INICIAR SESIÓN</button>
+            <div class="form-links">
+              <span class="form-link">¿No tienes una cuenta?</span>
+              <a href="register.html" class="form-link">Regístrate aquí</a>
+            </div>
+          </form>
+        </div>
+      </section>
+    </main>
+    <script
+      type="module"
+      src="../js/renderization/render_register_login.js"
+    ></script>
+  </body>
+</html>

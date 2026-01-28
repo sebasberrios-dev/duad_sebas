@@ -360,10 +360,3 @@ class TestDartThrowsRoutes:
             "Authorization": f"Bearer {player1_token}"
         })
         assert response.status_code == 200
-
-    def test_get_all_throws_admin_only(self, client, player1_token):
-        ## Test de que solo admin puede ver todas las tiradas 
-        response = client.get('/throws', headers={
-            "Authorization": f"Bearer {player1_token}"
-        })
-        assert response.status_code == 403

@@ -11,16 +11,7 @@ notes_route = Blueprint("notes_route", __name__)
 notes_repo = NotesRepository()
 controller = Controller()
 
-@notes_route.route("/notes", methods=["GET"])
-@require_role('admin')
-def get_notes():
-    try:
-        filterable_fields = ["id", "user_id", "content", "visible_for_players", "visible_for_dm"]
-        return controller.execute_get_method(notes_repo, filterable_fields, "notes", date_fields=["updated_at"])
-    
-    except Exception as e:
-        return jsonify({"error": str(e)}), 500
-
+# Obtiene todas las notas del usuario autenticado
 @notes_route.route("/my_notes", methods=["GET"])
 @require_auth
 def get_my_notes():
@@ -36,41 +27,37 @@ def get_my_notes():
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
+# Obtiene todas las notas de una partida (filtradas por visibilidad)
 @notes_route.route("/game/<int:game_id>/notes", methods=["GET"])
 @require_auth
 def get_game_notes(game_id):
-    # Obtiene notas de una partida según rol del usuario
     try:
         user_id = request.user.get("id")
         user_role = request.user.get("role")
         
-        # Obtener todas las notas de la partida
-        notes = notes_repo.read_by_game_id(game_id)
+        notes = notes_repo.read_by_game_id_with_username(game_id)
         
         if not notes:
             return jsonify({"message": "No notes available", "notes": []}), 200
         
-        # Filtrar según el rol
         if user_role == 'dm':
-            # DM ve todas las notas
             filtered_notes = notes
         else:
-            # Jugadores solo ven notas compartidas y sus propias notas privadas
             filtered_notes = [
                 note for note in notes
                 if note.get("visible_for_players") or note.get("user_id") == user_id
             ]
         
         serialized_notes = controller.serialize_list(filtered_notes, date_fields=["updated_at"])
-        return jsonify(serialized_notes), 200
+        return jsonify({"notes": serialized_notes}), 200
     
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
+# Crea una nota (privada para jugadores, puede ser compartida para DM)
 @notes_route.route("/notes/new", methods=["POST"])
 @require_auth
 def create_note():
-    # Crea una nota (privada para jugadores, puede ser compartida para DM)
     try:
         data = request.get_json()
         user_id = request.user.get("id")
@@ -78,15 +65,12 @@ def create_note():
         game_id = data.get("game_id")
         content = data.get("content")
         
-        # Valores por defecto según el rol
         if user_role == 'dm':
-            # DM puede crear notas compartidas o privadas
             visible_for_players = data.get("visible_for_players", False)
-            visible_for_dm = True  # DM siempre ve sus notas
+            visible_for_dm = True  
         else:
-            # Jugadores solo crean notas privadas
-            visible_for_players = False
-            visible_for_dm = data.get("visible_for_dm", True)  # DM puede verlas por defecto
+            visible_for_players = data.get("visible_for_players", False)
+            visible_for_dm = data.get("visible_for_dm", True)  
 
         required_fields = ["game_id", "content"]
         
@@ -102,13 +86,13 @@ def create_note():
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
+# Actualiza una nota existente (solo el creador)
 @notes_route.route("/notes/<int:note_id>", methods=["PUT"])
 @require_auth
 def update_note(note_id):
     try:
         user_id = request.user.get("id")
         
-        # Verificar que el usuario es dueño de la nota
         note = notes_repo.read_by_id(note_id)
         if not note:
             return jsonify({"error": "Note not found"}), 404
@@ -124,13 +108,13 @@ def update_note(note_id):
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
+# Elimina una nota (solo el creador)
 @notes_route.route("/notes/<int:note_id>", methods=["DELETE"])
 @require_auth
 def delete_note(note_id):
     try:
         user_id = request.user.get("id")
         
-        # Verificar que el usuario es dueño de la nota
         note = notes_repo.read_by_id(note_id)
         if not note:
             return jsonify({"error": "Note not found"}), 404

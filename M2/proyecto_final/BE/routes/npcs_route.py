@@ -11,6 +11,7 @@ npc_repo = NPCRepository()
 controller = Controller()
 npcs_route = Blueprint("npcs_route", __name__)
 
+# Obtiene todos los NPCs de una partida (solo el DM dueño)
 @npcs_route.route("/game/<int:game_id>/npcs", methods=["GET"])
 @require_role('dm')
 def get_game_npcs(game_id):
@@ -18,14 +19,13 @@ def get_game_npcs(game_id):
         from BE.repositories.games_repo import GamesRepository
         games_repo = GamesRepository()
         
-        # Verificar que la partida existe y el usuario es el DM
         user_id = request.user.get("id")
         game = games_repo.read_by_id(game_id)
         
         if not game:
             return jsonify({"error": "Game not found"}), 404
         
-        if game["dm_id"] != user_id:
+        if game["user_id"] != user_id:
             return jsonify({"error": "Only the owner can view NPCs for this game"}), 403
         
         npcs = npc_repo.read_by_game_id(game_id)
@@ -38,18 +38,8 @@ def get_game_npcs(game_id):
     
     except Exception as e:
         return jsonify({"error": str(e)}), 500
-
-
-@npcs_route.route("/npcs", methods=["GET"])
-@require_role('admin')
-def get_npcs():
-    try:
-        filterable_fields = ["game_id", "name", "race", "class", "level"]
-        return controller.execute_get_method(npc_repo, filterable_fields, "npcs", date_fields=["created_at"])
     
-    except Exception as e:
-        return jsonify({"error": str(e)}), 500
-    
+# Obtiene un NPC específico por ID
 @npcs_route.route("/npcs/<int:npc_id>", methods=["GET"])
 @require_auth
 def get_npc_by_id(npc_id):
@@ -65,6 +55,7 @@ def get_npc_by_id(npc_id):
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
+# Crea un nuevo NPC en una partida (solo el DM dueño)
 @npcs_route.route("/npcs/new", methods=["POST"])
 @require_role('dm')
 def create_npc():
@@ -74,34 +65,34 @@ def create_npc():
         
         data = request.get_json()
         game_id = data.get("game_id")
-        
-        # Verificar que la partida existe y el usuario es el DM
+
         user_id = request.user.get("id")
         game = games_repo.read_by_id(game_id)
         
         if not game:
             return jsonify({"error": "Game not found"}), 404
         
-        if game["dm_id"] != user_id:
+        if game["user_id"] != user_id:
             return jsonify({"error": "Only the owner can create NPCs for this game"}), 403
         
         name = data.get("name")
-        race = data.get("race")
-        npc_class = data.get("class")
-        level = data.get("level", 1)  # Default level 1 si no se proporciona
+        role = data.get("role")
+        level = data.get("level", 1)  
         description = data.get("description")
         attributes = data.get("attributes")
+        hp = data.get("hp", 15)  
 
-        required_fields = ["game_id", "name", "race", "npc_class", "description", "attributes"]
+        required_fields = ["game_id", "name", "role", "description", "attributes", "hp"]
 
         return controller.execute_post_method(
             npc_repo, required_fields, "npc",
-            game_id=game_id, name=name, race=race, npc_class=npc_class,
-            level=level, description=description, attributes=attributes)
+            game_id=game_id, name=name, role=role,
+            level=level, description=description, attributes=attributes, hp=hp)
     
     except Exception as e:
         return jsonify({"error": str(e)}), 500
     
+# Actualiza un NPC existente (solo el DM dueño)
 @npcs_route.route("/npcs/<int:npc_id>", methods=["PUT"])
 @require_role('dm')
 def update_npc(npc_id):
@@ -109,16 +100,14 @@ def update_npc(npc_id):
         from BE.repositories.games_repo import GamesRepository
         games_repo = GamesRepository()
         
-        # Verificar que el NPC existe
         npc = npc_repo.read_by_id(npc_id)
         if not npc:
             return jsonify({"error": "NPC not found"}), 404
         
-        # Verificar que el usuario es el DM de la partida
         user_id = request.user.get("id")
         game = games_repo.read_by_id(npc["game_id"])
         
-        if game["dm_id"] != user_id:
+        if game["user_id"] != user_id:
             return jsonify({"error": "Only the owner can update NPCs for this game"}), 403
         
         data = request.get_json()
@@ -129,23 +118,22 @@ def update_npc(npc_id):
     except Exception as e:
         return jsonify({"error": str(e)}), 500
     
+# Elimina un NPC (solo el DM dueño)
 @npcs_route.route("/npcs/<int:npc_id>", methods=["DELETE"])
 @require_role('dm')
 def delete_npc(npc_id):
     try:
         from BE.repositories.games_repo import GamesRepository
         games_repo = GamesRepository()
-        
-        # Verificar que el NPC existe
+
         npc = npc_repo.read_by_id(npc_id)
         if not npc:
             return jsonify({"error": "NPC not found"}), 404
-        
-        # Verificar que el usuario es el DM de la partida
+
         user_id = request.user.get("id")
         game = games_repo.read_by_id(npc["game_id"])
         
-        if game["dm_id"] != user_id:
+        if game["user_id"] != user_id:
             return jsonify({"error": "Only the owner can delete NPCs for this game"}), 403
         
         return controller.execute_delete_method(npc_repo, npc_id, "npc")

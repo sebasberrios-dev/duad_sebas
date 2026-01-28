@@ -10,10 +10,10 @@ class GamesRepository:
     def __init__(self):
         self.query_manager = QueryManager()
 
-    def create(self, dm_id, title, description, link):
+    def create(self, user_id, title, description, link):
         try:
             stmt = insert(games_table).returning(games_table.c.id).values({
-                "dm_id": dm_id,
+                "user_id": user_id,
                 "title": title,
                 "description": description,
                 "link": link
@@ -45,14 +45,14 @@ class GamesRepository:
             print(f"Error reading game by ID: {e}")
             return None
     
-    def read_by_dm_id(self, dm_id):
+    def read_by_user_id(self, user_id):
         try:
-            stmt = select(games_table).where(games_table.c.dm_id == dm_id)
+            stmt = select(games_table).where(games_table.c.user_id == user_id)
             query = self.query_manager.execute_get(stmt)
             games = query.mappings().all()
             return games or None
         except Exception as e:
-            print(f"Error reading games by DM ID: {e}")
+            print(f"Error reading games by user ID: {e}")
             return None
     
     def read_by_link(self, link):

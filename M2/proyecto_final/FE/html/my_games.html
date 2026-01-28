@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Mis partidas</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="../css/my_games/my_games.css" />
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+  </head>
+  <body>
+    <header>
+      <nav class="navbar contain">
+        <div class="navbar-main">
+          <button class="navbar-item">Lyfter D&D</button>
+          <button class="navbar-item">Inicio</button>
+          <button class="navbar-item">Contáctame</button>
+          <button class="navbar-item">Cerrar Sesión</button>
+        </div>
+      </nav>
+    </header>
+    <main>
+      <section class="my-games">
+        <h1 class="title">Mis Partidas</h1>
+        <p class="description">
+          Aquí puedes ver y gestionar las partidas en las que estás
+          participando. Selecciona una partida para ver más detalles o continuar
+          jugando.
+        </p>
+
+        <!-- Partidas como Jugador -->
+        <div
+          id="player-section"
+          class="games-section player"
+          style="display: none"
+        >
+          <h2 class="section-title">
+            <span class="icon">⚔️</span>
+            Partidas como Jugador
+          </h2>
+          <div id="player-games-grid" class="games-grid">
+            <!-- Las partidas se cargan aquí -->
+          </div>
+        </div>
+
+        <!-- Partidas como Dungeon Master -->
+        <div id="dm-section" class="games-section dm" style="display: none">
+          <h2 class="section-title">
+            <span class="icon">🎲</span>
+            Partidas como Dungeon Master
+          </h2>
+          <div id="dm-games-grid" class="games-grid">
+            <!-- Las partidas se cargan aquí -->
+          </div>
+        </div>
+
+        <!-- Mensaje cuando no hay partidas -->
+        <div
+          id="no-games-message"
+          style="display: none; text-align: center; padding: 3rem"
+        >
+          <p style="font-size: 1.3rem; color: rgba(255, 255, 255, 0.7)">
+            No tienes partidas activas en este momento.
+          </p>
+        </div>
+      </section>
+    </main>
+
+    <!-- Template para tarjeta de partida de jugador -->
+    <template id="player-card-template">
+      <div class="game-card player-card">
+        <div class="game-header">
+          <h3 class="game-title"></h3>
+          <span class="game-status"></span>
+        </div>
+        <p class="game-description"></p>
+        <a href="#" class="game-link" target="_blank"></a>
+        <div class="game-actions">
+          <button class="btn-primary">Ir a la partida</button>
+        </div>
+      </div>
+    </template>
+
+    <!-- Template para tarjeta de partida de DM -->
+    <template id="dm-card-template">
+      <div class="game-card dm-card">
+        <div class="game-header">
+          <h3 class="game-title"></h3>
+          <span class="game-status"></span>
+        </div>
+        <p class="game-description"></p>
+        <a href="#" class="game-link" target="_blank"></a>
+        <div class="game-actions">
+          <button class="btn-primary">Ir a la partida</button>
+        </div>
+      </div>
+    </template>
+
+    <!-- Template para crear nueva partida (solo DM) -->
+    <template id="create-card-template">
+      <div class="game-card create-card">
+        <div class="create-content">
+          <span class="create-icon">➕</span>
+          <h3 class="create-title">Crear Nueva Partida</h3>
+          <p class="create-description">
+            Comienza una nueva aventura como Dungeon Master
+          </p>
+          <button class="btn-create">Crear Partida</button>
+        </div>
+      </div>
+    </template>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script
+      type="module"
+      src="../js/renderization/render_my_games_page.js"
+    ></script>
+  </body>
+</html>

@@ -11,11 +11,12 @@ games_repo = GamesRepository()
 game_route = Blueprint("game_route", __name__)
 controller = Controller()
 
+# Obtiene todas las partidas del sistema (solo admins)
 @game_route.route("/games", methods=["GET"])
 @require_role('admin')
 def get_games():
     try:
-        filterable_fields = ["id", "dm_id", "title", "description", "link", "is_active"]
+        filterable_fields = ["id", "user_id", "title", "description", "link", "is_active"]
         return controller.execute_get_method(games_repo, filterable_fields, "games", date_fields=["created_at"])
     
     except Exception as e:
@@ -56,15 +57,16 @@ def get_game_by_link(invite_link):
     except Exception as e:
         return jsonify({"error": str(e)}), 500
     
+# Obtiene las partidas creadas por el usuario autenticado
 @game_route.route("/my_games", methods=["GET"])
-@require_role('dm')
+@require_auth
 def get_my_games():
     try:
-        dm_id = request.user.get("id")
-        games = games_repo.read_by_dm_id(dm_id)
+        user_id = request.user.get("id")
+        games = games_repo.read_by_user_id(user_id)
         
         if not games:
-            return jsonify({"error": "No games available for this DM"}), 404
+            return jsonify([]), 200
         
         serialized_games = controller.serialize_list(games, date_fields=["created_at"])
         return jsonify(serialized_games), 200
@@ -72,12 +74,13 @@ def get_my_games():
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
+# Crea una nueva partida (solo DMs)
 @game_route.route("/games/new", methods=["POST"])
 @require_role('dm')
 def create_game():
     try:
         data = request.get_json()
-        dm_id = request.user.get("id")
+        user_id = request.user.get("id")
         title = data.get("title")
         description = data.get("description")
         link = data.get("link")
@@ -88,15 +91,17 @@ def create_game():
             games_repo,
             required_fields,
             "game",
-            dm_id=dm_id,
+            user_id=user_id,
             title=title,
             description=description,
             link=link
         )
         
     except Exception as e:
+        print(f"ERROR in create_game: {e}")
         return jsonify({"error": str(e)}), 500
     
+# Actualiza una partida existente (solo el DM dueño)
 @game_route.route("/games/<int:game_id>", methods=["PUT"])
 @require_role('dm')
 def update_game(game_id):
@@ -108,7 +113,7 @@ def update_game(game_id):
         if not game:
             return jsonify({"error": "Game not found"}), 404
         
-        if game["dm_id"] != user_id:
+        if game["user_id"] != user_id:
             return jsonify({"error": "You are not authorized to modify this game"}), 403
         
         data = request.get_json()
@@ -119,18 +124,23 @@ def update_game(game_id):
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
+# Activa o desactiva una partida (solo el DM dueño)
 @game_route.route("/games/<int:game_id>/toggle-active", methods=["PATCH"])
-@require_role('dm')
+@require_auth
 def toggle_game_active(game_id):
-    # Activa o desactiva una partida
     try:
         user_id = request.user.get("id")
         
         game = games_repo.read_by_id(game_id)
+
+        # Verificar que el usuario es dm o admin
+        if request.user.get("role") not in ["dm", "admin"]:
+            return jsonify({"error": "Only DMs or admins can toggle game status"}), 403
+        
         if not game:
             return jsonify({"error": "Game not found"}), 404
         
-        if game["dm_id"] != user_id:
+        if request.user.get("role") == "dm" and game["user_id"] != user_id:
             return jsonify({"error": "You are not authorized to modify this game"}), 403
         
         new_status = not game.get("is_active", True)
@@ -143,19 +153,14 @@ def toggle_game_active(game_id):
         return jsonify({"error": str(e)}), 500
 
 
+# Elimina una partida 
 @game_route.route("/games/<int:game_id>", methods=["DELETE"])
-@require_role('dm')
+@require_role('admin')
 def delete_game(game_id):
-    try:
-        user_id = request.user.get("id")
-        
-        # Verificar que el DM es dueño de la partida
+    try:        
         game = games_repo.read_by_id(game_id)
         if not game:
             return jsonify({"error": "Game not found"}), 404
-        
-        if game["dm_id"] != user_id:
-            return jsonify({"error": "You are not authorized to delete this game"}), 403
         
         return controller.execute_delete_method(games_repo, game_id, "game")
         
