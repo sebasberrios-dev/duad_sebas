@@ -1,0 +1,48 @@
+.home-container {
+  max-width: 900px;
+  margin: 0 auto;
+  min-height: calc(100vh - 140px);
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  text-align: center;
+  padding: 40px 24px;
+  gap: 40px;
+}
+
+.title {
+  font-size: 56px;
+  font-weight: 800;
+  margin: 0;
+  color: #111;
+}
+
+.description {
+  font-size: 18px;
+  color: #666;
+  margin: 0;
+  line-height: 1.6;
+}
+
+.primary-button {
+  margin-top: 10px;
+  background: none;
+  border: none;
+  color: #7f55e0ff;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.primary-button:hover {
+  color: #6d3edcff;
+}
+
+.message {
+  margin-top: 40px;
+  font-size: 14px;
+  color: #777;
+}
