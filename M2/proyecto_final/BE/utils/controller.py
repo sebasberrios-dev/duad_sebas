@@ -38,7 +38,7 @@ class Controller:
         filtered_data = self.filter_request_params(items, fields_list)
 
         if not filtered_data:
-            return jsonify({"error": f"No {entity_name} available"}), 404
+            return jsonify({"message": f"No {entity_name} available", f"{entity_name}": []}), 200
         
         serialized_data = self.serialize_list(filtered_data, date_fields)
         return jsonify(serialized_data), 200

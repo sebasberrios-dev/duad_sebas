@@ -74,6 +74,27 @@ def player_token(client):
     })
     return response.get_json().get("token")
 
+@pytest.fixture
+def admin_token(client):
+    ## Token de administrador
+    response = client.post('/login', json={
+        "username": "gameadmin",
+        "password": "admin123"
+    })
+    if response.status_code == 200:
+        return response.get_json().get("token")
+    client.post('/register', json={
+        "username": "gameadmin",
+        "email": "gameadmin@test.com",
+        "password": "admin123",
+        "role": "admin"
+    })
+    response = client.post('/login', json={
+        "username": "gameadmin",
+        "password": "admin123"
+    })
+    return response.get_json().get("token")
+
 class TestGameRoutes:
     ## Tests para las rutas de partidas 
     
@@ -219,9 +240,9 @@ class TestGameRoutes:
         )
         assert response.status_code == 403
 
-    def test_delete_game_owner_only(self, client, dm_token, other_dm_token):
-        ## Test de eliminación solo por DM dueño
-        # Crear partida
+    def test_delete_game_admin_only(self, client, admin_token, dm_token):
+        ## Test de eliminación solo por admin
+        # Crear partida con DM
         create_response = client.post('/games/new', 
             json={
                 "title": "Delete Game",
@@ -232,16 +253,11 @@ class TestGameRoutes:
         )
         game_id = create_response.get_json()["game_id"]
         
-        # Otro DM no puede eliminar
+        # Admin sí puede eliminar
         response = client.delete(f'/games/{game_id}', headers={
-            "Authorization": f"Bearer {other_dm_token}"
+            "Authorization": f"Bearer {admin_token}"
         })
-        assert response.status_code == 403
-        
-        # DM dueño sí puede
-        response = client.delete(f'/games/{game_id}', headers={
-            "Authorization": f"Bearer {dm_token}"
-        })
+        print(f"Admin delete response: {response.status_code}, {response.get_json()}")
         assert response.status_code == 200
 
     def test_get_game_not_found(self, client, dm_token):

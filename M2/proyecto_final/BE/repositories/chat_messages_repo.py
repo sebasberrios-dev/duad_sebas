@@ -4,7 +4,7 @@ sys.path.append(os.path.join(os.path.dirname(__file__), '..', '..'))
 
 from sqlalchemy import insert, select, update, delete
 from BE.utils.query_manager import QueryManager
-from BE.database import chat_messages_table
+from BE.database import chat_messages_table, users_table
 
 class ChatRepository:
     def __init__(self):
@@ -62,6 +62,24 @@ class ChatRepository:
         except Exception as e:
             print(f"Error reading chat messages by game ID: {e}")
             return None
+    
+    def read_by_game_id_with_username(self, game_id):
+        """Obtiene los mensajes de chat de un juego con el nombre de usuario del autor"""
+        try:
+            stmt = select(
+                chat_messages_table,
+                users_table.c.username
+            ).join(
+                users_table,
+                chat_messages_table.c.user_id == users_table.c.id
+            ).where(chat_messages_table.c.game_id == game_id)
+            
+            query = self.query_manager.execute_get(stmt)
+            messages = query.mappings().all()
+            return messages or []
+        except Exception as e:
+            print(f"Error reading chat messages with username by game ID: {e}")
+            return []
         
     def update(self, cm_id, **kwargs):
         try:

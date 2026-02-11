@@ -1,0 +1,50 @@
+@import url(../header.css);
+@import url(../body.css);
+
+.content {
+  max-width: 600px;
+  margin: 80px auto;
+  padding: 2rem;
+  background-color: rgba(20, 20, 20, 0.9);
+  border: 2px solid rgba(139, 0, 0, 0.6);
+  border-radius: 8px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.8), 0 0 40px rgba(139, 0, 0, 0.3);
+}
+
+.title {
+  font-size: 3rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+  text-align: center;
+  color: #cccccc;
+}
+
+.about {
+  font-size: 1.5rem;
+  font-weight: 500;
+  margin-bottom: 1.5rem;
+  text-align: start;
+  color: #cccccc;
+}
+
+.text {
+  font-size: 1.5rem;
+  line-height: 2rem;
+  margin-bottom: 1.5rem;
+  color: #cccccc;
+}
+
+.contact-list {
+  list-style-type: none;
+  padding: 1.5rem;
+  margin-top: 1rem;
+  background-color: rgba(30, 30, 30, 0.95);
+  border-radius: 6px;
+  border: 1px solid rgba(139, 0, 0, 0.4);
+}
+
+.contact-item {
+  font-size: 1.2rem;
+  margin-bottom: 0.8rem;
+  color: #cccccc;
+}

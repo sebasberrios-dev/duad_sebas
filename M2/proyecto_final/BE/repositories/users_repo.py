@@ -23,7 +23,16 @@ class UsersRepository:
         except Exception as e:
             print(f"Error creating user: {e}")
             return None
-    
+    def read_all(self):
+        try:
+            stmt = select(users_table)
+            query = self.query_manager.execute_get(stmt)
+            users = query.mappings().all()
+            return users
+        except Exception as e:
+            print(f"Error reading users: {e}")
+            return None
+        
     def read(self, username, password):
         try:
             stmt = select(users_table).where(

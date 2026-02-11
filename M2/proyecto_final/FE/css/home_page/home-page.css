@@ -1,0 +1,107 @@
+@import url(../body.css);
+@import url(../header.css);
+
+.home-page {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 3rem 2rem;
+  color: white;
+}
+
+.title {
+  font-size: 3.5rem;
+  font-weight: 900;
+  text-align: center;
+  margin-bottom: 1.5rem;
+  text-shadow: 3px 3px 10px rgba(0, 0, 0, 0.8);
+  color: white;
+}
+
+.description {
+  font-size: 1.2rem;
+  line-height: 1.8;
+  text-align: center;
+  margin-bottom: 3rem;
+  opacity: 0.95;
+  text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.8);
+  max-width: 800px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.guide-container {
+  background-color: rgba(20, 20, 20, 0.9);
+  padding: 2.5rem;
+  border-radius: 8px;
+  border: 2px solid rgba(139, 0, 0, 0.6);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.8), 0 0 40px rgba(139, 0, 0, 0.3);
+}
+
+.guide-title {
+  font-size: 2.5rem;
+  font-weight: 800;
+  margin-bottom: 1rem;
+  color: white;
+  text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.8);
+  border-bottom: 2px solid rgba(139, 0, 0, 0.6);
+  padding-bottom: 0.5rem;
+}
+
+.guide-description {
+  font-size: 1.1rem;
+  line-height: 1.8;
+  margin-bottom: 2rem;
+  opacity: 0.95;
+  color: #e7e7e7;
+}
+
+.guide-rule-title {
+  font-size: 2rem;
+  font-weight: 700;
+  margin-top: 2.5rem;
+  margin-bottom: 1rem;
+  color: white;
+  text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.8);
+  border-bottom: 2px solid rgba(139, 0, 0, 0.4);
+  padding-bottom: 0.5rem;
+}
+
+.guide-rule-subtitle {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-top: 1.5rem;
+  margin-bottom: 0.8rem;
+  color: rgba(200, 200, 200, 1);
+  text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.7);
+}
+
+.guide-rule-description {
+  font-size: 1.05rem;
+  line-height: 1.8;
+  margin-bottom: 1.5rem;
+  color: #e7e7e7;
+  opacity: 0.95;
+}
+
+.guide-rule-list {
+  list-style-type: none;
+  padding-left: 0;
+  margin-bottom: 1.5rem;
+}
+
+.guide-rule-item {
+  font-size: 1.05rem;
+  line-height: 1.7;
+  margin-bottom: 0.8rem;
+  padding-left: 1.5rem;
+  position: relative;
+  color: #e7e7e7;
+}
+
+.guide-rule-item::before {
+  content: "⚔";
+  position: absolute;
+  left: 0;
+  color: rgba(139, 0, 0, 0.9);
+  font-size: 1.2rem;
+}
