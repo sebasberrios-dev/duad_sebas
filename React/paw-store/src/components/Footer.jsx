@@ -1,4 +1,4 @@
-import './Footer.css';
+import './Components.css';
 import { memo } from 'react';
 
 function Footer() {
@@ -6,13 +6,13 @@ function Footer() {
     <footer className="footer">
       <div className="footer-container">
         <div className="footer-left">
-          <p className="footer-text">
+          <p className="text-secondary">
             © PawStore 2025 — Todos los derechos reservados.
           </p>
         </div>
         <div className="footer-right">
-          <p className="footer-text">Instagram</p>
-          <p className="footer-text">Facebook</p>
+          <p className="text-secondary">Instagram</p>
+          <p className="text-secondary">Facebook</p>
         </div>
       </div>
     </footer>

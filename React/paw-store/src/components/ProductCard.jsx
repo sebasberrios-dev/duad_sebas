@@ -1,4 +1,4 @@
-import './ProductCard.css';
+import './Components.css';
 
 export function ProductCard({ product, onViewDetails }) {
   return (
@@ -9,11 +9,11 @@ export function ProductCard({ product, onViewDetails }) {
         className="product-image"
       />
       <div className="product-content">
-        <h3 className="product-name">{product.nombre}</h3>
-        <p className="product-price">₡{product.precio}</p>
-        <p className="product-category">{product.categoria}</p>
+        <h3 className="title-sm">{product.nombre}</h3>
+        <p className="price">₡{product.precio}</p>
+        <p className="text-small">{product.categoria}</p>
         <button
-          className="details-button"
+          className="btn btn-primary btn-full"
           onClick={() => onViewDetails(product)}
         >
           Ver detalles

@@ -4,7 +4,7 @@ export function Home({ onNavigate }) {
   return (
     <section>
       <div className="home-container">
-        <h1 className="title">Bienvenido a PawStore</h1>
+        <h1 className="home-title">Bienvenido a PawStore</h1>
         <p className="description">
           Somos una tienda dedicada a ofrecer productos de calidad para tus
           mascotas.

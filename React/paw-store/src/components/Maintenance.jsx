@@ -1,11 +1,11 @@
-import './Maintenance.css';
+import './Components.css';
 
 export function Maintenance() {
   return (
     <section>
-      <div className="maintenance-container">
-        <h2 className="maintenance-message">En mantenimiento...</h2>
-        <p className="maintenance-text">
+      <div className="centered-container full-height">
+        <h2 className="title title-lg">En mantenimiento...</h2>
+        <p className="text maintenance-text">
           Esta página estará disponible pronto.
         </p>
       </div>

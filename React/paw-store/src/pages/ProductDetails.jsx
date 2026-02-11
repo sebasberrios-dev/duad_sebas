@@ -13,7 +13,7 @@ export default function ProductDetail({ product, onNavigate }) {
     <section className="product-detail-page">
       <Image image={product.imagen} />
       <div className="container">
-        <h1 className="title">{product.nombre}</h1>
+        <h1 className="detail-title">{product.nombre}</h1>
         <p className="price">₡{product.precio}</p>
         <p className="category">{product.categoria}</p>
         <p className="description">{product.descripcion}</p>

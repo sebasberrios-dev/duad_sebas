@@ -1,4 +1,4 @@
-import './Navbar.css';
+import './Components.css';
 import pawPrint from '../assets/lucide-PawPrint-Outlined.svg';
 import { memo } from 'react';
 
@@ -8,10 +8,14 @@ function Navbar({ onNavigate, currentPage }) {
       <nav className="navbar">
         <div className="navbar-container">
           <div className="navbar-logo">
-            <span className="logo-badge">
-              <img src={pawPrint} alt="PawPrint Logo" className="navbar-icon" />
+            <span className="badge">
+              <img
+                src={pawPrint}
+                alt="PawPrint Logo"
+                className="icon navbar-icon"
+              />
             </span>
-            <span className="logo-text">PawStore</span>
+            <span className="text-brand">PawStore</span>
           </div>
 
           <ul className="navbar-links">

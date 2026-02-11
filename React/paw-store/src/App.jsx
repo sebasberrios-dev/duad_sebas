@@ -41,6 +41,7 @@ export function App() {
           </Suspense>
         )}
         {currentPage === 'contact' && <Maintenance />}
+        {currentPage === 'admin' && <Maintenance />}
       </main>
 
       <Footer />
