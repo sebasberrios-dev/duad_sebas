@@ -1,9 +1,10 @@
 import { useCallback, useState, lazy, Suspense } from 'react';
-import Navbar from './components/Navbar';
-import Footer from './components/Footer';
-import { Loading } from './components/Loading';
+import Navbar from './components/Static/Navbar';
+import Footer from './components/Static/Footer';
+import { Loading } from './components/Messages-States/Loading';
 import { Home } from './pages/Home';
-import { Maintenance } from './components/Maintenance';
+import { Maintenance } from './components/Messages-States/Maintenance';
+import { Administration } from './pages/Administration';
 
 const Products = lazy(() => import('./pages/Products'));
 const ProductDetail = lazy(() => import('./pages/ProductDetails'));
@@ -21,11 +22,14 @@ export function App() {
     setSelectedProduct(product);
     setCurrentPage('product-detail');
   }, []);
+
   return (
     <div className="app-layout">
       <Navbar onNavigate={handleNavigate} currentPage={currentPage} />
 
-      <main className="app-main">
+      <main
+        className={`app-main ${currentPage === 'admin' ? 'app-main-admin' : ''}`}
+      >
         {currentPage === 'home' && <Home onNavigate={handleNavigate} />}
         {currentPage === 'products' && (
           <Suspense fallback={<Loading element={'catálogo'} />}>
@@ -41,7 +45,7 @@ export function App() {
           </Suspense>
         )}
         {currentPage === 'contact' && <Maintenance />}
-        {currentPage === 'admin' && <Maintenance />}
+        {currentPage === 'admin' && <Administration />}
       </main>
 
       <Footer />

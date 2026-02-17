@@ -1,0 +1,123 @@
+.tableCard {
+  background: #ffffff;
+  border: 1px solid #e4e7f2;
+  border-radius: 14px;
+  box-shadow: 0 6px 18px rgba(18, 24, 40, 0.06);
+  padding: 18px 20px;
+  margin-bottom: 24px;
+  overflow-x: auto;
+}
+
+.cardHeader {
+  margin-bottom: 12px;
+}
+
+.cardTitle {
+  margin: 0 0 20px;
+  font-size: 22px;
+  font-weight: 700;
+  color: #111827;
+}
+
+.cardDescription {
+  margin: 0 0 20px;
+  font-size: 14px;
+  color: #6b7280;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 680px;
+}
+
+.tableHead {
+  border-bottom: 1px solid #e8ebf5;
+}
+
+.headerRow {
+  text-align: left;
+}
+
+.headerCell {
+  color: #6b7280;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  padding: 10px 12px;
+}
+
+.headerCell:last-child {
+  text-align: right;
+  padding-right: 20px;
+}
+
+.bodyRow {
+  border-bottom: 1px solid #f0f2f9;
+}
+
+.bodyCell {
+  padding: 12px;
+  color: #1f2937;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.categoryBadge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2px 10px;
+  border-radius: 999px;
+  background: #eef1f6;
+  color: #4b5563;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.actionsCell {
+  padding: 12px;
+  text-align: right;
+  white-space: nowrap;
+  padding-right: 20px;
+}
+
+.bodyRow:last-child .bodyCell,
+.bodyRow:last-child .actionsCell {
+  border-bottom: none;
+}
+
+.tableActions {
+  display: flex;
+  gap: 12px;
+  justify-content: flex-end;
+}
+
+.editButton,
+.deleteButton {
+  border: 1px solid #d7dbea;
+  border-radius: 10px;
+  background: #ffffff;
+  color: #2b2f38;
+  padding: 6px 12px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease,
+    color 0.2s ease;
+}
+
+.editButton:hover {
+  background: #f2f4ff;
+  border-color: #9aa2ff;
+  color: #3c48d2;
+}
+
+.deleteButton:hover {
+  background: #fff1f1;
+  border-color: #f1a5a5;
+  color: #d83b3b;
+}

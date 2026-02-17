@@ -1,36 +1,10 @@
 import './Products.css';
-import { useState, useEffect } from 'react';
-import { Loading } from '../components/Loading';
-import { NoProductsMessage } from '../components/NoProductsMessage';
-import { ErrorMessage } from '../components/ErrorMesagge';
-import { ProductCard } from '../components/ProductCard';
+import { NoProductsMessage } from '../components/Products/NoProductsMessage.jsx';
+import { ProductCard } from '../components/Products/ProductCard.jsx';
+import { useProducts } from '../context/ProductsContext.jsx';
 
 export default function Products({ onViewDetails }) {
-  const [products, setProducts] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-
-  useEffect(() => {
-    const timer = setTimeout(async () => {
-      try {
-        const data = await import('../data/products.json');
-        setProducts(data.default);
-      } catch (err) {
-        setError('Error al cargar los productos.');
-      }
-      setLoading(false);
-    }, 300);
-
-    return () => clearTimeout(timer);
-  }, []);
-
-  if (loading) {
-    return <Loading element={'productos'} />;
-  }
-
-  if (error) {
-    return <ErrorMessage text={error} />;
-  }
+  const { products } = useProducts();
 
   if (products.length === 0) {
     return <NoProductsMessage />;
