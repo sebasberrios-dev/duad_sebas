@@ -1,0 +1,40 @@
+.footer {
+  background: #fff;
+  border-top: 1px solid #eee;
+  box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.container {
+  max-width: 1500px;
+  margin: 0 auto;
+  padding: 14px 24px;
+  height: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.left,
+.right {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.text {
+  font-size: 0.875rem;
+  color: #666;
+  margin: 0;
+}
+
+.link {
+  text-decoration: none;
+  font-size: 0.875rem;
+  color: #666;
+  transition: color 0.2s;
+  cursor: pointer;
+}
+
+.link:hover {
+  color: #6c2bd9;
+}

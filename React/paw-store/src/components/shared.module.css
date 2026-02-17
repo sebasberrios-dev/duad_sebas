@@ -1,0 +1,123 @@
+/* --- Variables y tokens de diseño --- */
+:root {
+  --color-primary: #636ae8ff;
+  --color-primary-dark: #5b61f0;
+  --color-accent: rgb(140, 103, 226);
+  --color-brand: #7f55e0ff;
+  --color-success: #19b36b;
+  --color-error: #cc0000;
+
+  --color-text: #333;
+  --color-text-secondary: #666;
+  --color-text-tertiary: #777;
+
+  --color-border: #e9e9ef;
+  --color-bg: #fff;
+  --color-shadow: rgba(0, 0, 0, 0.04);
+}
+
+/* --- Contenedores --- */
+.container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  min-height: calc(100vh - 160px);
+  padding: 2rem;
+}
+
+.containerFull {
+  min-height: 700px;
+}
+
+/* --- Tipografía --- */
+.title {
+  margin: 0;
+  font-size: 1.5rem;
+  color: var(--color-text);
+  font-weight: 600;
+}
+
+.titleLg {
+  font-size: 2rem;
+}
+
+.titleSm {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: #111;
+}
+
+.text {
+  margin: 0;
+  font-size: 1rem;
+  color: var(--color-text);
+}
+
+.textSecondary {
+  font-size: 0.875rem;
+  color: var(--color-text-secondary);
+}
+
+.textSmall {
+  font-size: 0.8125rem;
+  color: var(--color-text-tertiary);
+}
+
+.price {
+  margin: 0;
+  color: var(--color-primary);
+  font-weight: 700;
+  font-size: 1rem;
+}
+
+/* --- Botones --- */
+.btn {
+  padding: 10px 12px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.2s;
+}
+
+.btnPrimary {
+  background: var(--color-primary);
+  color: #fff;
+}
+
+.btnPrimary:hover {
+  filter: brightness(0.95);
+}
+
+.btnAccent {
+  background: var(--color-accent);
+  color: white;
+  padding: 8px 14px;
+  border-radius: 6px;
+}
+
+.btnAccent:hover {
+  background: rgba(140, 103, 226, 0.8);
+}
+
+.btnFull {
+  width: 100%;
+}
+
+/* --- Iconos y badges --- */
+.badge {
+  width: 34px;
+  height: 34px;
+  border-radius: 6px;
+  background: var(--color-brand);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.icon {
+  width: 20px;
+  height: 20px;
+  display: block;
+}
