@@ -57,6 +57,20 @@ export function Administration() {
     addProduct(newProduct);
   };
 
+  if (editingProduct) {
+    return (
+      <section className={styles.page}>
+        <div className={styles.container}>
+          <EditProductForm
+            product={editingProduct}
+            onSubmit={handleUpdate}
+            onCancel={handleCloseForm}
+          />
+        </div>
+      </section>
+    );
+  }
+
   return (
     <section className={styles.page}>
       <div className={styles.container}>
@@ -70,18 +84,6 @@ export function Administration() {
         />
 
         <AddProductForm onSubmit={handleAddProduct} />
-
-        {editingProduct && (
-          <div className={styles.modalOverlay}>
-            <div className={styles.modalCard}>
-              <EditProductForm
-                product={editingProduct}
-                onSubmit={handleUpdate}
-                onCancel={handleCloseForm}
-              />
-            </div>
-          </div>
-        )}
       </div>
     </section>
   );
