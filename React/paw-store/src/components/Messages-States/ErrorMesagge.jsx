@@ -1,4 +1,4 @@
-import styles from './ErrorMessage.module.css';
+import styles from './MessagesStates.module.css';
 import shared from '../shared.module.css';
 
 export function ErrorMessage({ text }) {

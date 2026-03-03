@@ -1,9 +1,12 @@
 import styles from './Navbar.module.css';
 import shared from '../shared.module.css';
 import pawPrint from '../../assets/lucide-PawPrint-Outlined.svg';
+import { useAuth } from '../../store/AuthContext.jsx';
 import { memo } from 'react';
 
 function Navbar({ onNavigate, currentPage }) {
+  const { isLogged, isAdmin, user } = useAuth();
+
   return (
     <header>
       <nav className={styles.navbar}>
@@ -38,12 +41,32 @@ function Navbar({ onNavigate, currentPage }) {
             >
               Contacto
             </li>
-            <li
-              className={`${styles.item} ${currentPage === 'admin' ? styles.active : ''}`}
-              onClick={() => onNavigate('admin')}
-            >
-              Administración
-            </li>
+            {isAdmin && (
+              <li
+                className={`${styles.item} ${currentPage === 'admin' ? styles.active : ''}`}
+                onClick={() => onNavigate('admin')}
+              >
+                Administración
+              </li>
+            )}
+            {isLogged ? ( // 7 8 12 14 20 21
+              <>
+                <li className={styles.userLabel}>Usuario: {user.role}</li>
+                <li
+                  className={`${styles.item} ${styles.logout}`}
+                  onClick={() => onNavigate('logout')}
+                >
+                  Cerrar sesión
+                </li>
+              </>
+            ) : (
+              <li
+                className={`${styles.item} ${styles.login} ${currentPage === 'login' ? styles.active : ''}`}
+                onClick={() => onNavigate('login')}
+              >
+                Iniciar sesión
+              </li>
+            )}
           </ul>
         </div>
       </nav>

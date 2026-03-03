@@ -6,10 +6,12 @@
   --color-brand: #7f55e0ff;
   --color-success: #19b36b;
   --color-error: #cc0000;
+  --color-error-dark: #a30000;
 
   --color-text: #333;
   --color-text-secondary: #666;
   --color-text-tertiary: #777;
+  --color-text-quaternary: #fff;
 
   --color-border: #e9e9ef;
   --color-bg: #fff;
@@ -50,7 +52,7 @@
 
 .text {
   margin: 0;
-  font-size: 1rem;
+  font-size: 1.1rem;
   color: var(--color-text);
 }
 
@@ -73,6 +75,7 @@
 
 /* --- Botones --- */
 .btn {
+  font-size: 1rem;
   padding: 10px 12px;
   border: none;
   border-radius: 8px;

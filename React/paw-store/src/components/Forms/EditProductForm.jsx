@@ -1,148 +1,144 @@
-import { Formik, Form, Field, ErrorMessage } from 'formik';
-import * as Yup from 'yup';
-import styles from './EditProductForm.module.css';
-
-const validationSchema = Yup.object({
-  nombre: Yup.string().required('El nombre es obligatorio'),
-  descripcion: Yup.string().required('La descripción es obligatoria'),
-  precio: Yup.number()
-    .typeError('El precio debe ser un número')
-    .positive('El precio debe ser un número positivo')
-    .required('El precio es obligatorio'),
-  categoria: Yup.string().required('La categoría es obligatoria'),
-  stock: Yup.number()
-    .typeError('El stock debe ser un número')
-    .integer('El stock debe ser un número entero')
-    .positive('El stock debe ser un número positivo')
-    .required('El stock es obligatorio'),
-
-  imagen: Yup.string()
-    .required('La imagen es obligatoria')
-    .test('imagen-valida', 'La imagen debe ser una URL válida', (value) => {
-      if (!value) {
-        return false;
-      }
-
-      const normalized = value.trim();
-      const isAbsoluteUrl = /^https?:\/\//i.test(normalized);
-      const isRelativePath = /^(\.\.\/|\.\/|\/)/.test(normalized);
-
-      return isAbsoluteUrl || isRelativePath;
-    }),
-});
+import { useForm } from 'react-hook-form';
+import { Form, Title, Field, FieldTextarea, Button } from './FormsComponents';
+import styles from './Forms.module.css';
+import closeIcon from '../../assets/close-svgrepo-com.svg';
 
 export function EditProductForm({ product, onSubmit, onCancel }) {
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({
+    defaultValues: {
+      name: product.name,
+      description: product.description,
+      price: product.price,
+      category: product.category,
+      stock: product.stock,
+      image_url: product.image_url,
+    },
+  });
+
   return (
-    <Formik
-      initialValues={{
-        nombre: product.nombre,
-        descripcion: product.descripcion,
-        precio: product.precio,
-        categoria: product.categoria,
-        stock: product.stock,
-        imagen: product.imagen,
-      }}
-      enableReinitialize
-      validationSchema={validationSchema}
-      onSubmit={onSubmit}
-    >
-      <div>
-        <h1 className={styles.title}>Editar producto</h1>
-        <Form className={styles.form}>
-          <p className={styles.warning}>
-            Por favor, completa todos los campos antes de guardar los cambios.
-          </p>
-          <div className={styles.group}>
-            <label htmlFor="nombre" className={styles.label}>
-              Nombre
-            </label>
-            <Field id="nombre" name="nombre" className={styles.input} />
-            <ErrorMessage
-              name="nombre"
-              component="div"
-              className={styles.error}
-            />
-
-            <label htmlFor="descripcion" className={styles.label}>
-              Descripción
-            </label>
-            <Field
-              id="descripcion"
-              name="descripcion"
-              as="textarea"
-              className={styles.textarea}
-            />
-            <ErrorMessage
-              name="descripcion"
-              component="div"
-              className={styles.error}
-            />
-
-            <label htmlFor="precio" className={styles.label}>
-              Precio
-            </label>
-            <Field
-              id="precio"
-              name="precio"
-              type="number"
-              className={styles.input}
-            />
-            <ErrorMessage
-              name="precio"
-              component="div"
-              className={styles.error}
-            />
-
-            <label htmlFor="categoria" className={styles.label}>
-              Categoría
-            </label>
-            <Field id="categoria" name="categoria" className={styles.input} />
-            <ErrorMessage
-              name="categoria"
-              component="div"
-              className={styles.error}
-            />
-
-            <label htmlFor="stock" className={styles.label}>
-              Stock
-            </label>
-            <Field
-              id="stock"
-              name="stock"
-              type="number"
-              className={styles.input}
-            />
-            <ErrorMessage
-              name="stock"
-              component="div"
-              className={styles.error}
-            />
-
-            <label htmlFor="imagen" className={styles.label}>
-              URL de la imagen
-            </label>
-            <Field id="imagen" name="imagen" className={styles.input} />
-            <ErrorMessage
-              name="imagen"
-              component="div"
-              className={styles.error}
-            />
-
-            <div className={styles.actions}>
-              <button
-                type="button"
-                className={styles.cancelButton}
-                onClick={onCancel}
-              >
-                Cancelar
-              </button>
-              <button type="submit" className={styles.submitButton}>
-                Guardar cambios
-              </button>
-            </div>
-          </div>
-        </Form>
+    <Form className={styles.addForm} onSubmit={handleSubmit(onSubmit)}>
+      <div className={styles.editHeader}>
+        <Title className={styles.addTitle}>Editar producto</Title>
+        <button
+          type="button"
+          className={styles.closeButton}
+          onClick={onCancel}
+          aria-label="Cerrar"
+        >
+          <img src={closeIcon} alt="Cerrar" className={styles.closeIcon} />
+        </button>
       </div>
-    </Formik>
+      <div className={styles.grid}>
+        <div className={styles.column}>
+          <div className={styles.addField}>
+            <Field
+              labelClassName={styles.productLabel}
+              inputClassName={styles.productInput}
+              id="name"
+              placeholder="Nombre del producto"
+              error={errors.name ? 'El nombre es obligatorio' : ''}
+              {...register('name', { required: true })}
+            >
+              Nombre
+            </Field>
+          </div>
+
+          <div className={styles.addField}>
+            <FieldTextarea
+              labelClassName={styles.productLabel}
+              inputClassName={styles.productTextarea}
+              id="description"
+              placeholder="Descripción detallada del producto"
+              error={errors.description ? 'La descripción es obligatoria' : ''}
+              {...register('description', { required: true })}
+            >
+              Descripción
+            </FieldTextarea>
+          </div>
+
+          <div className={styles.addField}>
+            <Field
+              labelClassName={styles.productLabel}
+              inputClassName={styles.productInput}
+              id="price"
+              type="number"
+              step="0.01"
+              placeholder="0.00"
+              error={
+                errors.price
+                  ? 'El precio es obligatorio y debe ser un número positivo'
+                  : ''
+              }
+              {...register('price', { required: true, min: 0 })}
+            >
+              Precio
+            </Field>
+          </div>
+        </div>
+
+        <div className={styles.column}>
+          <div className={styles.addField}>
+            <Field
+              labelClassName={styles.productLabel}
+              inputClassName={styles.productInput}
+              id="category"
+              placeholder="Categoría del producto (ej. Alimento, Juguetes)"
+              error={errors.category ? 'La categoría es obligatoria' : ''}
+              {...register('category', { required: true })}
+            >
+              Categoría
+            </Field>
+          </div>
+
+          <div className={styles.addField}>
+            <Field
+              labelClassName={styles.productLabel}
+              inputClassName={styles.productInput}
+              id="image_url"
+              placeholder="https://api.example.com/placeholder/image.jpg"
+              error={
+                errors.image_url ? 'La URL de la imagen es obligatoria' : ''
+              }
+              {...register('image_url', { required: true })}
+            >
+              URL de la imagen
+            </Field>
+          </div>
+
+          <div className={styles.addField}>
+            <Field
+              labelClassName={styles.productLabel}
+              inputClassName={styles.productInput}
+              id="stock"
+              type="number"
+              placeholder="0"
+              error={
+                errors.stock
+                  ? 'El stock es obligatorio y debe ser un número positivo'
+                  : ''
+              }
+              {...register('stock', { required: true, min: 0 })}
+            >
+              Stock
+            </Field>
+          </div>
+        </div>
+      </div>
+
+      <div className={styles.editFormActions}>
+        <Button type="submit" className={styles.submitButton}>
+          Guardar cambios
+        </Button>
+      </div>
+      <div className={styles.addWarning}>
+        <p>
+          Por favor, complete todos los campos antes de guardar los cambios.
+        </p>
+      </div>
+    </Form>
   );
 }

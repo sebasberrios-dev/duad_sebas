@@ -1,5 +1,6 @@
 import { useForm } from 'react-hook-form';
-import styles from './AddProductForm.module.css';
+import { Form, Title, Field, FieldTextarea, Button } from './FormsComponents';
+import styles from './Forms.module.css';
 
 export function AddProductForm({ onSubmit }) {
   const {
@@ -19,105 +20,113 @@ export function AddProductForm({ onSubmit }) {
   };
 
   return (
-    <form className={styles.form} onSubmit={handleSubmit(handleFormSubmit)}>
-      <h2 className={styles.title}>Agregar nuevo producto</h2>
+    <Form className={styles.addForm} onSubmit={handleSubmit(handleFormSubmit)}>
+      <Title className={styles.addTitle}>Agregar nuevo producto</Title>
       <div className={styles.grid}>
         <div className={styles.column}>
-          <div className={styles.field}>
-            <label htmlFor="nombre">Nombre</label>
-            <input
+          <div className={styles.addField}>
+            <Field
+              labelClassName={styles.productLabel}
+              inputClassName={styles.productInput}
               id="nombre"
               placeholder="Nombre del producto"
+              error={errors.nombre ? 'Este campo es obligatorio' : ''}
               {...register('nombre', { required: true })}
-            />
-            <div aria-live="assertive">
-              {errors.nombre && <span>Este campo es obligatorio</span>}
-            </div>
+            >
+              Nombre
+            </Field>
           </div>
 
-          <div className={styles.field}>
-            <label htmlFor="descripcion">Descripción</label>
-            <textarea
+          <div className={styles.addField}>
+            <FieldTextarea
+              labelClassName={styles.productLabel}
+              inputClassName={styles.productTextarea}
               id="descripcion"
               placeholder="Descripción detallada del producto"
+              error={errors.descripcion ? 'Este campo es obligatorio' : ''}
               {...register('descripcion', { required: true })}
-            ></textarea>
-            <div aria-live="assertive">
-              {errors.descripcion && <span>Este campo es obligatorio</span>}
-            </div>
+            >
+              Descripción
+            </FieldTextarea>
           </div>
 
-          <div className={styles.field}>
-            <label htmlFor="precio">Precio</label>
-            <input
+          <div className={styles.addField}>
+            <Field
+              labelClassName={styles.productLabel}
+              inputClassName={styles.productInput}
               id="precio"
               type="number"
               step="0.01"
               placeholder="0.00"
+              error={
+                errors.precio
+                  ? 'Este campo es obligatorio y debe ser un número positivo'
+                  : ''
+              }
               {...register('precio', { required: true, min: 0 })}
-            />
-            <div aria-live="assertive">
-              {errors.precio && (
-                <span>
-                  Este campo es obligatorio y debe ser un número positivo
-                </span>
-              )}
-            </div>
+            >
+              Precio
+            </Field>
           </div>
         </div>
 
         <div className={styles.column}>
-          <div className={styles.field}>
-            <label htmlFor="categoria">Categoría</label>
-            <input
+          <div className={styles.addField}>
+            <Field
+              labelClassName={styles.productLabel}
+              inputClassName={styles.productInput}
               id="categoria"
               placeholder="Categoría del producto (ej. Alimento, Juguetes)"
+              error={errors.categoria ? 'Este campo es obligatorio' : ''}
               {...register('categoria', { required: true })}
-            />
-            <div aria-live="assertive">
-              {errors.categoria && <span>Este campo es obligatorio</span>}
-            </div>
+            >
+              Categoría
+            </Field>
           </div>
 
-          <div className={styles.field}>
-            <label htmlFor="imagen">URL de la imagen</label>
-            <input
+          <div className={styles.addField}>
+            <Field
+              labelClassName={styles.productLabel}
+              inputClassName={styles.productInput}
               id="imagen"
-              placeholder="/ap/placeholder/600x400"
+              placeholder="https://api.example.com/placeholder/image.jpg"
+              error={errors.imagen ? 'Este campo es obligatorio' : ''}
               {...register('imagen', { required: true })}
-            />
-            <div aria-live="assertive">
-              {errors.imagen && <span>Este campo es obligatorio</span>}
-            </div>
+            >
+              URL de la imagen
+            </Field>
           </div>
 
-          <div className={styles.field}>
-            <label htmlFor="stock">Stock</label>
-            <input
+          <div className={styles.addField}>
+            <Field
+              labelClassName={styles.productLabel}
+              inputClassName={styles.productInput}
               id="stock"
               type="number"
               placeholder="0"
+              error={
+                errors.stock
+                  ? 'Este campo es obligatorio y debe ser un número positivo'
+                  : ''
+              }
               {...register('stock', { required: true, min: 0 })}
-            />
-            <div aria-live="assertive">
-              {errors.stock && (
-                <span>
-                  Este campo es obligatorio y debe ser un número positivo
-                </span>
-              )}
-            </div>
+            >
+              Stock
+            </Field>
           </div>
         </div>
       </div>
 
-      <div className={styles.actions}>
-        <button type="submit">Agregar producto</button>
+      <div className={styles.addActions}>
+        <Button type="submit" className={styles.addPrimaryBtn}>
+          Agregar producto
+        </Button>
       </div>
-      <div className={styles.warning}>
+      <div className={styles.addWarning}>
         <p>
           Por favor, complete todos los campos antes de agregar el producto.
         </p>
       </div>
-    </form>
+    </Form>
   );
 }

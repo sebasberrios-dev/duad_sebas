@@ -1,9 +1,9 @@
 .card {
-  background: #fff;
-  border: 1px solid #e9e9ef;
+  background: var(--color-bg);
+  border: 1px solid var(--color-border);
   border-radius: 10px;
   overflow: hidden;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  box-shadow: 0 2px 8px var(--color-shadow);
   display: flex;
   flex-direction: column;
 }

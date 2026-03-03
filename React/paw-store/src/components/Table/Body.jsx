@@ -6,6 +6,14 @@ const normalizeColumnKey = (column) =>
     .normalize('NFD')
     .replace(/[\u0300-\u036f]/g, '');
 
+const columnKeyMap = {
+  nombre: 'name',
+  precio: 'price',
+  categoria: 'category',
+};
+
+const resolveKey = (columnKey) => columnKeyMap[columnKey] ?? columnKey;
+
 export function TableBody({ data, columns, onEdit, onDelete }) {
   const formatCurrency = (value) =>
     new Intl.NumberFormat('es-CR', {
@@ -13,7 +21,7 @@ export function TableBody({ data, columns, onEdit, onDelete }) {
       currency: 'CRC',
       minimumFractionDigits: 0,
     }).format(value ?? 0);
-
+  const dataArray = Array.isArray(data) ? data : [];
   const formatId = (value) => {
     if (typeof value === 'number') {
       return `PAW${String(value).padStart(3, '0')}`;
@@ -22,7 +30,14 @@ export function TableBody({ data, columns, onEdit, onDelete }) {
   };
   return (
     <tbody>
-      {data.map((row, index) => {
+      {dataArray.length === 0 && (
+        <tr>
+          <td colSpan={columns.length} className={styles.noData}>
+            No hay productos disponibles
+          </td>
+        </tr>
+      )}
+      {dataArray.map((row, index) => {
         return (
           <tr key={index} className={styles.bodyRow}>
             {columns.map((column) => {
@@ -31,7 +46,7 @@ export function TableBody({ data, columns, onEdit, onDelete }) {
               if (columnKey === 'id') {
                 return (
                   <td key={column} className={styles.bodyCell}>
-                    {formatId(row[columnKey])}
+                    {formatId(row[resolveKey(columnKey)])}
                   </td>
                 );
               }
@@ -62,7 +77,7 @@ export function TableBody({ data, columns, onEdit, onDelete }) {
               if (columnKey === 'precio') {
                 return (
                   <td key={column} className={styles.bodyCell}>
-                    {formatCurrency(row[columnKey])}
+                    {formatCurrency(row[resolveKey(columnKey)])}
                   </td>
                 );
               }
@@ -71,7 +86,7 @@ export function TableBody({ data, columns, onEdit, onDelete }) {
                 return (
                   <td key={column} className={styles.bodyCell}>
                     <span className={styles.categoryBadge}>
-                      {row[columnKey]}
+                      {row[resolveKey(columnKey)]}
                     </span>
                   </td>
                 );
@@ -79,7 +94,7 @@ export function TableBody({ data, columns, onEdit, onDelete }) {
 
               return (
                 <td key={column} className={styles.bodyCell}>
-                  {row[columnKey]}
+                  {row[resolveKey(columnKey)]}
                 </td>
               );
             })}

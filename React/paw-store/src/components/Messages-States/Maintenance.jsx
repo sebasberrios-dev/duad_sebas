@@ -1,10 +1,10 @@
-import styles from './Maintenance.module.css';
+import styles from './MessagesStates.module.css';
 import shared from '../shared.module.css';
 
 export function Maintenance() {
   return (
     <section>
-      <div className={`${shared.container} ${styles.fullHeight}`}>
+      <div className={`${shared.container} ${shared.containerFull}`}>
         <h2 className={`${shared.title} ${shared.titleLg}`}>
           En mantenimiento...
         </h2>

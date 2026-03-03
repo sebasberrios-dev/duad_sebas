@@ -1,16 +1,15 @@
 import { useState } from 'react';
 import styles from './Administration.module.css';
 import { AdminProductsTable } from '../components/Table/AdminProductsTable.jsx';
-import { useProducts } from '../context/ProductsContext.jsx';
 import { EditProductForm } from '../components/Forms/EditProductForm.jsx';
 import { AddProductForm } from '../components/Forms/AddProductForm.jsx';
+import { useProductsStore } from '../store/useProductsStore.jsx';
 
 export function Administration() {
-  const { products, deleteProduct, updateProduct, addProduct } = useProducts();
+  const { products, deleteProduct, updateProduct, addProduct, loading, error } =
+    useProductsStore();
   const [editingProduct, setEditingProduct] = useState(null);
-
   const columns = ['ID', 'NOMBRE', 'PRECIO', 'CATEGORÍA', 'STOCK', 'ACCIONES'];
-
   const handleDelete = (product) => {
     deleteProduct(product.id);
   };
@@ -19,71 +18,62 @@ export function Administration() {
     setEditingProduct(product);
   };
 
-  const handleUpdate = (values, helpers) => {
+  const handleUpdate = (values) => {
     if (!editingProduct) {
       return;
     }
 
     updateProduct(editingProduct.id, {
-      nombre: values.nombre.trim(),
-      descripcion: values.descripcion.trim(),
-      precio: Number(values.precio),
-      categoria: values.categoria.trim(),
+      name: values.name.trim(),
+      description: values.description.trim(),
+      price: Number(values.price),
+      category: values.category.trim(),
       stock: Number(values.stock),
-      imagen: values.imagen.trim(),
+      image_url: values.image_url.trim(),
     });
 
     setEditingProduct(null);
-
-    if (helpers?.setSubmitting) {
-      helpers.setSubmitting(false);
-    }
   };
 
-  const handleCloseForm = () => {
+  const handleCancel = () => {
     setEditingProduct(null);
   };
 
   const handleAddProduct = (data) => {
     const newProduct = {
-      id: products.length > 0 ? Math.max(...products.map((p) => p.id)) + 1 : 1,
-      nombre: data.nombre.trim(),
-      descripcion: data.descripcion.trim(),
-      precio: data.precio,
-      categoria: data.categoria.trim(),
+      name: data.nombre.trim(),
+      description: data.descripcion.trim(),
+      price: data.precio,
+      category: data.categoria.trim(),
       stock: data.stock,
-      imagen: data.imagen.trim(),
+      image_url: data.imagen.trim(),
     };
     addProduct(newProduct);
   };
 
-  if (editingProduct) {
-    return (
-      <section className={styles.page}>
-        <div className={styles.container}>
-          <EditProductForm
-            product={editingProduct}
-            onSubmit={handleUpdate}
-            onCancel={handleCloseForm}
-          />
-        </div>
-      </section>
-    );
-  }
-
   return (
     <section className={styles.page}>
       <div className={styles.container}>
-        <AdminProductsTable
-          columns={columns}
-          data={products}
-          onEdit={handleEdit}
-          onDelete={handleDelete}
-          title="Administración de Productos"
-          description="En esta sección puedes gestionar el catálogo de productos de Paw Store."
-        />
-
-        <AddProductForm onSubmit={handleAddProduct} />
+        <h1 className={styles.title}>Administración de Productos</h1>
+        {loading && <p className={styles.message}>Cargando productos...</p>}
+        {error && <p className={styles.error}>¡Ups algo salió mal!</p>}
+        {!loading && !error && (
+          <AdminProductsTable
+            data={products}
+            columns={columns}
+            onEdit={handleEdit}
+            onDelete={handleDelete}
+          />
+        )}
+        {editingProduct ? (
+          <EditProductForm
+            product={editingProduct}
+            onSubmit={handleUpdate}
+            onCancel={handleCancel}
+          />
+        ) : (
+          <AddProductForm onSubmit={handleAddProduct} />
+        )}
       </div>
     </section>
   );
