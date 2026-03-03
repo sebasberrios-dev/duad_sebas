@@ -11,12 +11,12 @@ function Image({ image }) {
 export default function ProductDetail({ product, onNavigate }) {
   return (
     <section className="product-detail-page">
-      <Image image={product.imagen} />
+      <Image image={product.image_url} />
       <div className="container">
-        <h1 className="detail-title">{product.nombre}</h1>
-        <p className="price">₡{product.precio}</p>
-        <p className="category">{product.categoria}</p>
-        <p className="description">{product.descripcion}</p>
+        <h1 className="detail-title">{product.name}</h1>
+        <p className="price">₡{product.price}</p>
+        <p className="category">{product.category}</p>
+        <p className="description">{product.description}</p>
         <p className="message">
           Más adelante aquí se podrá agregar este producto al carrito y
           completar la compra

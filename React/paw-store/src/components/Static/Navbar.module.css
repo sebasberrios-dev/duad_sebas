@@ -1,0 +1,90 @@
+.navbar {
+  background: var(--color-bg);
+  border-bottom: 1px solid var(--color-border);
+  box-shadow: 0 2px 4px var(--color-shadow);
+}
+
+.container {
+  max-width: 1800px;
+  margin: 0 auto;
+  padding: 14px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.iconWhite {
+  filter: brightness(0) invert(1);
+}
+
+.brand {
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: var(--color-brand);
+}
+
+.links {
+  list-style: none;
+  display: flex;
+  align-items: center;
+  gap: 28px;
+  margin: 0;
+  padding: 0;
+}
+
+.item {
+  cursor: pointer;
+  color: var(--color-text);
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  transition: color 0.2s;
+}
+
+.item.logout {
+  color: var(--color-error);
+  &&:hover {
+    color: var(--color-error-dark);
+  }
+}
+
+.item.login {
+  background-color: var(--color-bg);
+  color: var(--color-text);
+  padding: 6px 12px;
+  border: 1px solid var(--color-border);
+  border-radius: 4px;
+
+  &&:hover {
+    box-shadow: 1px 1px 6px var(--color-brand);
+    transition: box-shadow 0.2s;
+  }
+  &&.active {
+    box-shadow: 1px 1px 6px var(--color-brand);
+    transition: box-shadow 0.2s;
+  }
+}
+
+.item:hover:not(.login) {
+  color: var(--color-accent);
+}
+
+.item.active:not(.login) {
+  color: var(--color-brand);
+  font-weight: 600;
+}
+
+.userLabel {
+  color: var(--color-text);
+  font-weight: 500;
+  font-size: 0.95rem;
+  cursor: default;
+  display: flex;
+  align-items: center;
+}

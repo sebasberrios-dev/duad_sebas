@@ -1,0 +1,281 @@
+/* Login / Register */
+
+.section {
+  min-height: 70vh;
+}
+
+.form {
+  background-color: var(--color-bg);
+  border-radius: 12px;
+  box-shadow: 0 4px 20px var(--color-shadow);
+  padding: 2.5rem 2.5rem;
+  width: 100%;
+  max-width: 420px;
+  display: flex;
+  flex-direction: column;
+  gap: 1.1rem;
+}
+
+.textAlign {
+  text-align: center;
+}
+
+.errorMessage {
+  color: var(--color-error);
+  font-size: 0.9rem;
+  text-align: center;
+  margin: 0;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.label {
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--color-text-secondary);
+}
+
+.input {
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  padding: 0.65rem 0.85rem;
+  font-size: 0.95rem;
+  color: var(--color-text);
+  outline: none;
+  transition: border-color 0.2s;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.input:focus {
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px rgba(92, 99, 216, 0.15);
+}
+
+.inputError {
+  border-color: var(--color-error);
+}
+
+.fieldError {
+  font-size: 0.8rem;
+  color: var(--color-error);
+}
+
+.actions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+  margin-top: 0.4rem;
+  align-items: center;
+}
+
+.registerLink,
+.loginLink {
+  display: flex;
+  gap: 0.5rem;
+  font-size: 0.875rem;
+  color: var(--color-text-secondary);
+}
+
+.linkButton {
+  background: none;
+  border: none;
+  color: var(--color-primary);
+  cursor: pointer;
+  font-size: 0.875rem;
+  padding: 0;
+}
+
+.linkButton:hover {
+  text-decoration: underline;
+}
+
+/* Compartido: Add & Edit Product */
+
+.productLabel {
+  font-size: 13px;
+  font-weight: 600;
+  color: #374151;
+  margin-bottom: 6px;
+}
+
+.productInput,
+.productTextarea {
+  width: 100%;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  padding: 10px 12px;
+  font-size: 14px;
+  color: #111827;
+  background: var(--color-bg);
+  outline: none;
+  box-shadow: inset 0 1px 2px rgba(15, 23, 42, 0.04);
+  box-sizing: border-box;
+}
+
+.productInput::placeholder,
+.productTextarea::placeholder {
+  color: #9ca3af;
+}
+
+.productTextarea {
+  min-height: 85px;
+  resize: vertical;
+  font-family: inherit;
+}
+
+.productInput:focus,
+.productTextarea:focus {
+  border-color: #7a7ff2;
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15);
+}
+
+/* Add Product Form */
+
+.addForm {
+  background: var(--color-bg);
+  border: 1px solid #e6e9f2;
+  border-radius: 14px;
+  box-shadow: 0 6px 18px rgba(18, 24, 40, 0.06);
+  padding: 24px 28px 28px;
+  margin: 24px 0;
+}
+
+.addTitle {
+  margin: 0 0 20px;
+  font-size: 20px;
+  font-weight: 700;
+  color: #111827;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  margin-bottom: 20px;
+}
+
+.column {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.addField {
+  display: flex;
+  flex-direction: column;
+}
+
+.addField div[aria-live] {
+  min-height: 18px;
+}
+
+.addField div[aria-live] span {
+  display: block;
+  font-size: 12px;
+  color: #ef4444;
+  margin-top: 4px;
+}
+
+.addActions {
+  margin-bottom: 12px;
+}
+
+.addPrimaryBtn {
+  width: 100%;
+  border: none;
+  border-radius: 8px;
+  padding: 12px 18px;
+  background: var(--color-primary-dark);
+  color: var(--color-text-quaternary);
+  font-weight: 600;
+  font-size: 14px;
+  cursor: pointer;
+  box-shadow: 0 4px 10px rgba(91, 97, 240, 0.25);
+  transition: filter 0.2s ease;
+}
+
+.addPrimaryBtn:hover {
+  filter: brightness(0.95);
+}
+
+.editFormActions {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.closeButton {
+  flex-shrink: 0;
+  width: 32px;
+  height: 32px;
+  border: none;
+  border-radius: 50%;
+  background: #f3f4f6;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s ease;
+  padding: 0;
+}
+
+.closeIcon {
+  width: 16px;
+  height: 16px;
+  opacity: 0.5;
+  transition: opacity 0.2s ease;
+}
+
+.closeButton:hover {
+  background: #fee2e2;
+}
+
+.closeButton:hover .closeIcon {
+  opacity: 1;
+}
+
+.editHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.editHeader .addTitle {
+  margin: 0;
+}
+
+.submitButton {
+  flex: 1;
+  border: none;
+  border-radius: 8px;
+  padding: 12px 18px;
+  background: var(--color-primary-dark);
+  color: var(--color-text-quaternary);
+  font-weight: 600;
+  font-size: 14px;
+  cursor: pointer;
+  box-shadow: 0 4px 10px rgba(91, 97, 240, 0.25);
+  transition: filter 0.2s ease;
+}
+
+.submitButton:hover {
+  filter: brightness(0.95);
+}
+
+.addWarning {
+  margin-top: 20px;
+  padding: 12px 16px;
+  text-align: center;
+}
+
+.addWarning p {
+  margin: 0;
+  font-size: 13px;
+  color: #ff0606;
+}

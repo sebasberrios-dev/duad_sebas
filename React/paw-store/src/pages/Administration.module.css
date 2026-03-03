@@ -1,0 +1,26 @@
+.page {
+  min-height: calc(100vh - 160px);
+}
+
+.container {
+  max-width: 1500px;
+  margin: 0 auto;
+  padding: 24px 24px 40px;
+}
+
+.message {
+  text-align: center;
+  font-size: 1.2rem;
+  color: #555;
+}
+
+.error {
+  background: #ffffff;
+  border-radius: 14px;
+  box-shadow: 0 6px 18px rgba(18, 24, 40, 0.06);
+  padding: 18px 20px;
+  margin-bottom: 24px;
+  margin-top: 20px;
+  font-weight: 800;
+  color: #d9534f;
+}
