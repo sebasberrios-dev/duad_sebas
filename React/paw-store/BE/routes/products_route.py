@@ -26,9 +26,10 @@ def get_product(product_id):
 
         if not product:
             return jsonify({'message': 'product not found', 'product': None}), 200
-        return jsonify(product), 200
+        return jsonify(dict(product)), 200
     
     except Exception as e:
+        print(e)
         return jsonify({'error': str(e)}), 500
     
 @products_bp.route('/products', methods=['POST'])

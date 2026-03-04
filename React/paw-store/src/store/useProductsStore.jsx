@@ -18,6 +18,19 @@ export const useProductsStore = create((set, get) => ({
     }
   },
 
+  fetchProductById: async (id) => {
+    try {
+      set({ loading: true, error: null });
+      const response = await api.get(`/products/${id}`);
+
+      set({ loading: false, error: null });
+      return response.data;
+    } catch (error) {
+      set({ error: error.message, loading: false });
+      return null;
+    }
+  },
+
   addProduct: async (productData) => {
     try {
       set({ loading: true, error: null });

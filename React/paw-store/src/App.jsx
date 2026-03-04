@@ -4,7 +4,6 @@ import Footer from './components/Static/Footer';
 import { Loading } from './components/Messages-States/Loading';
 import { Home } from './pages/Home';
 import { Maintenance } from './components/Messages-States/Maintenance';
-import { Administration } from './pages/Administration';
 import { LoginForm } from './components/Forms/LoginForm.jsx';
 import { RegisterForm } from './components/Forms/RegisterForm.jsx';
 import { useProductsStore } from './store/useProductsStore.jsx';
@@ -16,6 +15,7 @@ import {
 
 const Products = lazy(() => import('./pages/Products'));
 const ProductDetail = lazy(() => import('./pages/ProductDetails'));
+const Administration = lazy(() => import('./pages/Administration'));
 
 function ProtectedPage({ isLogged, onNavigate, children }) {
   if (!isLogged) return <NoLoggedWarning onNavigate={onNavigate} />;
@@ -56,7 +56,9 @@ function AppLayout({
         {currentPage === 'contact' && <Maintenance />}
         {currentPage === 'admin' &&
           (isAdmin ? (
-            <Administration />
+            <Suspense fallback={<Loading element={'administración'} />}>
+              <Administration />
+            </Suspense>
           ) : isLogged ? (
             <NoAdminWarning onNavigate={handleNavigate} />
           ) : (
@@ -74,7 +76,7 @@ function AppLayout({
 }
 
 export function App() {
-  const { fetchProducts } = useProductsStore();
+  const { fetchProducts, fetchProductById } = useProductsStore();
   const { logout, isAdmin, isLogged } = useAuth();
   const [currentPage, setCurrentPage] = useState('home');
   const [selectedProduct, setSelectedProduct] = useState(null);
@@ -98,8 +100,9 @@ export function App() {
     [logout]
   );
 
-  const handleViewDetails = useCallback((product) => {
-    setSelectedProduct(product);
+  const handleViewDetails = useCallback(async (product) => {
+    const fetchedProduct = await fetchProductById(product.id);
+    setSelectedProduct(fetchedProduct);
     setCurrentPage('product-detail');
   }, []);
 
