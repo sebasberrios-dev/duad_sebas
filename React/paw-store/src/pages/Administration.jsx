@@ -5,7 +5,7 @@ import { EditProductForm } from '../components/Forms/EditProductForm.jsx';
 import { AddProductForm } from '../components/Forms/AddProductForm.jsx';
 import { useProductsStore } from '../store/useProductsStore.jsx';
 
-export function Administration() {
+export default function Administration() {
   const { products, deleteProduct, updateProduct, addProduct, loading, error } =
     useProductsStore();
   const [editingProduct, setEditingProduct] = useState(null);
