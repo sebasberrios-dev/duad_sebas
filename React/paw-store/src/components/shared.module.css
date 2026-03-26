@@ -2,6 +2,7 @@
 :root {
   --color-primary: #636ae8ff;
   --color-primary-dark: #5b61f0;
+  --color-disabled: rgb(153, 157, 233);
   --color-accent: rgb(140, 103, 226);
   --color-brand: #7f55e0ff;
   --color-success: #19b36b;
@@ -30,6 +31,17 @@
 
 .containerFull {
   min-height: 700px;
+}
+
+.containerWide {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  min-height: calc(100vh - 160px);
+  padding: 2rem 3rem;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 /* --- Tipografía --- */
@@ -84,13 +96,25 @@
   transition: all 0.2s;
 }
 
+.btn:hover:not(:disabled) {
+  transform: scale(1.02);
+}
+
+.btn:disabled {
+  cursor: not-allowed;
+}
+
 .btnPrimary {
   background: var(--color-primary);
   color: #fff;
 }
 
-.btnPrimary:hover {
-  filter: brightness(0.95);
+.btnPrimary:active:not(:disabled) {
+  background: var(--color-primary-dark);
+}
+
+.btnPrimary:disabled {
+  background: var(--color-disabled);
 }
 
 .btnAccent {
@@ -106,6 +130,16 @@
 
 .btnFull {
   width: 100%;
+}
+
+.btnOutline {
+  background: transparent;
+  border: 1px solid var(--color-border);
+  color: var(--color-text);
+}
+
+.btnOutline:hover {
+  background: #f9fafb;
 }
 
 /* --- Iconos y badges --- */

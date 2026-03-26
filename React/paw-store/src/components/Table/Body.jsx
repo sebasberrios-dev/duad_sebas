@@ -14,20 +14,22 @@ const columnKeyMap = {
 
 const resolveKey = (columnKey) => columnKeyMap[columnKey] ?? columnKey;
 
+const formatCurrency = (value) =>
+  new Intl.NumberFormat('es-CR', {
+    style: 'currency',
+    currency: 'CRC',
+    minimumFractionDigits: 0,
+  }).format(value ?? 0);
+
+const formatId = (value) => {
+  if (typeof value === 'number') {
+    return `PAW${String(value).padStart(3, '0')}`;
+  }
+  return value;
+};
+
 export function TableBody({ data, columns, onEdit, onDelete }) {
-  const formatCurrency = (value) =>
-    new Intl.NumberFormat('es-CR', {
-      style: 'currency',
-      currency: 'CRC',
-      minimumFractionDigits: 0,
-    }).format(value ?? 0);
   const dataArray = Array.isArray(data) ? data : [];
-  const formatId = (value) => {
-    if (typeof value === 'number') {
-      return `PAW${String(value).padStart(3, '0')}`;
-    }
-    return value;
-  };
   return (
     <tbody>
       {dataArray.length === 0 && (
@@ -37,9 +39,9 @@ export function TableBody({ data, columns, onEdit, onDelete }) {
           </td>
         </tr>
       )}
-      {dataArray.map((row, index) => {
+      {dataArray.map((row) => {
         return (
-          <tr key={index} className={styles.bodyRow}>
+          <tr key={row.id} className={styles.bodyRow}>
             {columns.map((column) => {
               const columnKey = normalizeColumnKey(column);
 

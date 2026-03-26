@@ -2,9 +2,10 @@ import styles from './Forms.module.css';
 import shared from '../shared.module.css';
 import { useAuth } from '../../store/AuthContext.jsx';
 import { useForm } from 'react-hook-form';
+import { useNavigate } from 'react-router';
 import { Form, Title, Field, Button } from './FormsComponents';
 
-export function RegisterForm({ onNavigate }) {
+export function RegisterForm() {
   const {
     register,
     handleSubmit,
@@ -14,25 +15,20 @@ export function RegisterForm({ onNavigate }) {
   } = useForm();
 
   const { registerUser, registerError } = useAuth();
+  const navigate = useNavigate();
 
   const password = watch('password');
 
-  const handleFormSubmit = async (data, redirect) => {
+  const handleFormSubmit = async (data) => {
     const success = await registerUser(data);
     if (success) {
       reset();
-      if (redirect) {
-        onNavigate(redirect);
-      }
+      navigate('/home');
     }
   };
-
   return (
     <section className={`${shared.container} ${styles.section}`}>
-      <Form
-        className={styles.form}
-        onSubmit={handleSubmit((data) => handleFormSubmit(data, 'home'))}
-      >
+      <Form className={styles.form} onSubmit={handleSubmit(handleFormSubmit)}>
         <Title className={`${shared.title} ${styles.textAlign}`}>
           Crear cuenta
         </Title>
@@ -122,7 +118,7 @@ export function RegisterForm({ onNavigate }) {
             <button
               type="button"
               className={styles.linkButton}
-              onClick={() => onNavigate('login')}
+              onClick={() => navigate('/login')}
             >
               Ya tengo una cuenta
             </button>

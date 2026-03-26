@@ -1,15 +1,18 @@
-import './Products.css';
+import styles from './Products.module.css';
 import { NoProductsMessage } from '../components/Products/NoProductsMessage.jsx';
-import { Loading } from '../components/Messages-States/Loading.jsx';
-import { ErrorMessage } from '../components/Messages-States/ErrorMesagge.jsx';
+import { LoadingPage } from '../components/Messages-States/Loading.jsx';
+import { ErrorPage } from '../components/Messages-States/Error.jsx';
 import { ProductCard } from '../components/Products/ProductCard.jsx';
 import { useProductsStore } from '../store/useProductsStore.jsx';
+import { usePurchaseStore } from '../store/usePurchaseStore.jsx';
+import { useEffect } from 'react';
+import { useNavigate } from 'react-router';
 
 function ProductsPage({ func, products }) {
   return (
-    <section className="products-page">
-      <h1 className="products-title">Catalogo de Productos</h1>
-      <div className="products-grid">
+    <section className={styles.productsPage}>
+      <h1 className={styles.productsTitle}>Catalogo de Productos</h1>
+      <div className={styles.productsGrid}>
         {products.map((product) => (
           <ProductCard
             key={product.id}
@@ -22,19 +25,37 @@ function ProductsPage({ func, products }) {
   );
 }
 
-export default function Products({ onViewDetails }) {
-  const { products, loading, error } = useProductsStore();
+export default function Products() {
+  const products = useProductsStore((state) => state.products);
+  const fetchProducts = useProductsStore((state) => state.fetchProducts);
+  const isFetchingProducts = useProductsStore(
+    (state) => state.loading.fetchingProducts
+  );
+  const screenError = useProductsStore((state) => state.error.screen);
 
-  return (
-    console.log('Products renderizado con:', { products, loading, error }) || (
-      <>
-        {loading && <Loading element={'catálogo'} />}
-        {error && <ErrorMessage text={error} />}
-        {products.length === 0 && !loading && !error && <NoProductsMessage />}
-        {products.length > 0 && !loading && !error && (
-          <ProductsPage func={onViewDetails} products={products} />
-        )}
-      </>
-    )
+  const initializeCart = usePurchaseStore((state) => state.initializeCart);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (products.length === 0) {
+      fetchProducts();
+    }
+    initializeCart();
+  }, []);
+
+  const onViewDetails = (product) => {
+    navigate(`/products/${product.id}`);
+  };
+
+  const filteredProducts = products.filter((p) => p.stock > 0);
+
+  return isFetchingProducts ? (
+    <LoadingPage element="catálogo" />
+  ) : screenError ? (
+    <ErrorPage text={screenError} />
+  ) : filteredProducts.length === 0 ? (
+    <NoProductsMessage />
+  ) : (
+    <ProductsPage func={onViewDetails} products={filteredProducts} />
   );
 }

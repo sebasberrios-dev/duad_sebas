@@ -1,26 +1,51 @@
 import { useForm } from 'react-hook-form';
+import { useEffect } from 'react';
 import { Form, Title, Field, FieldTextarea, Button } from './FormsComponents';
 import styles from './Forms.module.css';
 import closeIcon from '../../assets/close-svgrepo-com.svg';
 
-export function EditProductForm({ product, onSubmit, onCancel }) {
+export function EditProductForm({ product, onSubmit, onCancel, saving }) {
   const {
     register,
     handleSubmit,
-    formState: { errors },
+    reset,
+    formState: { errors, isDirty },
   } = useForm({
     defaultValues: {
-      name: product.name,
-      description: product.description,
-      price: product.price,
-      category: product.category,
-      stock: product.stock,
-      image_url: product.image_url,
+      name: '',
+      description: '',
+      price: 0,
+      category: '',
+      stock: 0,
+      image_url: '',
     },
   });
 
+  useEffect(() => {
+    if (!product) return;
+
+    reset({
+      name: product.name ?? '',
+      description: product.description ?? '',
+      price: product.price ?? 0,
+      category: product.category ?? '',
+      stock: product.stock ?? 0,
+      image_url: product.image_url ?? '',
+    });
+  }, [product, reset]);
+
+  const handleFormSubmit = async (data) => {
+    const ok = await onSubmit({
+      ...data,
+      price: Number(data.price),
+      stock: Number(data.stock),
+    });
+
+    return ok;
+  };
+
   return (
-    <Form className={styles.addForm} onSubmit={handleSubmit(onSubmit)}>
+    <Form className={styles.addForm} onSubmit={handleSubmit(handleFormSubmit)}>
       <div className={styles.editHeader}>
         <Title className={styles.addTitle}>Editar producto</Title>
         <button
@@ -40,8 +65,8 @@ export function EditProductForm({ product, onSubmit, onCancel }) {
               inputClassName={styles.productInput}
               id="name"
               placeholder="Nombre del producto"
-              error={errors.name ? 'El nombre es obligatorio' : ''}
-              {...register('name', { required: true })}
+              error={errors.name?.message}
+              {...register('name', { required: 'El nombre es obligatorio' })}
             >
               Nombre
             </Field>
@@ -53,8 +78,10 @@ export function EditProductForm({ product, onSubmit, onCancel }) {
               inputClassName={styles.productTextarea}
               id="description"
               placeholder="Descripción detallada del producto"
-              error={errors.description ? 'La descripción es obligatoria' : ''}
-              {...register('description', { required: true })}
+              error={errors.description?.message}
+              {...register('description', {
+                required: 'La descripción es obligatoria',
+              })}
             >
               Descripción
             </FieldTextarea>
@@ -68,12 +95,14 @@ export function EditProductForm({ product, onSubmit, onCancel }) {
               type="number"
               step="0.01"
               placeholder="0.00"
-              error={
-                errors.price
-                  ? 'El precio es obligatorio y debe ser un número positivo'
-                  : ''
-              }
-              {...register('price', { required: true, min: 0 })}
+              error={errors.price?.message}
+              {...register('price', {
+                required: 'El precio es obligatorio',
+                min: {
+                  value: 0,
+                  message: 'El precio debe ser un número positivo',
+                },
+              })}
             >
               Precio
             </Field>
@@ -87,8 +116,10 @@ export function EditProductForm({ product, onSubmit, onCancel }) {
               inputClassName={styles.productInput}
               id="category"
               placeholder="Categoría del producto (ej. Alimento, Juguetes)"
-              error={errors.category ? 'La categoría es obligatoria' : ''}
-              {...register('category', { required: true })}
+              error={errors.category?.message}
+              {...register('category', {
+                required: 'La categoría es obligatoria',
+              })}
             >
               Categoría
             </Field>
@@ -100,10 +131,10 @@ export function EditProductForm({ product, onSubmit, onCancel }) {
               inputClassName={styles.productInput}
               id="image_url"
               placeholder="https://api.example.com/placeholder/image.jpg"
-              error={
-                errors.image_url ? 'La URL de la imagen es obligatoria' : ''
-              }
-              {...register('image_url', { required: true })}
+              error={errors.image_url?.message}
+              {...register('image_url', {
+                required: 'La URL de la imagen es obligatoria',
+              })}
             >
               URL de la imagen
             </Field>
@@ -116,12 +147,14 @@ export function EditProductForm({ product, onSubmit, onCancel }) {
               id="stock"
               type="number"
               placeholder="0"
-              error={
-                errors.stock
-                  ? 'El stock es obligatorio y debe ser un número positivo'
-                  : ''
-              }
-              {...register('stock', { required: true, min: 0 })}
+              error={errors.stock?.message}
+              {...register('stock', {
+                required: 'El stock es obligatorio',
+                min: {
+                  value: 0,
+                  message: 'El stock debe ser un número positivo',
+                },
+              })}
             >
               Stock
             </Field>
@@ -130,8 +163,13 @@ export function EditProductForm({ product, onSubmit, onCancel }) {
       </div>
 
       <div className={styles.editFormActions}>
-        <Button type="submit" className={styles.submitButton}>
-          Guardar cambios
+        <Button
+          type="submit"
+          className={styles.submitButton}
+          disabled={!isDirty || saving}
+          title={!isDirty ? 'No hay cambios para guardar' : ''}
+        >
+          {saving ? 'Guardando...' : 'Guardar cambios'}
         </Button>
       </div>
       <div className={styles.addWarning}>

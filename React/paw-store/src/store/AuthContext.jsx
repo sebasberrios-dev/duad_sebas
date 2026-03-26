@@ -20,9 +20,11 @@ export const AuthProvider = ({ children }) => {
   const [token, setToken] = useState(storedToken);
   const [loginError, setLoginError] = useState(null);
   const [registerError, setRegisterError] = useState(null);
+  const [isLoggingOut, setIsLoggingOut] = useState(false);
 
   const login = async (credentials) => {
     try {
+      setIsLoggingOut(false);
       setLoginError(null);
       const response = await api.post('/login', credentials);
       const token = response.data.token;
@@ -61,8 +63,13 @@ export const AuthProvider = ({ children }) => {
       return false;
     }
   };
-
-  const logout = () => {
+  const handleLogout = async (navigate) => {
+    setIsLoggingOut(true);
+    await logout();
+    navigate('/');
+    setTimeout(() => setIsLoggingOut(false), 0);
+  };
+  const logout = async () => {
     setToken(null);
     setUser(null);
     localStorage.removeItem('token');
@@ -76,9 +83,10 @@ export const AuthProvider = ({ children }) => {
       value={{
         user,
         login,
-        logout,
+        handleLogout,
         isLogged,
         isAdmin,
+        isLoggingOut,
         loginError,
         registerError,
         registerUser,

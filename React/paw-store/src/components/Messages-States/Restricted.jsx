@@ -1,34 +1,33 @@
 import shared from '../shared.module.css';
 import styles from './MessagesStates.module.css';
 import lockIcon from '../../assets/lock_24dp_000000_FILL0_wght400_GRAD0_opsz24.svg';
+import { useNavigate } from 'react-router';
 
-const Img = ({ src, alt, className }) => (
+export const Img = ({ src, alt, className }) => (
   <img src={src} alt={alt} className={className} />
 );
-const Title = ({ text, className }) => <h1 className={className}>{text}</h1>;
-const Message = ({ text, className }) => <p className={className}>{text}</p>;
-const Button = ({ text, onClick, className }) => (
+export const Title = ({ text, className }) => (
+  <h1 className={className}>{text}</h1>
+);
+export const Message = ({ text, className }) => (
+  <p className={className}>{text}</p>
+);
+export const Button = ({ text, onClick, className }) => (
   <button className={className} onClick={onClick}>
     {text}
   </button>
 );
 
-export function NoLoggedWarning({ onNavigate }) {
+export function LayoutRestricted({ props }) {
   return (
     <section className={shared.container}>
       <div className={styles.restricted}>
-        <Img src={lockIcon} alt="lock" className={styles.lockImage} />
-        <Title
-          text="Debes iniciar sesión para continuar"
-          className={shared.titleLg}
-        />
-        <Message
-          text="Protege tus compras y gestiona tu perfil con facilidad"
-          className={styles.message}
-        />
+        <Img src={props.icon} alt="icon" className={styles.icon} />
+        <Title text={props.title} className={shared.titleLg} />
+        <Message text={props.message} className={styles.message} />
         <Button
-          text="Ir a iniciar sesión"
-          onClick={() => onNavigate('login')}
+          text={props.buttonText}
+          onClick={props.onButtonClick}
           className={`${shared.btn} ${shared.btnPrimary}`}
         />
       </div>
@@ -36,22 +35,26 @@ export function NoLoggedWarning({ onNavigate }) {
   );
 }
 
-export function NoAdminWarning({ onNavigate }) {
-  return (
-    <section className={shared.container}>
-      <div className={styles.restricted}>
-        <Img src={lockIcon} alt="lock" className={styles.lockImage} />
-        <Title text="Acceso restringido" className={shared.titleLg} />
-        <Message
-          text="No tienes los permisos necesarios para acceder a esta sección"
-          className={styles.message}
-        />
-        <Button
-          text="Volver al inicio"
-          onClick={() => onNavigate('home')}
-          className={`${shared.btn} ${shared.btnPrimary}`}
-        />
-      </div>
-    </section>
-  );
+export function NoLoggedWarning() {
+  const navigate = useNavigate();
+  const props = {
+    icon: lockIcon,
+    title: 'Acceso restringido',
+    message: 'Debes iniciar sesión para acceder a esta sección',
+    buttonText: 'Iniciar sesión',
+    onButtonClick: () => navigate('/login'),
+  };
+  return <LayoutRestricted props={props} />;
+}
+
+export function NoAdminWarning() {
+  const navigate = useNavigate();
+  const props = {
+    icon: lockIcon,
+    title: 'Acceso restringido',
+    message: 'No tienes permisos para acceder a esta sección',
+    buttonText: 'Volver al inicio',
+    onButtonClick: () => navigate('/'),
+  };
+  return <LayoutRestricted props={props} />;
 }
