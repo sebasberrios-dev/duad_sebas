@@ -4,6 +4,7 @@ import { useAuth } from '../../store/AuthContext.jsx';
 import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router';
 import { Form, Title, Field, Button } from './FormsComponents';
+import { showLoginSuccess } from '../Messages-States/Alerts.jsx';
 
 export function LoginForm() {
   const {
@@ -21,6 +22,7 @@ export function LoginForm() {
     const success = await login(data);
     if (success) {
       reset();
+      showLoginSuccess(data.email);
       navigate('/');
     }
   };

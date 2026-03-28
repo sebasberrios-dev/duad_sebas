@@ -23,9 +23,9 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">35.29% </span>
+                <span class="strong">52.94% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>6/17</span>
+                <span class='fraction'>9/17</span>
             </div>
         
             
@@ -37,16 +37,16 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">22.22% </span>
+                <span class="strong">55.55% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>2/9</span>
+                <span class='fraction'>5/9</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">35.29% </span>
+                <span class="strong">52.94% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>6/17</span>
+                <span class='fraction'>9/17</span>
             </div>
         
             
@@ -61,7 +61,7 @@
             </div>
         </template>
     </div>
-    <div class='status-line low'></div>
+    <div class='status-line medium'></div>
     <pre><table class="coverage">
 <tr><td class="line-count quiet"><a name='L1'></a><a href='#L1'>1</a>
 <a name='L2'></a><a href='#L2'>2</a>
@@ -128,23 +128,23 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">7x</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">9x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">7x</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">9x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -188,8 +188,8 @@ import styles from './MessagesStates.module.css';
 import lockIcon from '../../assets/lock_24dp_000000_FILL0_wght400_GRAD0_opsz24.svg';
 import { useNavigate } from 'react-router';
 &nbsp;
-export const <span class="fstat-no" title="function not covered" >Img = ({</span> src, alt, className }) =&gt; (
-<span class="cstat-no" title="statement not covered" >  &lt;img src={src} alt={alt} className={className} /&gt;</span>
+export const Img = ({ src, alt, className }) =&gt; (
+  &lt;img src={src} alt={alt} className={className} /&gt;
 );
 export const Title = ({ text, className }) =&gt; (
   &lt;h1 className={className}&gt;{text}&lt;/h1&gt;
@@ -197,14 +197,14 @@ export const Title = ({ text, className }) =&gt; (
 export const Message = ({ text, className }) =&gt; (
   &lt;p className={className}&gt;{text}&lt;/p&gt;
 );
-export const <span class="fstat-no" title="function not covered" >Button = ({</span> text, onClick, className }) =&gt; (
-<span class="cstat-no" title="statement not covered" >  &lt;button className={className} onClick={onClick}&gt;</span>
+export const Button = ({ text, onClick, className }) =&gt; (
+  &lt;button className={className} onClick={onClick}&gt;
     {text}
   &lt;/button&gt;
 );
 &nbsp;
-export function <span class="fstat-no" title="function not covered" >LayoutRestricted({</span> props }) {
-<span class="cstat-no" title="statement not covered" >  return (</span>
+export function LayoutRestricted({ props }) {
+  return (
     &lt;section className={shared.container}&gt;
       &lt;div className={styles.restricted}&gt;
         &lt;Img src={props.icon} alt="icon" className={styles.icon} /&gt;
@@ -250,7 +250,7 @@ export function <span class="fstat-no" title="function not covered" >NoAdminWarn
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2026-03-26T02:11:55.923Z
+                at 2026-03-28T06:25:16.354Z
             </div>
         <script src="../../prettify.js"></script>
         <script>

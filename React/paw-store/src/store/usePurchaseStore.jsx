@@ -115,7 +115,6 @@ export const usePurchaseStore = create((set, get) => ({
     }
     try {
       const res = await api.get(`/cart/products/${cartId}`);
-      // Mapear id a product_id para mantener consistencia en el frontend
       let items = res.data.products_in_cart.map((item) => ({
         ...item,
         product_id: item.product_id ?? item.id,
@@ -125,8 +124,6 @@ export const usePurchaseStore = create((set, get) => ({
             ? Number(item.quantity)
             : item.quantity,
       }));
-
-      // Filtrar productos eliminados o sin stock
       const products = useProductsStore.getState().products;
       const validProductIds = new Set(
         (products || [])

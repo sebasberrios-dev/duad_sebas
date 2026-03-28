@@ -6,8 +6,7 @@ import { calculateSubTotal } from '../../utils/helpers.js';
 import { useNavigate } from 'react-router';
 import { showAlertError } from '../../components/Messages-States/Alerts.jsx';
 import { useEffect } from 'react';
-import styles from './BuyingProcess.module.css';
-import shared from '../../components/shared.module.css';
+import styles from './BuyingProccess.module.css';
 import { ErrorPage } from '../../components/Messages-States/Error.jsx';
 
 export default function ShoppingCart() {

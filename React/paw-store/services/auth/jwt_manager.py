@@ -15,6 +15,8 @@ class JWTManager:
     def decode(self, token):
         try: 
             return jwt.decode(token, self.secret, algorithms=[self.algorithm])
+        except jwt.ExpiredSignatureError:
+            raise
         except Exception as e:
             print(f'Error decoding JWT: {e}')
             return None

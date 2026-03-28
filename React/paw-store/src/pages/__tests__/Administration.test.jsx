@@ -15,6 +15,11 @@ vi.mock('sweetalert2', () => ({
   __esModule: true,
   default: {
     fire: vi.fn(() => Promise.resolve()),
+    mixin: vi.fn(() => ({ fire: vi.fn(() => Promise.resolve()) })),
+    close: vi.fn(),
+    showLoading: vi.fn(),
+    stopTimer: vi.fn(),
+    resumeTimer: vi.fn(),
   },
 }));
 

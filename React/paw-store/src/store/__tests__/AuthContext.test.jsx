@@ -14,6 +14,13 @@ beforeAll(() => {
   };
   vi.spyOn(api, 'post');
 });
+
+vi.mock('../../components/Messages-States/Alerts.jsx', () => ({
+  showLoginSuccess: vi.fn(() => Promise.resolve()),
+  showLogoutSuccess: vi.fn(() => Promise.resolve()),
+  showSessionExpired: vi.fn(() => Promise.resolve()),
+}));
+
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { AuthProvider, useAuth } from '../AuthContext.jsx';

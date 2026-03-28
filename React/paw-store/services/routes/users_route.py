@@ -1,11 +1,13 @@
+from variables import SECRET_KEY, JWT_ALGORITHM
 import bcrypt
 from flask import request, jsonify, Blueprint
 from auth.jwt_manager import JWTManager
+import datetime
 from repositories.users_repo import UserRepository 
 
 users_bp = Blueprint('users', __name__)
 user_repo = UserRepository()
-jwt_manager = JWTManager('trespatitos', 'HS256')
+jwt_manager = JWTManager(SECRET_KEY, JWT_ALGORITHM)
 
 @users_bp.route('/register', methods=['POST'])
 def register():
@@ -28,7 +30,7 @@ def register():
         user = user_repo.create(full_name, email, password, role)
 
         if user:
-            token = jwt_manager.encode({'id': int(user.id), 'role': role})
+            token = jwt_manager.encode({'id': int(user.id), 'role': role, 'exp': datetime.datetime.now(tz=datetime.timezone.utc) + datetime.timedelta(minutes=60)})
             return jsonify({ 'message': 'user created', 'token': token }), 201
         
         else:
@@ -60,7 +62,7 @@ def login():
         if not ok:
             return jsonify({ 'error': 'invalid credentials' }), 401
         
-        token = jwt_manager.encode({'id': int(user['id']), 'role': user['role']})
+        token = jwt_manager.encode({'id': int(user['id']), 'role': user['role'], 'exp': datetime.datetime.now(tz=datetime.timezone.utc) + datetime.timedelta(minutes=60)})
         return jsonify({ 'message': 'login successful', 'token': token }), 200
     
     except Exception as e:

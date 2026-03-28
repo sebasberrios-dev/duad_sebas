@@ -1,7 +1,9 @@
+from variables import SECRET_KEY, JWT_ALGORITHM
 from flask import request, jsonify
+from jwt import ExpiredSignatureError
 from auth.jwt_manager import JWTManager
 
-jwt_manager = JWTManager('trespatitos', 'HS256')
+jwt_manager = JWTManager(SECRET_KEY, JWT_ALGORITHM)
 
 def require_auth(func):
     def wrapper(*args, **kwargs):
@@ -11,8 +13,9 @@ def require_auth(func):
         try:
             decoded = jwt_manager.decode(token.replace("Bearer ", ""))
             request.user = decoded
-            # Set user_id for convenience in endpoints
             request.user_id = decoded.get('id')
+        except ExpiredSignatureError:
+            return jsonify({'error': 'token expired'}), 401
         except Exception:
             return jsonify({'error': 'invalid token'}), 401
         return func(*args, **kwargs)
@@ -30,6 +33,8 @@ def require_role(required_role):
                 if decoded.get('role') != required_role:
                     return jsonify({'error': 'access denied'}), 403
                 request.user = decoded
+            except ExpiredSignatureError:
+                return jsonify({'error': 'token expired'}), 401
             except Exception:
                 return jsonify({'error': 'invalid token'}), 401
             return func(*args, **kwargs)

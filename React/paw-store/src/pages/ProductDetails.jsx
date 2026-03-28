@@ -5,11 +5,15 @@ import { useProductsStore } from '../store/useProductsStore.jsx';
 import { usePurchaseStore } from '../store/usePurchaseStore.jsx';
 import { useEffect } from 'react';
 import { LoadingPage } from '../components/Messages-States/Loading.jsx';
-import { ErrorPage } from '../components/Messages-States/Error.jsx';
+import {
+  ErrorMessage,
+  ErrorPage,
+} from '../components/Messages-States/Error.jsx';
 import {
   showAlertError,
   showAlertSuccess,
 } from '../components/Messages-States/Alerts.jsx';
+import { NotFound } from '../components/Messages-States/NotFound.jsx';
 
 function Image({ image }) {
   return (
@@ -56,7 +60,13 @@ export default function ProductDetail() {
 
   if (isFetchingProducts) return <LoadingPage element={'producto'} />;
   if (screenError) return <ErrorPage text={screenError} />;
-  if (!product) return null;
+  if (!product)
+    return (
+      <NotFound
+        title="Producto no encontrado"
+        message="El producto que estás buscando no existe"
+      />
+    );
 
   return (
     <section className={styles.productDetailPage}>

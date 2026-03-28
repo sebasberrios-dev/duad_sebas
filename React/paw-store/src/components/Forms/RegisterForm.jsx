@@ -23,7 +23,7 @@ export function RegisterForm() {
     const success = await registerUser(data);
     if (success) {
       reset();
-      navigate('/home');
+      navigate('/');
     }
   };
   return (

@@ -2,7 +2,7 @@ import { useNavigate } from 'react-router';
 import PurchaseSuccess from '../../components/Messages-States/PurchaseSuccess';
 import PurchaseSummary from '../../components/PurchaseFlow/PurchaseSummary';
 import shared from '../../components/shared.module.css';
-import styles from './BuyingProcess.module.css';
+import styles from './BuyingProccess.module.css';
 import { usePurchaseStore } from '../../store/usePurchaseStore';
 import { useEffect, useRef } from 'react';
 import { calculateSubTotal } from '../../utils/helpers';

@@ -89,7 +89,7 @@ export default function Administration() {
     };
     try {
       await addProduct(newProduct);
-      showAlertSuccess('Éxito!', 'Se eliminó el producto correctamente.');
+      showAlertSuccess('Éxito!', 'Se agregó el producto correctamente.');
     } catch (e) {
       showAlertError('Error', actionError);
     }

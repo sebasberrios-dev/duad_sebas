@@ -28,7 +28,7 @@ class ProductsRepository:
     
     def read_all(self):
         try:
-            stmt = select(products)
+            stmt = select(products).where(products.c.is_active == True)
             with self.db_manager.engine.connect() as conn:
                 result = conn.execute(stmt)
                 all_products = result.mappings().all()
@@ -63,15 +63,10 @@ class ProductsRepository:
             return None
     
     def delete(self, product_id):
-        from db.db import cart_products
         try:
+            stmt = update(products).where(products.c.id == product_id).values(is_active=False)
             with self.db_manager.engine.connect() as conn:
-                # Elimina referencias en cart_products
-                stmt_cart = delete(cart_products).where(cart_products.c.product_id == product_id)
-                conn.execute(stmt_cart)
-                # Ahora elimina el producto
-                stmt_product = delete(products).where(products.c.id == product_id)
-                result = conn.execute(stmt_product)
+                result = conn.execute(stmt)
                 conn.commit()
                 return result.rowcount
         except Exception as e:

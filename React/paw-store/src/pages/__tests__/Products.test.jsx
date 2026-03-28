@@ -13,6 +13,14 @@ import userEvent from '@testing-library/user-event';
 import { MemoryRouter } from 'react-router';
 import Products from '../Products';
 import { useProductsStore } from '../../store/useProductsStore';
+import { usePurchaseStore } from '../../store/usePurchaseStore';
+
+vi.mock('../../store/usePurchaseStore', () => {
+  const store = vi.fn(() => vi.fn());
+  store.setState = vi.fn();
+  store.getState = vi.fn(() => ({ initializeCart: vi.fn() }));
+  return { usePurchaseStore: store };
+});
 
 const mockNavigate = vi.fn();
 vi.mock('react-router', async () => {

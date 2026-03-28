@@ -5,7 +5,7 @@ import { Home } from '../pages/Home.jsx';
 import { LoginForm } from '../components/Forms/LoginForm.jsx';
 import { RegisterForm } from '../components/Forms/RegisterForm.jsx';
 import { Maintenance } from '../components/Messages-States/Maintenance.jsx';
-import { PageNotFound } from '../components/Messages-States/PageNotFound.jsx';
+import { NotFound } from '../components/Messages-States/NotFound.jsx';
 import {
   NoLoggedWarning,
   NoAdminWarning,
@@ -21,7 +21,12 @@ export const router = createBrowserRouter([
   {
     path: '/',
     element: <App />,
-    errorElement: <PageNotFound />,
+    errorElement: (
+      <NotFound
+        title="Página no encontrada"
+        message="La página que estás buscando no existe"
+      />
+    ),
     children: [
       { index: true, element: <Home /> },
       { path: 'login', element: <LoginForm /> },

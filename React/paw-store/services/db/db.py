@@ -1,18 +1,22 @@
+import os
+from dotenv import load_dotenv
 from sqlalchemy import create_engine
-from sqlalchemy import Table, Column, Integer, String, ForeignKey, Float, DateTime, UniqueConstraint
+from sqlalchemy import Table, Column, Integer, String, ForeignKey, Float, DateTime, UniqueConstraint, Boolean
 from sqlalchemy import MetaData
 from datetime import datetime, timezone
+
+load_dotenv()
 
 def utc_now():
     return datetime.now(timezone.utc)
 
 class DBManager:
     def __init__(self):
-        url = "postgresql://postgres:sebas0408@localhost:5432/postgres"
+        url = os.getenv('DB_URL')
         self.engine = create_engine(url)
         metadata_obj.create_all(self.engine)
 
-metadata_obj = MetaData(schema="paw_store")
+metadata_obj = MetaData(schema=os.getenv('DB_SCHEMA'))
 
 users = Table(
     "users",
@@ -33,7 +37,8 @@ products = Table(
     Column("price", Integer, nullable=False),
     Column("category", String(50), nullable=True),
     Column("stock", Integer, nullable=False),
-    Column("image_url", String(255), nullable=True)
+    Column("image_url", String(255), nullable=True),
+    Column("is_active", Boolean, nullable=False, default=True)
 )
 
 shopping_cart = Table(

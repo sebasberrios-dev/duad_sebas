@@ -43,7 +43,9 @@ export function Home() {
         </Link>
         <div className={styles.featuredSection}>
           <h2 className={styles.featuredTitle}>Productos Destacados</h2>
-          {isFetchingMostPurchased && <p>Cargando productos destacados...</p>}
+          {isFetchingMostPurchased && mostPurchasedProducts.length === 0 && (
+            <p>Cargando productos destacados...</p>
+          )}
           {actionError && <p className={styles.error}>{actionError}</p>}
           {mostPurchasedProducts.length === 0 && (
             <p className={styles.message}>
