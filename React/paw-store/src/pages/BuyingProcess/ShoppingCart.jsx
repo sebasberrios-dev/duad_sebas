@@ -1,10 +1,14 @@
 import { ItemCart } from '../../components/PurchaseFlow/ItemCart.jsx';
 import { ContinueCard } from '../../components/PurchaseFlow/ContinueCard.jsx';
 import { LoadingPage } from '../../components/Messages-States/Loading.jsx';
+import { useCart } from '../../store/CartContext.jsx';
 import { usePurchaseStore } from '../../store/usePurchaseStore.jsx';
 import { calculateSubTotal } from '../../utils/helpers.js';
 import { useNavigate } from 'react-router';
-import { showAlertError } from '../../components/Messages-States/Alerts.jsx';
+import {
+  showAlertError,
+  showAlertConfirm,
+} from '../../components/Messages-States/Alerts.jsx';
 import { useEffect } from 'react';
 import styles from './BuyingProccess.module.css';
 import { ErrorPage } from '../../components/Messages-States/Error.jsx';
@@ -12,18 +16,27 @@ import { ErrorPage } from '../../components/Messages-States/Error.jsx';
 export default function ShoppingCart() {
   const navigate = useNavigate();
 
-  const isInitializing = usePurchaseStore(
-    (state) => state.loading.initializingCart
-  );
-  const isSyncingCart = usePurchaseStore((state) => state.loading.syncingCart);
+  const {
+    initializingCart: isInitializing,
+    syncingCart: isSyncingCart,
+    screenError,
+    initializeCart,
+    cartId,
+    cartItems,
+    increaseQuantity,
+    decreaseQuantity,
+    removingItemId,
+    removeFromCart,
+    syncCart,
+    clearCart,
+    clearingCart,
+  } = useCart();
+
   const isCreatingOrder = usePurchaseStore(
     (state) => state.loading.creatingOrder
   );
+  const createOrder = usePurchaseStore((state) => state.createOrder);
 
-  const screenError = usePurchaseStore((state) => state.error.screen);
-
-  const initializeCart = usePurchaseStore((state) => state.initializeCart);
-  const cartItems = usePurchaseStore((state) => state.cart.items);
   // Filtrar productos con price inválido (null, undefined, NaN, no numérico)
   const validCartItems = Array.isArray(cartItems)
     ? cartItems.filter(
@@ -34,28 +47,34 @@ export default function ShoppingCart() {
       )
     : [];
 
-  const increaseQuantity = usePurchaseStore((state) => state.increaseQuantity);
-  const decreaseQuantity = usePurchaseStore((state) => state.decreaseQuantity);
-
-  const removingItemId = usePurchaseStore(
-    (state) => state.loading.removingItemId
-  );
-  const removeFromCart = usePurchaseStore((state) => state.removeFromCart);
-
   const subtotal = calculateSubTotal(validCartItems);
-  const syncCart = usePurchaseStore((state) => state.syncCart);
-  const createOrder = usePurchaseStore((state) => state.createOrder);
 
   const handleContinue = async () => {
     try {
       await syncCart();
-      await createOrder();
+      await createOrder(cartId, validCartItems);
 
       navigate('/checkout');
     } catch (e) {
       showAlertError(
         'Error',
         e.response?.data?.error ?? e.message ?? 'Error inesperado'
+      );
+    }
+  };
+
+  const handleClearCart = async () => {
+    const result = await showAlertConfirm(
+      '¿Vaciar carrito?',
+      'Se eliminarán todos los productos del carrito.'
+    );
+    if (!result.isConfirmed) return;
+    try {
+      await clearCart();
+    } catch (e) {
+      showAlertError(
+        'Error',
+        e.response?.data?.error ?? e.message ?? 'No se pudo vaciar el carrito'
       );
     }
   };
@@ -106,6 +125,14 @@ export default function ShoppingCart() {
                   onRemove={() => handleRemoveItem(item.product_id)}
                 />
               ))}
+              <button
+                type="button"
+                className={styles.clearCart}
+                onClick={handleClearCart}
+                disabled={clearingCart}
+              >
+                {clearingCart ? 'Vaciando...' : 'Vaciar carrito'}
+              </button>
             </div>
             <ContinueCard
               isLoading={isSyncingCart || isCreatingOrder}

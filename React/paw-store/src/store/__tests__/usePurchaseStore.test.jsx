@@ -23,97 +23,30 @@ describe('usePurchaseStore', () => {
   });
   beforeEach(() => {
     usePurchaseStore.setState({
-      checkoutProccess: false,
-      cart: { cartId: null, items: [] },
       checkout: {
         order: { id: null, totalPrice: null, status: '' },
         customer: { fullName: '', email: '', phoneNumber: '' },
         shipping: { address: '' },
       },
       loading: {
-        initializingCart: false,
-        syncingCart: false,
-        addingItemId: null,
-        removingItemId: null,
         creatingOrder: false,
         creatingCheckoutData: false,
         completingPurchase: false,
         confirmingOrder: false,
-        clearingInfo: false,
       },
-      error: { screen: null, action: null },
+      error: { action: null },
     });
     vi.resetAllMocks();
   });
 
-  it('fetches cart and items', async () => {
-    const { useProductsStore } = await import('../useProductsStore.jsx');
-    useProductsStore.setState({
-      products: [{ id: 1, name: 'Product 1', stock: 5 }],
-      loading: {},
-      error: {},
-    });
-    api.get.mockResolvedValueOnce({ data: { cart: { id: 1 } } });
-    api.get.mockResolvedValueOnce({
-      data: { products_in_cart: [{ product_id: 1, quantity: 2 }] },
-    });
-    await act(async () => {
-      await usePurchaseStore.getState().initializeCart();
-    });
-    expect(usePurchaseStore.getState().cart.cartId).toBe(1);
-    expect(usePurchaseStore.getState().cart.items).toHaveLength(1);
-  });
-
-  it('adds to cart', async () => {
-    usePurchaseStore.setState({ cart: { cartId: 1, items: [] } });
-    api.post.mockResolvedValue({
-      data: { product: { product_id: 2, quantity: 1 } },
-    });
-    await act(async () => {
-      await usePurchaseStore
-        .getState()
-        .addToCart({ product_id: 2, quantity: 1 });
-    });
-    expect(usePurchaseStore.getState().cart.items[0].product_id).toBe(2);
-  });
-
-  it('removes from cart', async () => {
-    usePurchaseStore.setState({
-      cart: { cartId: 1, items: [{ product_id: 2, quantity: 1 }] },
-    });
-    api.delete.mockResolvedValue({});
-    await act(async () => {
-      await usePurchaseStore.getState().removeFromCart(2);
-    });
-    expect(usePurchaseStore.getState().cart.items).toHaveLength(0);
-  });
-
-  it('increases and decreases quantity', () => {
-    usePurchaseStore.setState({
-      cart: { cartId: 1, items: [{ product_id: 1, quantity: 2 }] },
-    });
-    usePurchaseStore.getState().increaseQuantity(1);
-    expect(usePurchaseStore.getState().cart.items[0].quantity).toBe(3);
-    usePurchaseStore.getState().decreaseQuantity(1);
-    expect(usePurchaseStore.getState().cart.items[0].quantity).toBe(2);
-  });
-
-  it('syncs cart', async () => {
-    usePurchaseStore.setState({ cart: initialCart });
-    api.post.mockResolvedValue({});
-    await act(async () => {
-      await usePurchaseStore.getState().syncCart();
-    });
-    expect(usePurchaseStore.getState().checkoutProccess).toBe(true);
-  });
-
   it('creates order', async () => {
-    usePurchaseStore.setState({ cart: initialCart });
     api.post.mockResolvedValue({
       data: { order: { id: 10, total_price: 2000, status: 'pending' } },
     });
     await act(async () => {
-      await usePurchaseStore.getState().createOrder();
+      await usePurchaseStore
+        .getState()
+        .createOrder(initialCart.cartId, initialCart.items);
     });
     expect(usePurchaseStore.getState().checkout.order.id).toBe(10);
   });
@@ -143,7 +76,6 @@ describe('usePurchaseStore', () => {
 
   it('completes purchase', async () => {
     usePurchaseStore.setState({
-      cart: { cartId: 1, items: [{ product_id: 1, quantity: 2, price: 1000 }] },
       checkout: {
         ...initialCheckout,
         order: { id: 10, totalPrice: 2000, status: 'pending' },
@@ -161,14 +93,15 @@ describe('usePurchaseStore', () => {
       return Promise.resolve({});
     });
     await act(async () => {
-      await usePurchaseStore.getState().completePurchase();
+      await usePurchaseStore
+        .getState()
+        .completePurchase(initialCart.cartId, initialCart.items);
     });
     expect(usePurchaseStore.getState().checkout.order.status).toBe('completed');
   });
 
   it('confirms order', async () => {
     usePurchaseStore.setState({
-      cart: { cartId: 1, items: [] },
       checkout: {
         ...initialCheckout,
         order: { id: 10, totalPrice: 2000, status: 'completed' },
@@ -177,18 +110,15 @@ describe('usePurchaseStore', () => {
     });
     api.post.mockResolvedValue({});
     await act(async () => {
-      await usePurchaseStore.getState().confirmOrder();
+      await usePurchaseStore.getState().confirmOrder(initialCart.cartId);
     });
     expect(usePurchaseStore.getState().error.action).toBeFalsy();
   });
 
-  it('clears info', async () => {
-    usePurchaseStore.setState({ cart: initialCart });
-    api.delete.mockResolvedValue({});
-    await act(async () => {
-      await usePurchaseStore.getState().clearInfo();
-    });
-    expect(usePurchaseStore.getState().cart.items).toHaveLength(0);
-    expect(usePurchaseStore.getState().checkoutProccess).toBe(false);
+  it('clears checkout', () => {
+    usePurchaseStore.setState({ checkout: initialCheckout });
+    usePurchaseStore.getState().clearCheckout();
+    expect(usePurchaseStore.getState().checkout.order.id).toBeNull();
+    expect(usePurchaseStore.getState().checkout.customer.fullName).toBe('');
   });
 });

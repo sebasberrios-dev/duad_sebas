@@ -19,44 +19,55 @@ vi.mock('../../Messages-States/Alerts.jsx', () => ({
   closeAlert: vi.fn(),
 }));
 
+let mockCartContext = {};
+vi.mock('../../../store/CartContext.jsx', () => ({
+  useCart: () => mockCartContext,
+}));
+
 describe('Purchase Form', () => {
   let user;
   let mockCreateCheckoutData;
   let mockCompletePurchase;
   let mockConfirmOrder;
-  let mockClearInfo;
+  let mockClearCart;
+  let mockClearCheckout;
 
   beforeEach(() => {
     mockCreateCheckoutData = vi.fn().mockResolvedValue();
     mockCompletePurchase = vi.fn().mockResolvedValue();
     mockConfirmOrder = vi.fn().mockResolvedValue();
-    mockClearInfo = vi.fn().mockResolvedValue();
+    mockClearCart = vi.fn().mockResolvedValue();
+    mockClearCheckout = vi.fn();
+
+    mockCartContext = {
+      checkoutProccess: true,
+      cartId: 1,
+      cartItems: [
+        {
+          id: 1,
+          product_id: 1,
+          name: 'Product 1',
+          image_url: '/test/test.jpg',
+          price: 12000,
+          quantity: 2,
+        },
+        {
+          id: 2,
+          product_id: 2,
+          name: 'Product 2',
+          image_url: '/test2/test2.jpg',
+          price: 21000,
+          quantity: 3,
+        },
+      ],
+      clearCart: mockClearCart,
+    };
 
     usePurchaseStore.setState({
-      checkoutProccess: true,
-      cart: {
-        cartId: 1,
-        items: [
-          {
-            id: 1,
-            name: 'Product 1',
-            image_url: '/test/test.jpg',
-            price: 12000,
-            quantity: 2,
-          },
-          {
-            id: 2,
-            name: 'Product 2',
-            image_url: '/test2/test2.jpg',
-            price: 21000,
-            quantity: 3,
-          },
-        ],
-      },
       createCheckoutData: mockCreateCheckoutData,
       completePurchase: mockCompletePurchase,
       confirmOrder: mockConfirmOrder,
-      clearInfo: mockClearInfo,
+      clearCheckout: mockClearCheckout,
     });
 
     user = userEvent.setup();
@@ -140,7 +151,7 @@ describe('Purchase Form', () => {
     expect(showAlertConfirm).toHaveBeenCalledTimes(1);
     expect(showAlertLoading).toHaveBeenCalledWith('Cancelando compra...');
     expect(nameInput).toHaveValue('');
-    expect(mockClearInfo).toHaveBeenCalled();
+    expect(mockClearCart).toHaveBeenCalled();
     expect(closeAlert).toHaveBeenCalledTimes(1);
     expect(showAlertSuccess).toHaveBeenCalledWith(
       'Compra cancelada',
@@ -151,7 +162,7 @@ describe('Purchase Form', () => {
 
   describe('Edge case: checkoutProccess = false', () => {
     it('redirects to home if user is not in checkout proccess', () => {
-      usePurchaseStore.setState({ checkoutProccess: false });
+      mockCartContext = { ...mockCartContext, checkoutProccess: false };
 
       render(
         <MemoryRouter>

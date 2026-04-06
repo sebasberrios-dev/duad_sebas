@@ -1,5 +1,6 @@
 import { useForm } from 'react-hook-form';
 import { Form, Title, Field, Button } from './FormsComponents.jsx';
+import { useCart } from '../../store/CartContext.jsx';
 import { usePurchaseStore } from '../../store/usePurchaseStore.jsx';
 import { useNavigate } from 'react-router';
 import {
@@ -49,15 +50,17 @@ export default function PurchaseInfoForm() {
     reset,
   } = useForm();
 
-  const isPurchasing = usePurchaseStore((state) => state.checkoutProccess);
+  const isPurchasing = useCart().checkoutProccess;
 
-  const cartItems = usePurchaseStore((state) => state.cart.items);
+  const cartItems = useCart().cartItems;
+  const cartId = useCart().cartId;
+  const clearCart = useCart().clearCart;
   const createCheckoutData = usePurchaseStore(
     (state) => state.createCheckoutData
   );
   const completePurchase = usePurchaseStore((state) => state.completePurchase);
   const confirmOrder = usePurchaseStore((state) => state.confirmOrder);
-  const clearInfo = usePurchaseStore((state) => state.clearInfo);
+  const clearCheckout = usePurchaseStore((state) => state.clearCheckout);
 
   const isCreatingCheckoutData = usePurchaseStore(
     (state) => state.loading.creatingCheckoutData
@@ -82,7 +85,8 @@ export default function PurchaseInfoForm() {
     showAlertLoading('Cancelando compra...');
 
     try {
-      await clearInfo();
+      await clearCart();
+      clearCheckout();
       await reset();
       closeAlert();
       showAlertSuccess('Compra cancelada', 'Se canceló la compra con éxito');
@@ -104,8 +108,8 @@ export default function PurchaseInfoForm() {
       };
 
       await createCheckoutData(payload);
-      await completePurchase();
-      await confirmOrder();
+      await completePurchase(cartId, cartItems);
+      await confirmOrder(cartId);
 
       navigate('/purchase-finished');
     } catch (e) {

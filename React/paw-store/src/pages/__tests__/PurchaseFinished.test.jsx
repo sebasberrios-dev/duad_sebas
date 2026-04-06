@@ -11,6 +11,11 @@ vi.mock('react-router', async () => {
   return { ...actual, useNavigate: () => mockNavigate };
 });
 
+let mockCartContext = {};
+vi.mock('../../store/CartContext.jsx', () => ({
+  useCart: () => mockCartContext,
+}));
+
 const sampleItems = [
   {
     id: 1,
@@ -23,12 +28,14 @@ const sampleItems = [
 
 describe('Purchase Finished', () => {
   let user;
-  let mockClearInfo;
+  let mockClearCart;
+  let mockClearCheckout;
 
-  const defaultState = () => ({
+  const defaultCartContext = () => ({
+    cartItems: sampleItems,
+    clearCart: mockClearCart,
     checkoutProccess: true,
-    cart: { cartId: 1, items: sampleItems },
-    clearInfo: mockClearInfo,
+    cartId: 1,
   });
 
   const renderFinished = () =>
@@ -39,13 +46,19 @@ describe('Purchase Finished', () => {
     );
 
   beforeEach(() => {
-    mockClearInfo = vi.fn();
+    mockClearCart = vi.fn();
+    mockClearCheckout = vi.fn();
     mockNavigate.mockReset();
     user = userEvent.setup();
+
+    mockCartContext = defaultCartContext();
+
+    usePurchaseStore.setState({
+      clearCheckout: mockClearCheckout,
+    });
   });
 
   it('renders purchase success layout', () => {
-    usePurchaseStore.setState(defaultState());
     renderFinished();
 
     expect(screen.getByText('Compra realizada con éxito')).toBeInTheDocument();
@@ -57,7 +70,6 @@ describe('Purchase Finished', () => {
   });
 
   it('renders purchase summary layout', () => {
-    usePurchaseStore.setState(defaultState());
     renderFinished();
 
     expect(screen.getByText('Product 1')).toBeInTheDocument();
@@ -68,7 +80,6 @@ describe('Purchase Finished', () => {
   });
 
   it('renders action buttons', () => {
-    usePurchaseStore.setState(defaultState());
     renderFinished();
 
     expect(
@@ -79,39 +90,35 @@ describe('Purchase Finished', () => {
     ).toBeInTheDocument();
   });
 
-  it('navigates to /products and calls clearInfo when clicking "Volver al catálogo"', async () => {
-    usePurchaseStore.setState(defaultState());
+  it('navigates to /products and calls clearCart when clicking "Volver al catálogo"', async () => {
     renderFinished();
 
     await user.click(
       screen.getByRole('button', { name: /Volver al catálogo/i })
     );
 
-    expect(mockClearInfo).toHaveBeenCalledTimes(1);
+    expect(mockClearCart).toHaveBeenCalledTimes(1);
     expect(mockNavigate).toHaveBeenCalledWith('/products');
   });
 
-  it('navigates to / and calls clearInfo when clicking "Ir al inicio"', async () => {
-    usePurchaseStore.setState(defaultState());
+  it('navigates to / and calls clearCart when clicking "Ir al inicio"', async () => {
     renderFinished();
 
     await user.click(screen.getByRole('button', { name: /Ir al inicio/i }));
 
-    expect(mockClearInfo).toHaveBeenCalledTimes(1);
+    expect(mockClearCart).toHaveBeenCalledTimes(1);
     expect(mockNavigate).toHaveBeenCalledWith('/');
   });
 
-  it('calls clearInfo on unmount', () => {
-    usePurchaseStore.setState(defaultState());
+  it('calls clearCart on unmount', () => {
     const { unmount } = renderFinished();
 
     unmount();
 
-    expect(mockClearInfo).toHaveBeenCalledTimes(1);
+    expect(mockClearCart).toHaveBeenCalledTimes(1);
   });
 
-  it('calls clearInfo only once even if triggered multiple times', async () => {
-    usePurchaseStore.setState(defaultState());
+  it('calls clearCart only once even if triggered multiple times', async () => {
     const { unmount } = renderFinished();
 
     await user.click(
@@ -119,6 +126,6 @@ describe('Purchase Finished', () => {
     );
     unmount();
 
-    expect(mockClearInfo).toHaveBeenCalledTimes(1);
+    expect(mockClearCart).toHaveBeenCalledTimes(1);
   });
 });

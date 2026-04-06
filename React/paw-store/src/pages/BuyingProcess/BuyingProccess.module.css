@@ -77,14 +77,23 @@
 
 .clearCart {
   background-color: transparent;
-  color: #888888;
-  border: none;
-  font-size: 1rem;
+  color: var(--color-error);
+  border: 1px solid var(--color-error);
+  border-radius: 8px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  padding: 10px 20px;
   cursor: pointer;
-  margin-top: 18px;
-  margin-left: 8px;
-  transition: color 0.1s ease;
+  align-self: flex-start;
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease;
 }
 .clearCart:hover {
-  color: #111827;
+  background-color: var(--color-error);
+  color: #fff;
+}
+.clearCart:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
 }

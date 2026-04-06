@@ -40,7 +40,7 @@ Aplicación e-commerce full-stack para la venta de productos para mascotas. Fron
 
 ## Manejo de Estados
 
-La aplicación utiliza una estrategia dual para el manejo del estado global:
+La aplicación utiliza una estrategia mixta de **React Context** y **Zustand** para el manejo del estado global:
 
 ### React Context — `AuthContext`
 
@@ -51,10 +51,22 @@ Maneja el estado de **autenticación** de la aplicación. Envuelve toda la app e
 - **Persistencia**: Token JWT almacenado en `localStorage`, decodificado al iniciar para restaurar la sesión
 - **Hook**: `useAuth()` para acceder al contexto desde cualquier componente
 
+### React Context — `CartContext`
+
+Maneja el estado del **carrito de compras**. Envuelve toda la app en `<CartProvider>`.
+
+- **Estado**: `cartId`, `cartItems[]`, `checkoutProccess`, `screenError`, `actionError`, loading flags (`initializingCart`, `addingItemId`, `removingItemId`, `syncingCart`, `clearingCart`)
+- **Acciones**: `initializeCart()`, `addToCart()`, `removeFromCart()`, `increaseQuantity()`, `decreaseQuantity()`, `syncCart()`, `clearCart()`
+- **Sincronización**: El carrito se sincroniza con el backend antes del checkout mediante `syncCart()`
+- **Validación**: `fetchItems()` cruza los items contra `useProductsStore` para mostrar solo productos con stock disponible
+- **Hook**: `useCart()` para acceder al contexto desde cualquier componente
+
 ```jsx
-// main.jsx — AuthProvider envuelve toda la app
+// main.jsx — Providers envuelven toda la app
 <AuthProvider>
-  <RouterProvider router={router} />
+  <CartProvider>
+    <RouterProvider router={router} />
+  </CartProvider>
 </AuthProvider>
 ```
 
@@ -65,23 +77,24 @@ Store global para el **catálogo de productos**. Accesible desde cualquier compo
 - **Estado**: `products[]`, `mostPurchasedProducts[]`, `loading` (flags por operación), `error` (screen / action)
 - **Acciones**: `fetchProducts()`, `fetchMostPurchased()`, `addProduct()`, `updateProduct()`, `deleteProduct()`
 - **Patrón**: Cada acción maneja su propio estado de `loading` y `error` de forma independiente
+- **Validación**: `fetchMostPurchased()` filtra los productos destacados contra el catálogo real para evitar mostrar productos eliminados
 
 ### Zustand — `usePurchaseStore`
 
-Store global para el **carrito de compras y flujo de checkout**. Maneja todo el ciclo de vida de una compra.
+Store global para el **flujo de checkout**. Maneja las operaciones de compra una vez que se sale del carrito.
 
-- **Estado**: `cart` (cartId + items), `checkout` (order, customer, shipping), `loading`, `error`
-- **Acciones**: `createCart()`, `addToCart()`, `removeFromCart()`, `increaseQuantity()`, `decreaseQuantity()`, `syncCart()`, `createOrder()`, `createCheckoutData()`, `completePurchase()`, `confirmOrder()`, `clearInfo()`
-- **Sincronización**: El carrito se sincroniza con el backend antes del checkout mediante `syncCart()`
+- **Estado**: `checkout` (order, checkoutData), `loading` (creatingOrder, creatingCheckoutData, completingPurchase, confirmingOrder), `error` (action)
+- **Acciones**: `createOrder(cartId, currentItems)`, `createCheckoutData(payload)`, `completePurchase(cartId, currentItems)`, `confirmOrder(cartId)`, `clearCheckout()`
+- **Patrón**: Recibe `cartId` y `currentItems` como parámetros desde `CartContext` en vez de manejar estado interno del carrito
 
 ### ¿Por qué esta separación?
 
-| Aspecto     | React Context                                | Zustand                                                   |
-| ----------- | -------------------------------------------- | --------------------------------------------------------- |
-| Uso         | Autenticación (actualizaciones infrecuentes) | Datos del catálogo y carrito (actualizaciones frecuentes) |
-| Re-renders  | Todos los consumidores se re-renderizan      | Solo los componentes que leen el estado modificado        |
-| Provider    | Requiere `<AuthProvider>` en el árbol        | No requiere provider, acceso directo al store             |
-| Complejidad | Baja (un solo contexto)                      | Media (múltiples acciones async con loading/error)        |
+| Aspecto     | React Context                                                | Zustand                                            |
+| ----------- | ------------------------------------------------------------ | -------------------------------------------------- |
+| Uso         | Autenticación y carrito de compras                           | Catálogo de productos y flujo de checkout          |
+| Re-renders  | Todos los consumidores se re-renderizan                      | Solo los componentes que leen el estado modificado |
+| Provider    | Requiere `<AuthProvider>` y `<CartProvider>` en el árbol     | No requiere provider, acceso directo al store      |
+| Complejidad | Media (auth simple, carrito con múltiples operaciones async) | Media (catálogo CRUD, checkout secuencial)         |
 
 ---
 
@@ -140,8 +153,9 @@ paw-store/
 │   │   └── protected.jsx              # Wrapper de rutas protegidas
 │   ├── store/
 │   │   ├── AuthContext.jsx            # Context de autenticación
+│   │   ├── CartContext.jsx            # Context del carrito de compras
 │   │   ├── useProductsStore.jsx       # Zustand store de productos
-│   │   ├── usePurchaseStore.jsx       # Zustand store de compras
+│   │   ├── usePurchaseStore.jsx       # Zustand store de checkout
 │   │   └── __tests__/
 │   ├── utils/
 │   │   ├── helpers.js                 # Funciones de cálculo de precios

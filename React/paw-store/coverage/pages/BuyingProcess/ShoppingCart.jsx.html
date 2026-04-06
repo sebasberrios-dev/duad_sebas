@@ -23,9 +23,9 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">91.11% </span>
+                <span class="strong">84.61% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>41/45</span>
+                <span class='fraction'>22/26</span>
             </div>
         
             
@@ -37,16 +37,16 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">90.47% </span>
+                <span class="strong">81.81% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>19/21</span>
+                <span class='fraction'>9/11</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">88.88% </span>
+                <span class="strong">84% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>32/36</span>
+                <span class='fraction'>21/25</span>
             </div>
         
             
@@ -182,9 +182,21 @@
 <a name='L117'></a><a href='#L117'>117</a>
 <a name='L118'></a><a href='#L118'>118</a>
 <a name='L119'></a><a href='#L119'>119</a>
-<a name='L120'></a><a href='#L120'>120</a>
-<a name='L121'></a><a href='#L121'>121</a>
-<a name='L122'></a><a href='#L122'>122</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L120'></a><a href='#L120'>120</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">7x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -198,18 +210,12 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">7x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">7x</span>
 <span class="cline-any cline-yes">21x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">21x</span>
-<span class="cline-any cline-yes">7x</span>
-<span class="cline-any cline-yes">21x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">21x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">21x</span>
-<span class="cline-any cline-yes">21x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">7x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -220,17 +226,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">21x</span>
-<span class="cline-any cline-yes">21x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">7x</span>
-<span class="cline-any cline-yes">21x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">21x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">7x</span>
-<span class="cline-any cline-yes">21x</span>
-<span class="cline-any cline-yes">21x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">7x</span>
 <span class="cline-any cline-yes">1x</span>
@@ -308,6 +304,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { ItemCart } from '../../components/PurchaseFlow/ItemCart.jsx';
 import { ContinueCard } from '../../components/PurchaseFlow/ContinueCard.jsx';
 import { LoadingPage } from '../../components/Messages-States/Loading.jsx';
+import { useCart } from '../../store/CartContext.jsx';
 import { usePurchaseStore } from '../../store/usePurchaseStore.jsx';
 import { calculateSubTotal } from '../../utils/helpers.js';
 import { useNavigate } from 'react-router';
@@ -319,18 +316,25 @@ import { ErrorPage } from '../../components/Messages-States/Error.jsx';
 export default function ShoppingCart() {
   const navigate = useNavigate();
 &nbsp;
-  const isInitializing = usePurchaseStore(
-    (state) =&gt; state.loading.initializingCart
-  );
-  const isSyncingCart = usePurchaseStore((state) =&gt; state.loading.syncingCart);
+  const {
+    initializingCart: isInitializing,
+    syncingCart: isSyncingCart,
+    screenError,
+    initializeCart,
+    cartId,
+    cartItems,
+    increaseQuantity,
+    decreaseQuantity,
+    removingItemId,
+    removeFromCart,
+    syncCart,
+  } = useCart();
+&nbsp;
   const isCreatingOrder = usePurchaseStore(
     (state) =&gt; state.loading.creatingOrder
   );
+  const createOrder = usePurchaseStore((state) =&gt; state.createOrder);
 &nbsp;
-  const screenError = usePurchaseStore((state) =&gt; state.error.screen);
-&nbsp;
-  const initializeCart = usePurchaseStore((state) =&gt; state.initializeCart);
-  const cartItems = usePurchaseStore((state) =&gt; state.cart.items);
   // Filtrar productos con price inválido (null, undefined, NaN, no numérico)
   const validCartItems = Array.isArray(cartItems)
     ? cartItems.filter(
@@ -341,22 +345,12 @@ export default function ShoppingCart() {
       )
     : <span class="branch-1 cbranch-no" title="branch not covered" >[];</span>
 &nbsp;
-  const increaseQuantity = usePurchaseStore((state) =&gt; state.increaseQuantity);
-  const decreaseQuantity = usePurchaseStore((state) =&gt; state.decreaseQuantity);
-&nbsp;
-  const removingItemId = usePurchaseStore(
-    (state) =&gt; state.loading.removingItemId
-  );
-  const removeFromCart = usePurchaseStore((state) =&gt; state.removeFromCart);
-&nbsp;
   const subtotal = calculateSubTotal(validCartItems);
-  const syncCart = usePurchaseStore((state) =&gt; state.syncCart);
-  const createOrder = usePurchaseStore((state) =&gt; state.createOrder);
 &nbsp;
   const handleContinue = async () =&gt; {
     try {
       await syncCart();
-      await createOrder();
+      await createOrder(cartId, validCartItems);
 &nbsp;
       navigate('/checkout');
     } catch (e) {
@@ -433,7 +427,7 @@ export default function ShoppingCart() {
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2026-03-28T06:25:16.354Z
+                at 2026-04-06T01:35:58.692Z
             </div>
         <script src="../../prettify.js"></script>
         <script>

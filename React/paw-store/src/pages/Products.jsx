@@ -4,7 +4,7 @@ import { LoadingPage } from '../components/Messages-States/Loading.jsx';
 import { ErrorPage } from '../components/Messages-States/Error.jsx';
 import { ProductCard } from '../components/Products/ProductCard.jsx';
 import { useProductsStore } from '../store/useProductsStore.jsx';
-import { usePurchaseStore } from '../store/usePurchaseStore.jsx';
+import { useCart } from '../store/CartContext.jsx';
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router';
 
@@ -33,7 +33,7 @@ export default function Products() {
   );
   const screenError = useProductsStore((state) => state.error.screen);
 
-  const initializeCart = usePurchaseStore((state) => state.initializeCart);
+  const { initializeCart } = useCart();
   const navigate = useNavigate();
 
   useEffect(() => {

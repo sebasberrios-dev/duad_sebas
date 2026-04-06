@@ -4,7 +4,11 @@ import userEvent from '@testing-library/user-event';
 import { MemoryRouter, Route, Routes } from 'react-router';
 import ProductDetail from '../ProductDetails';
 import { useProductsStore } from '../../store/useProductsStore';
-import { usePurchaseStore } from '../../store/usePurchaseStore';
+
+let mockCartContext = {};
+vi.mock('../../store/CartContext.jsx', () => ({
+  useCart: () => mockCartContext,
+}));
 
 const mockNavigate = vi.fn();
 vi.mock('react-router', async () => {
@@ -58,22 +62,18 @@ describe('ProductDetails', () => {
       fetchProducts: mockFetchProducts,
     });
 
-    usePurchaseStore.setState({
-      loading: {
-        initializingCart: false,
-        syncingCart: false,
-        addingItemId: null,
-        removingItemId: null,
-        creatingOrder: false,
-        creatingCheckoutData: false,
-        completingPurchase: false,
-        confirmingOrder: false,
-        clearingInfo: false,
-      },
-      error: { screen: null, action: null },
+    mockCartContext = {
+      initializingCart: false,
+      syncingCart: false,
+      addingItemId: null,
+      removingItemId: null,
+      screenError: null,
+      actionError: null,
       addToCart: mockAddToCart,
       initializeCart: vi.fn(),
-    });
+      cartId: 1,
+      cartItems: [],
+    };
   });
 
   it('renders product details layout', () => {
@@ -158,10 +158,11 @@ describe('ProductDetails', () => {
   });
 
   it('disables button and shows "Añadiendo..." while adding to cart', () => {
-    usePurchaseStore.setState({
-      loading: { addingItemId: 5 },
+    mockCartContext = {
+      ...mockCartContext,
+      addingItemId: 5,
       addToCart: mockAddToCart,
-    });
+    };
     renderWithRoute();
 
     const btn = screen.getByRole('button', { name: /Añadiendo/i });

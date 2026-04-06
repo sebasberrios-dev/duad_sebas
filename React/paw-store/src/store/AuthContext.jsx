@@ -31,8 +31,6 @@ export const AuthProvider = ({ children }) => {
   const [registerError, setRegisterError] = useState(null);
   const [isLoggingOut, setIsLoggingOut] = useState(false);
 
-  // Maneja expiración del token: limpia al montar si ya expiró,
-  // o programa un timer para cuando expire en el futuro
   useEffect(() => {
     if (!token || !user?.exp) return;
 

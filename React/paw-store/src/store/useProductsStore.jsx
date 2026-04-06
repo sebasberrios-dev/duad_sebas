@@ -62,8 +62,24 @@ export const useProductsStore = create((set, get) => ({
       error: { ...state.error, action: null },
     }));
     try {
+      let { products } = get();
+      if (!products || products.length === 0) {
+        const prodRes = await api.get('/products');
+        let fetched = prodRes.data;
+        if (!Array.isArray(fetched)) {
+          fetched =
+            fetched && Array.isArray(fetched.products) ? fetched.products : [];
+        }
+        products = fetched;
+        set({ products });
+      }
+      const validIds = new Set(products.map((p) => p.id));
+
       const res = await api.get('/most_purchased_products');
-      set({ mostPurchasedProducts: res.data.products });
+      const mostPurchased = (res.data.products || []).filter((p) =>
+        validIds.has(p.id)
+      );
+      set({ mostPurchasedProducts: mostPurchased });
     } catch (e) {
       const errorMessage =
         e.response?.data?.error ??
@@ -145,7 +161,7 @@ export const useProductsStore = create((set, get) => ({
 
   deleteProduct: async (id) => {
     set((state) => ({
-      loading: { ...state.loading, removingProduct: true },
+      loading: { ...state.loading, deletingProduct: true },
       error: { ...state.error, action: null },
     }));
     try {
@@ -166,7 +182,7 @@ export const useProductsStore = create((set, get) => ({
       }));
     } finally {
       set((state) => ({
-        loading: { ...state.loading, removingProduct: false },
+        loading: { ...state.loading, deletingProduct: false },
       }));
     }
   },

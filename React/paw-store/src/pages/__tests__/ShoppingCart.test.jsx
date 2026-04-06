@@ -15,6 +15,11 @@ vi.mock('../../components/Messages-States/Alerts.jsx', () => ({
   showAlertError: vi.fn(),
 }));
 
+let mockCartContext = {};
+vi.mock('../../store/CartContext.jsx', () => ({
+  useCart: () => mockCartContext,
+}));
+
 const sampleItems = [
   {
     product_id: 1,
@@ -32,21 +37,18 @@ describe('Shopping Cart', () => {
   let mockSyncCart;
   let mockCreateOrder;
 
-  const defaultState = () => ({
-    loading: {
-      initializingCart: false,
-      syncingCart: false,
-      creatingOrder: false,
-      removingItemId: null,
-    },
-    error: { screen: null },
-    cart: { cartId: 1, items: sampleItems },
+  const defaultCartContext = () => ({
+    initializingCart: false,
+    syncingCart: false,
+    screenError: null,
     initializeCart: mockInitializeCart,
-    removeFromCart: mockRemoveFromCart,
+    cartId: 1,
+    cartItems: sampleItems,
     increaseQuantity: vi.fn(),
     decreaseQuantity: vi.fn(),
+    removingItemId: null,
+    removeFromCart: mockRemoveFromCart,
     syncCart: mockSyncCart,
-    createOrder: mockCreateOrder,
   });
 
   const renderCart = () =>
@@ -63,37 +65,39 @@ describe('Shopping Cart', () => {
     mockCreateOrder = vi.fn();
     mockNavigate.mockReset();
     user = userEvent.setup();
+
+    mockCartContext = defaultCartContext();
+
+    usePurchaseStore.setState({
+      loading: { creatingOrder: false },
+      createOrder: mockCreateOrder,
+    });
   });
 
   it('calls initializeCart on mount', () => {
-    usePurchaseStore.setState(defaultState());
     renderCart();
 
     expect(mockInitializeCart).toHaveBeenCalledTimes(1);
   });
 
   it('shows loading when the cart is initializing', () => {
-    usePurchaseStore.setState({
-      ...defaultState(),
-      loading: { initializingCart: true },
-    });
+    mockCartContext = { ...defaultCartContext(), initializingCart: true };
     renderCart();
 
     expect(screen.getByText('Cargando carrito...')).toBeInTheDocument();
   });
 
   it('shows error when there is a screen error', () => {
-    usePurchaseStore.setState({
-      ...defaultState(),
-      error: { screen: 'Error de conexión' },
-    });
+    mockCartContext = {
+      ...defaultCartContext(),
+      screenError: 'Error de conexión',
+    };
     renderCart();
 
     expect(screen.getByText(/Error de conexión/)).toBeInTheDocument();
   });
 
   it('renders cart layout with items', () => {
-    usePurchaseStore.setState(defaultState());
     renderCart();
 
     expect(screen.getByText('Carrito de compras')).toBeInTheDocument();
@@ -105,7 +109,6 @@ describe('Shopping Cart', () => {
   });
 
   it('renders cart action buttons', () => {
-    usePurchaseStore.setState(defaultState());
     renderCart();
 
     expect(
@@ -123,7 +126,6 @@ describe('Shopping Cart', () => {
   });
 
   it('calls removeFromCart when clicking remove button', async () => {
-    usePurchaseStore.setState(defaultState());
     renderCart();
 
     await user.click(
@@ -134,7 +136,6 @@ describe('Shopping Cart', () => {
   });
 
   it('calls syncCart, createOrder and navigates when clicking continue', async () => {
-    usePurchaseStore.setState(defaultState());
     renderCart();
 
     await user.click(

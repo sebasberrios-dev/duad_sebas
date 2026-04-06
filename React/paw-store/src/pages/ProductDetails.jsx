@@ -2,7 +2,7 @@ import styles from './ProductDetails.module.css';
 import shared from '../components/shared.module.css';
 import { useNavigate, useParams } from 'react-router';
 import { useProductsStore } from '../store/useProductsStore.jsx';
-import { usePurchaseStore } from '../store/usePurchaseStore.jsx';
+import { useCart } from '../store/CartContext.jsx';
 import { useEffect } from 'react';
 import { LoadingPage } from '../components/Messages-States/Loading.jsx';
 import {
@@ -33,12 +33,8 @@ export default function ProductDetail() {
     (state) => state.loading.fetchingProducts
   );
   const screenError = useProductsStore((state) => state.error.screen);
-  const actionError = usePurchaseStore((state) => state.error.action);
+  const { actionError, initializeCart, addToCart, addingItemId } = useCart();
   const { id } = useParams();
-
-  const initializeCart = usePurchaseStore((state) => state.initializeCart);
-  const addToCart = usePurchaseStore((state) => state.addToCart);
-  const addingItemId = usePurchaseStore((state) => state.loading.addingItemId);
 
   useEffect(() => {
     if (products.length === 0) {
