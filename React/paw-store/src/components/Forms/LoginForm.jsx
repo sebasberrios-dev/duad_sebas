@@ -2,9 +2,11 @@ import styles from './Forms.module.css';
 import shared from '../shared.module.css';
 import { useAuth } from '../../store/AuthContext.jsx';
 import { useForm } from 'react-hook-form';
+import { useNavigate } from 'react-router';
 import { Form, Title, Field, Button } from './FormsComponents';
+import { showLoginSuccess } from '../Messages-States/Alerts.jsx';
 
-export function LoginForm({ onNavigate }) {
+export function LoginForm() {
   const {
     register,
     handleSubmit,
@@ -14,58 +16,53 @@ export function LoginForm({ onNavigate }) {
 
   const { login, loginError } = useAuth();
 
-  const handleFormSubmit = async (data, redirect) => {
+  const navigate = useNavigate();
+
+  const handleFormSubmit = async (data) => {
     const success = await login(data);
     if (success) {
       reset();
-      if (redirect) {
-        onNavigate(redirect);
-      }
+      showLoginSuccess(data.email);
+      navigate('/');
     }
   };
 
   return (
     <section className={`${shared.container} ${styles.section}`}>
-      <Form
-        className={styles.form}
-        onSubmit={handleSubmit((data) => handleFormSubmit(data, 'home'))}
-      >
+      <Form className={styles.form} onSubmit={handleSubmit(handleFormSubmit)}>
         <Title className={`${shared.title} ${styles.textAlign}`}>
           Iniciar sesión
         </Title>
 
         {loginError && <p className={styles.errorMessage}>{loginError}</p>}
+        <Field
+          divClassName={styles.field}
+          labelClassName={styles.label}
+          inputClassName={styles.input}
+          inputErrorClassName={styles.inputError}
+          errorClassName={styles.fieldError}
+          type="email"
+          id="email"
+          placeholder="nombre.apellido@ejemplo.com"
+          error={errors.email ? 'Correo electrónico obligatorio' : ''}
+          {...register('email', { required: true })}
+        >
+          Correo electrónico
+        </Field>
 
-        <div className={styles.field}>
-          <Field
-            labelClassName={styles.label}
-            inputClassName={styles.input}
-            inputErrorClassName={styles.inputError}
-            errorClassName={styles.fieldError}
-            type="email"
-            id="email"
-            placeholder="nombre.apellido@ejemplo.com"
-            error={errors.email ? 'Correo electrónico obligatorio' : ''}
-            {...register('email', { required: true })}
-          >
-            Correo electrónico
-          </Field>
-        </div>
-
-        <div className={styles.field}>
-          <Field
-            labelClassName={styles.label}
-            inputClassName={styles.input}
-            inputErrorClassName={styles.inputError}
-            errorClassName={styles.fieldError}
-            type="password"
-            id="password"
-            error={errors.password ? 'Contraseña obligatoria' : ''}
-            {...register('password', { required: true })}
-          >
-            Contraseña
-          </Field>
-        </div>
+        <Field
+          divClassName={styles.field}
+          labelClassName={styles.label}
+          inputClassName={styles.input}
+          inputErrorClassName={styles.inputError}
+          errorClassName={styles.fieldError}
+          type="password"
+          id="password"
+          error={errors.password ? 'Contraseña obligatoria' : ''}
+          {...register('password', { required: true })}
+        >
+          Contraseña
+        </Field>
 
         <div className={styles.actions}>
           <Button
@@ -79,7 +76,7 @@ export function LoginForm({ onNavigate }) {
             <button
               type="button"
               className={styles.linkButton}
-              onClick={() => onNavigate('register')}
+              onClick={() => navigate('/register')}
             >
               Registrarse
             </button>

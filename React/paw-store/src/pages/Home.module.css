@@ -1,0 +1,76 @@
+.featuredSection {
+  width: 100%;
+  margin-top: 32px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.featuredTitle {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-bottom: 18px;
+  color: #333;
+}
+
+.featuredGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 24px;
+  width: 100%;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.error {
+  color: var(--color-error);
+  margin-bottom: 12px;
+}
+.homeContainer {
+  max-width: 900px;
+  margin: 0 auto;
+  min-height: calc(100vh - 140px);
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  text-align: center;
+  gap: 40px;
+}
+
+.homeTitle {
+  font-size: 56px;
+  font-weight: 800;
+  margin: 0;
+  color: #111;
+}
+
+.description {
+  font-size: 18px;
+  color: #666;
+  margin: 0;
+  line-height: 1.6;
+}
+
+.productsLink {
+  margin-top: 10px;
+  background: none;
+  border: none;
+  color: #7f55e0ff;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.productsLink:hover {
+  color: #6d3edcff;
+}
+
+.message {
+  margin-top: 40px;
+  font-size: 14px;
+  color: #777;
+}

@@ -94,6 +94,49 @@
   text-decoration: underline;
 }
 
+/* PurchaseInfoForm / Checkout */
+
+.checkoutLayout {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2.5rem;
+  width: 100%;
+  max-width: 1400px;
+  align-items: start;
+}
+
+.purchaseForm {
+  background-color: var(--color-bg);
+  border-radius: 12px;
+  box-shadow: 0 4px 20px var(--color-shadow);
+  padding: 3rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.4rem;
+}
+
+.summaryCard {
+  background-color: var(--color-bg);
+  border-radius: 12px;
+  box-shadow: 0 4px 20px var(--color-shadow);
+  padding: 3rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.75rem;
+}
+
+.summaryActions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.message {
+  font-size: 0.875rem;
+  color: var(--color-text-secondary);
+  margin: 0;
+}
+
 /* Compartido: Add & Edit Product */
 
 .productLabel {
@@ -199,8 +242,13 @@
   transition: filter 0.2s ease;
 }
 
-.addPrimaryBtn:hover {
+.addPrimaryBtn:hover:not(:disabled) {
   filter: brightness(0.95);
+}
+
+.addPrimaryBtn:disabled {
+  background: var(--color-disabled);
+  cursor: not-allowed;
 }
 
 .editFormActions {
@@ -264,8 +312,13 @@
   transition: filter 0.2s ease;
 }
 
-.submitButton:hover {
+.submitButton:hover:not(:disabled) {
   filter: brightness(0.95);
+}
+
+.submitButton:disabled {
+  background: var(--color-disabled);
+  cursor: not-allowed;
 }
 
 .addWarning {
@@ -277,5 +330,5 @@
 .addWarning p {
   margin: 0;
   font-size: 13px;
-  color: #ff0606;
+  color: var(--color-error);
 }

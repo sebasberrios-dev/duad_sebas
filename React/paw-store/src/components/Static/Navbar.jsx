@@ -2,10 +2,13 @@ import styles from './Navbar.module.css';
 import shared from '../shared.module.css';
 import pawPrint from '../../assets/lucide-PawPrint-Outlined.svg';
 import { useAuth } from '../../store/AuthContext.jsx';
+import { NavLink } from 'react-router';
 import { memo } from 'react';
+import { useNavigate } from 'react-router';
 
-function Navbar({ onNavigate, currentPage }) {
-  const { isLogged, isAdmin, user } = useAuth();
+function Navbar() {
+  const { isLogged, isAdmin, user, handleLogout } = useAuth();
+  const navigate = useNavigate();
 
   return (
     <header>
@@ -23,49 +26,68 @@ function Navbar({ onNavigate, currentPage }) {
           </div>
 
           <ul className={styles.links}>
-            <li
-              className={`${styles.item} ${currentPage === 'home' ? styles.active : ''}`}
-              onClick={() => onNavigate('home')}
+            <NavLink
+              to="/"
+              className={({ isActive }) =>
+                `${styles.item} ${isActive ? styles.active : ''}`
+              }
             >
               Inicio
-            </li>
-            <li
-              className={`${styles.item} ${currentPage === 'products' ? styles.active : ''}`}
-              onClick={() => onNavigate('products')}
+            </NavLink>
+            <NavLink
+              to="/products"
+              className={({ isActive }) =>
+                `${styles.item} ${isActive ? styles.active : ''}`
+              }
             >
               Productos
-            </li>
-            <li
-              className={`${styles.item} ${currentPage === 'contact' ? styles.active : ''}`}
-              onClick={() => onNavigate('contact')}
+            </NavLink>
+            <NavLink
+              to="/contact"
+              className={({ isActive }) =>
+                `${styles.item} ${isActive ? styles.active : ''}`
+              }
             >
               Contacto
-            </li>
+            </NavLink>
             {isAdmin && (
-              <li
-                className={`${styles.item} ${currentPage === 'admin' ? styles.active : ''}`}
-                onClick={() => onNavigate('admin')}
+              <NavLink
+                to="/admin/products"
+                className={({ isActive }) =>
+                  `${styles.item} ${isActive ? styles.active : ''}`
+                }
               >
                 Administración
-              </li>
+              </NavLink>
             )}
-            {isLogged ? ( // 7 8 12 14 20 21
+            {isLogged ? (
               <>
+                <NavLink
+                  className={({ isActive }) =>
+                    `${styles.item} ${isActive ? styles.active : ''}`
+                  }
+                  to="/cart"
+                >
+                  Carrito
+                </NavLink>
                 <li className={styles.userLabel}>Usuario: {user.role}</li>
-                <li
+                <button
+                  type="button"
                   className={`${styles.item} ${styles.logout}`}
-                  onClick={() => onNavigate('logout')}
+                  onClick={() => handleLogout(navigate)}
                 >
                   Cerrar sesión
-                </li>
+                </button>
               </>
             ) : (
-              <li
-                className={`${styles.item} ${styles.login} ${currentPage === 'login' ? styles.active : ''}`}
-                onClick={() => onNavigate('login')}
+              <NavLink
+                to="/login"
+                className={({ isActive }) =>
+                  `${styles.item} ${styles.login} ${isActive ? styles.active : ''}`
+                }
               >
                 Iniciar sesión
-              </li>
+              </NavLink>
             )}
           </ul>
         </div>

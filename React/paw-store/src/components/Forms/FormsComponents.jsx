@@ -8,6 +8,7 @@ export const Form = ({ children, ...props }) => {
 
 export const Field = ({
   children,
+  divClassName,
   labelClassName,
   inputClassName,
   inputErrorClassName,
@@ -20,7 +21,7 @@ export const Field = ({
     undefined;
 
   return (
-    <>
+    <div className={divClassName}>
       <label className={labelClassName} htmlFor={inputProps.id}>
         {children}
       </label>
@@ -28,12 +29,13 @@ export const Field = ({
       <div aria-live="assertive">
         {error && <span className={errorClassName}>{error}</span>}
       </div>
-    </>
+    </div>
   );
 };
 
 export const FieldTextarea = ({
   children,
+  divClassName,
   labelClassName,
   inputClassName,
   inputErrorClassName,
@@ -46,7 +48,7 @@ export const FieldTextarea = ({
     undefined;
 
   return (
-    <>
+    <div className={divClassName}>
       <label className={labelClassName} htmlFor={inputProps.id}>
         {children}
       </label>
@@ -54,7 +56,7 @@ export const FieldTextarea = ({
       <div aria-live="assertive">
         {error && <span className={errorClassName}>{error}</span>}
       </div>
-    </>
+    </div>
   );
 };
 

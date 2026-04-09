@@ -6,6 +6,8 @@
     "hook": "^0.1.0",
     "react": "^19.2.4",
     "react-redux": "^9.2.0",
+    "sweetalert": "^2.1.2",
+    "sweetalert2": "^11.26.22",
     "yup": "^1.7.1"
   }
 }

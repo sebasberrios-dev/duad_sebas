@@ -1,0 +1,139 @@
+/* Cart items */
+
+.item {
+  display: flex;
+  align-items: center;
+  gap: 34px;
+
+  padding: 2rem;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  transition: all 0.2s;
+}
+
+.itemImage {
+  width: 74px;
+  height: 74px;
+  object-fit: contain;
+  border-radius: 10px;
+}
+
+.itemName {
+  margin: 0;
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: #111827;
+}
+
+.quantityControl {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+.quantityButton {
+  width: 30px;
+  height: 30px;
+  display: inline-flex;
+  border: none;
+  border-radius: 6px;
+  justify-content: center;
+  align-items: center;
+  background: transparent;
+  color: #888;
+  cursor: pointer;
+  transition:
+    transform 0.1s ease,
+    color 0.1s ease,
+    background-color 0.1s ease;
+}
+
+.quantityButton:hover:not(:disabled) {
+  color: #111827;
+  background: #11182714;
+  transform: scale(1.08);
+}
+
+.quantityButton:disabled {
+  color: #b9b9b9;
+  background: rgba(0, 0, 0, 0.04);
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+.quantityIcon {
+  width: 18px;
+  height: 18px;
+  fill: currentColor;
+  pointer-events: none;
+}
+
+.quantity {
+  margin: 0 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  border: 1px solid #e5e7eb;
+  border-radius: 6px;
+  padding: 0.5rem 2rem;
+}
+
+.prices {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.itemPrice {
+  margin: 0;
+  font-size: 1rem;
+  color: #111827;
+  text-align: end;
+}
+
+.itemSubtotal {
+  margin: 0;
+  font-size: 1.2rem;
+  color: #111827;
+  font-weight: 700;
+  text-align: end;
+}
+
+.removeButton {
+  width: 36px;
+  height: 36px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--color-error);
+  cursor: pointer;
+  transition:
+    transform 0.1s ease,
+    color 0.1s ease,
+    background-color 0.1s ease;
+}
+
+.removeButton:hover:not(:disabled) {
+  color: var(--color-error-dark);
+  background-color: rgba(220, 38, 38, 0.08);
+  transform: scale(1.08);
+}
+
+.removeButton:disabled {
+  color: #111827;
+  background: #11182714;
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+.removeIcon {
+  width: 24px;
+  height: 24px;
+  fill: currentColor;
+  pointer-events: none;
+}

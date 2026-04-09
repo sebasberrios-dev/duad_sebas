@@ -1,15 +1,24 @@
 import api from '../api/axios.js';
-import { createContext, useState, useContext } from 'react';
+import { jwtDecode } from 'jwt-decode';
+import { createContext, useState, useContext, useEffect } from 'react';
+import {
+  showSessionExpired,
+  showLogoutSuccess,
+} from '../components/Messages-States/Alerts.jsx';
 
 const AuthContext = createContext();
 
 const decodeToken = (token) => {
   try {
-    const payload = token.split('.')[1];
-    return JSON.parse(atob(payload));
+    return jwtDecode(token);
   } catch {
     return null;
   }
+};
+
+const isTokenExpired = (decoded) => {
+  if (!decoded?.exp) return false;
+  return decoded.exp < Date.now() / 1000;
 };
 
 export const AuthProvider = ({ children }) => {
@@ -20,15 +29,44 @@ export const AuthProvider = ({ children }) => {
   const [token, setToken] = useState(storedToken);
   const [loginError, setLoginError] = useState(null);
   const [registerError, setRegisterError] = useState(null);
+  const [isLoggingOut, setIsLoggingOut] = useState(false);
+
+  useEffect(() => {
+    if (!token || !user?.exp) return;
+
+    if (isTokenExpired(user)) {
+      clearAuth();
+      showSessionExpired();
+      return;
+    }
+
+    const msUntilExpiry = user.exp * 1000 - Date.now();
+    const timerId = setTimeout(() => {
+      clearAuth();
+      showSessionExpired();
+    }, msUntilExpiry);
+
+    return () => clearTimeout(timerId);
+  }, [token, user]);
+
+  const saveAuth = (newToken) => {
+    setToken(newToken);
+    setUser(decodeToken(newToken));
+    localStorage.setItem('token', newToken);
+  };
+
+  const clearAuth = () => {
+    setToken(null);
+    setUser(null);
+    localStorage.removeItem('token');
+  };
 
   const login = async (credentials) => {
     try {
+      setIsLoggingOut(false);
       setLoginError(null);
       const response = await api.post('/login', credentials);
-      const token = response.data.token;
-      setToken(token);
-      localStorage.setItem('token', token);
-      setUser(decodeToken(token));
+      saveAuth(response.data.token);
       return true;
     } catch (error) {
       console.error('Login failed:', error);
@@ -44,10 +82,7 @@ export const AuthProvider = ({ children }) => {
     try {
       setRegisterError(null);
       const response = await api.post('/register', userData);
-      const token = response.data.token;
-      setToken(token);
-      localStorage.setItem('token', token);
-      setUser(decodeToken(token));
+      saveAuth(response.data.token);
       return true;
     } catch (error) {
       console.error('Registration failed:', error);
@@ -62,13 +97,15 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  const logout = () => {
-    setToken(null);
-    setUser(null);
-    localStorage.removeItem('token');
+  const handleLogout = (navigate) => {
+    setIsLoggingOut(true);
+    clearAuth();
+    showLogoutSuccess();
+    navigate('/');
+    setTimeout(() => setIsLoggingOut(false), 0);
   };
 
-  const isLogged = !!token;
+  const isLogged = !!token && !isTokenExpired(user);
   const isAdmin = user?.role === 'admin';
 
   return (
@@ -76,9 +113,10 @@ export const AuthProvider = ({ children }) => {
       value={{
         user,
         login,
-        logout,
+        handleLogout,
         isLogged,
         isAdmin,
+        isLoggingOut,
         loginError,
         registerError,
         registerUser,

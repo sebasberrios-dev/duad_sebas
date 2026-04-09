@@ -1,0 +1,19 @@
+.productsPage {
+  max-width: 1500px;
+  margin: 0 auto;
+  padding: 28px 24px 40px;
+}
+
+.productsTitle {
+  text-align: center;
+  font-size: 28px;
+  font-weight: 700;
+  margin: 10px 0 24px;
+  color: #111;
+}
+
+.productsGrid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 22px;
+}

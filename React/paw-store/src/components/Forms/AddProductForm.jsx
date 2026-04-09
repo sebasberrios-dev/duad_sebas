@@ -2,7 +2,7 @@ import { useForm } from 'react-hook-form';
 import { Form, Title, Field, FieldTextarea, Button } from './FormsComponents';
 import styles from './Forms.module.css';
 
-export function AddProductForm({ onSubmit }) {
+export function AddProductForm({ onSubmit, saving }) {
   const {
     register,
     handleSubmit,
@@ -10,18 +10,19 @@ export function AddProductForm({ onSubmit }) {
     reset,
   } = useForm();
 
-  const handleFormSubmit = (data) => {
-    onSubmit({
+  const handleFormSubmit = async (data) => {
+    const ok = await onSubmit({
       ...data,
-      precio: Number(data.precio),
+      price: Number(data.precio),
       stock: Number(data.stock),
     });
-    reset();
+    if (ok) reset();
   };
 
   return (
     <Form className={styles.addForm} onSubmit={handleSubmit(handleFormSubmit)}>
       <Title className={styles.addTitle}>Agregar nuevo producto</Title>
+
       <div className={styles.grid}>
         <div className={styles.column}>
           <div className={styles.addField}>
@@ -30,8 +31,8 @@ export function AddProductForm({ onSubmit }) {
               inputClassName={styles.productInput}
               id="nombre"
               placeholder="Nombre del producto"
-              error={errors.nombre ? 'Este campo es obligatorio' : ''}
-              {...register('nombre', { required: true })}
+              error={errors.nombre?.message}
+              {...register('nombre', { required: 'Este campo es obligatorio' })}
             >
               Nombre
             </Field>
@@ -43,8 +44,10 @@ export function AddProductForm({ onSubmit }) {
               inputClassName={styles.productTextarea}
               id="descripcion"
               placeholder="Descripción detallada del producto"
-              error={errors.descripcion ? 'Este campo es obligatorio' : ''}
-              {...register('descripcion', { required: true })}
+              error={errors.descripcion?.message}
+              {...register('descripcion', {
+                required: 'Este campo es obligatorio',
+              })}
             >
               Descripción
             </FieldTextarea>
@@ -58,12 +61,14 @@ export function AddProductForm({ onSubmit }) {
               type="number"
               step="0.01"
               placeholder="0.00"
-              error={
-                errors.precio
-                  ? 'Este campo es obligatorio y debe ser un número positivo'
-                  : ''
-              }
-              {...register('precio', { required: true, min: 0 })}
+              error={errors.precio?.message}
+              {...register('precio', {
+                required: 'Este campo es obligatorio',
+                min: {
+                  value: 0,
+                  message: 'El valor debe ser un número positivo',
+                },
+              })}
             >
               Precio
             </Field>
@@ -77,8 +82,10 @@ export function AddProductForm({ onSubmit }) {
               inputClassName={styles.productInput}
               id="categoria"
               placeholder="Categoría del producto (ej. Alimento, Juguetes)"
-              error={errors.categoria ? 'Este campo es obligatorio' : ''}
-              {...register('categoria', { required: true })}
+              error={errors.categoria?.message}
+              {...register('categoria', {
+                required: 'Este campo es obligatorio',
+              })}
             >
               Categoría
             </Field>
@@ -90,8 +97,8 @@ export function AddProductForm({ onSubmit }) {
               inputClassName={styles.productInput}
               id="imagen"
               placeholder="https://api.example.com/placeholder/image.jpg"
-              error={errors.imagen ? 'Este campo es obligatorio' : ''}
-              {...register('imagen', { required: true })}
+              error={errors.imagen?.message}
+              {...register('imagen', { required: 'Este campo es obligatorio' })}
             >
               URL de la imagen
             </Field>
@@ -104,12 +111,14 @@ export function AddProductForm({ onSubmit }) {
               id="stock"
               type="number"
               placeholder="0"
-              error={
-                errors.stock
-                  ? 'Este campo es obligatorio y debe ser un número positivo'
-                  : ''
-              }
-              {...register('stock', { required: true, min: 0 })}
+              error={errors.stock?.message}
+              {...register('stock', {
+                required: 'Este campo es obligatorio',
+                min: {
+                  value: 0,
+                  message: 'El valor debe ser un número positivo',
+                },
+              })}
             >
               Stock
             </Field>
@@ -118,8 +127,12 @@ export function AddProductForm({ onSubmit }) {
       </div>
 
       <div className={styles.addActions}>
-        <Button type="submit" className={styles.addPrimaryBtn}>
-          Agregar producto
+        <Button
+          type="submit"
+          className={styles.addPrimaryBtn}
+          disabled={saving}
+        >
+          {saving ? 'Agregando...' : 'Agregar Producto'}
         </Button>
       </div>
       <div className={styles.addWarning}>
