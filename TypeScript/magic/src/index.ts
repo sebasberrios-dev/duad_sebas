@@ -8,13 +8,13 @@ async function main() {
     return;
   }
 
-  /* cards.forEach((card) => {
+  cards.forEach((card) => {
     console.log(`🎴 Nombre: ${card.name}`);
     console.log(`❓ Tipo: ${card.type}`);
     console.log(`🌈 Colores: ${card.colors?.join(", ") ?? "Incoloro"}`);
     console.log(`🖌️ Rareza: ${card.rarity}`);
     console.log("=====================================");
-  }); */
+  });
 }
 
 main();
