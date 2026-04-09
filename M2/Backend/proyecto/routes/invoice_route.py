@@ -24,26 +24,26 @@ def checkout():
         payment_details = data.get("payment_details")
         issue_date = data.get("issue_date")
         products = cart_repo.read_products_in_cart(cart_id)
+        valid_products = []
         total = 0
         for product in products:
             product_id = product.get('product_id')
             quantity = product.get('quantity', 1)
             product_info = product_repo.read_by_id(product_id)
-            price = product_info.get('price', 0) if product_info else 0
-            total += price * quantity
+            # Only include if product exists and has enough stock
+            if product_info and product_info.get('stock', 0) >= quantity:
+                price = product_info.get('price', 0)
+                total += price * quantity
+                valid_products.append((product_id, quantity, product_info))
         if not cart_id or not address or not payment_details or not issue_date or total == 0:
-            return jsonify({"error": "Missing required fields or invalid total"}), 400
-        
+            return jsonify({"error": "Missing required fields, invalid total, or no valid products in cart"}), 400
+
         invoice = invoice_repo.create(cart_id, address, payment_details, issue_date, total)
         if invoice:
             new_status = {"status": "completed"}
             cart_repo.update(cart_id, new_status)
-            for product in products:
-                product_id = product.get('product_id')
-                quantity = product.get('quantity', 1)
-                stock = product_repo.read_by_id(product_id)
-                if stock and stock['stock'] >= quantity:
-                    product_repo.update(product_id, {"stock": stock['stock'] - quantity})                    
+            for product_id, quantity, product_info in valid_products:
+                product_repo.update(product_id, {"stock": product_info['stock'] - quantity})
             cache_manager.delete_data("invoices")
             return jsonify({"message": "Invoice created successfully", "invoice_id": invoice.id}), 201
         else:
