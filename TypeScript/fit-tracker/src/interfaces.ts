@@ -1,13 +1,15 @@
+import { Days } from "./types";
+import { Level } from "./types";
+
 interface Exercise {
   name: string;
   durationMinutes: number;
   caloriesPerMinute: number;
   distanceKm?: number;
-  completed: boolean;
 }
 
 interface RoutineEntry {
-  day: string;
+  day: Days[];
   exercise: Exercise;
 }
 
@@ -19,6 +21,6 @@ export interface Routine {
 export interface User {
   name: string;
   age: number;
-  level: string;
+  level: Level;
   routine: Routine;
 }

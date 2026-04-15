@@ -4,31 +4,28 @@ const fullBodyPlan: Routine = {
   name: "Full Body Plan",
   entries: [
     {
-      day: "Lunes",
+      day: ["Lunes"],
       exercise: {
         name: "Running",
         durationMinutes: 45,
         caloriesPerMinute: 10.4,
         distanceKm: 5.2,
-        completed: true,
       },
     },
     {
-      day: "Miercoles",
+      day: ["Miercoles"],
       exercise: {
         name: "Squats",
         durationMinutes: 30,
         caloriesPerMinute: 10,
-        completed: true,
       },
     },
     {
-      day: "Viernes",
+      day: ["Viernes"],
       exercise: {
         name: "Swimming",
         durationMinutes: 60,
         caloriesPerMinute: 12,
-        completed: false,
       },
     },
   ],
@@ -40,24 +37,38 @@ const user: User = {
   level: "Intermedio",
   routine: fullBodyPlan,
 };
+function formatDuration(totalMinutes: number): string {
+  const hours = Math.floor(totalMinutes / 60);
+  const minutes = Math.floor(totalMinutes % 60);
+
+  const parts: string[] = [];
+
+  if (hours > 0) parts.push(`${hours}h`);
+  if (minutes > 0) parts.push(`${minutes}min`);
+
+  return parts.length > 0 ? parts.join("") : "0min";
+}
 
 function calculateRoutineCalories(routine: Routine): number {
   let totalCalories = 0;
 
   for (const entry of routine.entries) {
-    totalCalories +=
-      entry.exercise.durationMinutes * entry.exercise.caloriesPerMinute;
+    const exercise = entry.exercise;
+    if (!exercise) continue;
+
+    totalCalories += calculateCalories(
+      exercise.durationMinutes,
+      exercise.caloriesPerMinute,
+    );
   }
 
   return totalCalories;
 }
 
-function printUserProfile(user: User): void {
-  console.log("👤 Perfil de Usuario");
-  console.log("=====================");
-  console.log(`Nombre: ${user.name}`);
-  console.log(`Edad: ${user.age}`);
-  console.log(`Nivel: ${user.level}`);
+function calculateWeeklyAvgCalories(routine: Routine, totalCalories: number) {
+  const days = routine.entries.filter((e) => e.day).length;
+
+  return days === 0 ? 0 : totalCalories / days;
 }
 
 function calculateCalories(duration: number, calPerMin: number): number {
@@ -69,6 +80,14 @@ function calculatePace(duration: number, distance: number): number {
   return Number(pace.toFixed(2));
 }
 
+function printUserProfile(user: User): void {
+  console.log("👤 Perfil de Usuario");
+  console.log("=====================");
+  console.log(`Nombre: ${user.name}`);
+  console.log(`Edad: ${user.age}`);
+  console.log(`Nivel: ${user.level}`);
+}
+
 function printWorkoutStats(routine: Routine, totalCalories: number): void {
   console.log(`📋 Rutina Semanal: ${routine.name}`);
   console.log("──────────────────────────────────");
@@ -77,14 +96,19 @@ function printWorkoutStats(routine: Routine, totalCalories: number): void {
       entry.exercise.durationMinutes,
       entry.exercise.caloriesPerMinute,
     );
-    const isRace: boolean = !!entry.exercise.distanceKm;
+    const paceStr = entry.exercise.distanceKm
+      ? ` - ${calculatePace(entry.exercise.durationMinutes, entry.exercise.distanceKm)} min/km`
+      : "";
 
     console.log(
-      `${entry.day}:    ${entry.exercise.name} - ${entry.exercise.durationMinutes} min - ${isRace ? `${calculatePace(entry.exercise.durationMinutes, entry.exercise.distanceKm!)} min/km` : ""} (${caloriesPerDay} cal) ${entry.exercise.completed ? "✅¡Completado!" : "❌¡No completado!"}`,
+      `${entry.day}:  ${entry.exercise.name} - ${formatDuration(entry.exercise.durationMinutes)}${paceStr} (${caloriesPerDay} cal)`,
     );
   }
   console.log("──────────────────────────────────");
   console.log(`Total semanal: ${totalCalories} calorías`);
+  console.log(
+    `Promedio por día: ${calculateWeeklyAvgCalories(routine, totalCalories)} (${routine.entries.filter((e) => e.day).length} días entrenados)`,
+  );
   console.log("──────────────────────────────────");
 }
 
