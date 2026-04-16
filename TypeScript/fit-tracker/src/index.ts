@@ -1,4 +1,5 @@
 import { Routine, User } from "./interfaces";
+import { Days } from "./types";
 
 const fullBodyPlan: Routine = {
   name: "Full Body Plan",
@@ -13,11 +14,27 @@ const fullBodyPlan: Routine = {
       },
     },
     {
+      day: ["Lunes"],
+      exercise: {
+        name: "Back",
+        durationMinutes: 112,
+        caloriesPerMinute: 5.4,
+      },
+    },
+    {
       day: ["Miercoles"],
       exercise: {
         name: "Squats",
         durationMinutes: 30,
         caloriesPerMinute: 10,
+      },
+    },
+    {
+      day: ["Miercoles"],
+      exercise: {
+        name: "Boxing",
+        durationMinutes: 60,
+        caloriesPerMinute: 15,
       },
     },
     {
@@ -44,7 +61,7 @@ function formatDuration(totalMinutes: number): string {
   const parts: string[] = [];
 
   if (hours > 0) parts.push(`${hours}h`);
-  if (minutes > 0) parts.push(`${minutes}min`);
+  if (minutes > 0) parts.push(` ${minutes}min`);
 
   return parts.length > 0 ? parts.join("") : "0min";
 }
@@ -65,14 +82,35 @@ function calculateRoutineCalories(routine: Routine): number {
   return totalCalories;
 }
 
-function calculateWeeklyAvgCalories(routine: Routine, totalCalories: number) {
-  const days = routine.entries.filter((e) => e.day).length;
+function getUniqueDays(routine: Routine, days: Days[]): string[] {
+  for (const day of routine.entries) {
+    days.push(...day.day);
+  }
 
-  return days === 0 ? 0 : totalCalories / days;
+  const uniqueDays: string[] = [...new Set(days)];
+
+  return uniqueDays;
+}
+
+function calculateWeeklyAvgCalories(
+  routine: Routine,
+  totalCalories: number,
+): { cal: number; uniqueDays: number } {
+  const days: Days[] = [];
+
+  const uniqueDays: string[] = getUniqueDays(routine, days);
+  const result =
+    uniqueDays.length === 0 ? 0 : totalCalories / uniqueDays.length;
+
+  return {
+    cal: Number(result.toFixed(0)),
+    uniqueDays: uniqueDays.length,
+  };
 }
 
 function calculateCalories(duration: number, calPerMin: number): number {
-  return duration * calPerMin;
+  const calories = duration * calPerMin;
+  return Number(calories.toFixed(0));
 }
 
 function calculatePace(duration: number, distance: number): number {
@@ -104,11 +142,13 @@ function printWorkoutStats(routine: Routine, totalCalories: number): void {
       `${entry.day}:  ${entry.exercise.name} - ${formatDuration(entry.exercise.durationMinutes)}${paceStr} (${caloriesPerDay} cal)`,
     );
   }
+  const { cal, uniqueDays } = calculateWeeklyAvgCalories(
+    routine,
+    totalCalories,
+  );
   console.log("──────────────────────────────────");
   console.log(`Total semanal: ${totalCalories} calorías`);
-  console.log(
-    `Promedio por día: ${calculateWeeklyAvgCalories(routine, totalCalories)} (${routine.entries.filter((e) => e.day).length} días entrenados)`,
-  );
+  console.log(`Promedio por día: ${cal} (${uniqueDays} días entrenados)`);
   console.log("──────────────────────────────────");
 }
 
