@@ -1,88 +1,76 @@
 # Fit Tracker
 
-Aplicación de consola desarrollada en **TypeScript** para gestionar y visualizar rutinas de ejercicio semanales. Calcula calorías quemadas, ritmo (pace) y muestra un resumen del perfil del usuario junto con sus estadísticas de entrenamiento.
+Aplicación web de seguimiento de rutinas de ejercicio construida con React, TypeScript y Vite.
 
-## Estructura del Proyecto
+## Descripción
 
-```
-fit-tracker/
-├── src/
-│   ├── index.ts        # Punto de entrada principal
-│   ├── interfaces.ts   # Interfaces (Exercise, RoutineEntry, Routine, User)
-│   └── types.ts        # Types personalizados (Days, Level)
-├── package.json
-└── tsconfig.json
-```
+Fit Tracker permite a los usuarios registrarse, iniciar sesión y gestionar su rutina de ejercicios. Los usuarios pueden armar un catálogo de ejercicios y asociarlos a su perfil con detalles específicos según la categoría (Cardio, Fuerza o Flexibilidad). Al finalizar, pueden ver un resumen completo de su rutina con estadísticas de calorías, duración y ritmo.
 
 ## Tecnologías
 
-- **TypeScript** 5.8
-- **Node.js**
-- **tsx** (ejecución directa de TypeScript)
+- **React 19** + **TypeScript**
+- **Vite** como bundler
+- **React Hook Form** + **Zod** para manejo y validación de formularios
+- **React Router** para navegación
+- **Tailwind CSS** para estilos
 
-## Requisitos Previos
+## Arquitectura de datos (sin API)
 
-- [Node.js](https://nodejs.org/) (v18 o superior)
-- npm
+Al no contar con una API ni base de datos real, la persistencia se resuelve con **`localStorage`** como capa de almacenamiento. Toda la lógica de lectura y escritura está centralizada en tres contextos de React:
 
-## Instalación
+### `UserContext`
 
-```bash
-cd TypeScript/fit-tracker
-npm install
+Actúa como la "base de datos" de usuarios. Almacena el array completo de usuarios registrados en `localStorage` y expone funciones para agregar (`addUser`) y actualizar (`updateUser`) usuarios. Cualquier componente que necesite leer o modificar datos de usuarios consume este contexto.
+
+### `SessionContext`
+
+Maneja la sesión activa. En lugar de guardar todo el objeto del usuario en sesión, guarda únicamente el `id` del usuario activo en `localStorage`. Para obtener el `currentUser` completo, busca ese `id` dentro del array que provee `UserContext`. Esto garantiza que si el usuario es actualizado (por ejemplo al agregar un ejercicio a su rutina), la sesión siempre refleja los datos más recientes sin necesidad de sincronización manual.
+
+> Aclaración: `SessionContext` no es un almacén de datos — es una capa de acceso que depende de `UserContext`. Por eso vive anidado dentro de `UserProvider` en el árbol de providers.
+
+### `CatalogContext`
+
+Almacena el catálogo de ejercicios disponibles para seleccionar al registrar una rutina. También persiste en `localStorage`. El catálogo no está asociado a ningún usuario — es un recurso compartido que cualquier usuario puede consultar.
+
+## Estructura del proyecto
+
+```
+src/
+├── components/        # Componentes reutilizables (inputs, etc.)
+├── context/           # UserContext, SessionContext, CatalogContext
+├── pages/
+│   ├── Admin/         # Registro de ejercicios al catálogo
+│   ├── RegisterExercise/  # Registro de ejercicios en la rutina del usuario
+│   └── User/          # Registro e inicio de sesión de usuarios
+├── routes/            # Configuración de React Router
+├── types/             # Interfaces y tipos TypeScript
+└── utils/             # Funciones de cálculo y formato (calorías, duración, ritmo, etc.)
 ```
 
-## Ejecución
+## Rutas
 
-### Modo desarrollo (recomendado)
+| Ruta              | Página                           |
+| ----------------- | -------------------------------- |
+| `/`               | Registro de usuario              |
+| `/login`          | Inicio de sesión                 |
+| `/exercise`       | Registrar ejercicio en la rutina |
+| `/admin/exercise` | Agregar ejercicio al catálogo    |
 
-Ejecuta directamente el archivo TypeScript sin necesidad de compilar:
+## Instrucciones para correr el proyecto
 
 ```bash
+npm install
 npm run dev
 ```
 
-### Compilar y ejecutar
+### Flujo de uso
 
-Compila el proyecto a JavaScript y luego ejecútalo:
+1. Ir a `/admin/exercise` y agregar al menos un ejercicio al catálogo (nombre, categoría y descripción).
+2. Registrarse en `/` con nombre, edad, peso, nivel y plan de membresía. Al registrarse, se crea la sesión automáticamente y redirige a `/exercise`.
+3. En `/exercise`, seleccionar un ejercicio del catálogo, completar los detalles según la categoría y guardar. El ejercicio se guarda en la rutina del usuario activo.
+4. Hacer click en **"Ver mi rutina"** para imprimir en consola el resumen completo de la rutina con estadísticas.
+5. Para cambiar de usuario, ir a `/login` e ingresar el nombre de un usuario ya registrado.
 
-```bash
-npm run build
-node dist/index.js
-```
+> Los datos persisten en `localStorage`, por lo que se mantienen al recargar la página.
 
-## Salida Esperada
-
-```
-👤 Perfil de Usuario
-=====================
-Nombre: Sebastián Berríos Aguilera
-Edad: 21
-Nivel: Intermedio
-
-📋 Rutina Semanal: Full Body Plan
-──────────────────────────────────
-Lunes:  Running - 45min - 8.65 min/km (468 cal)
-Miercoles:  Squats - 30min (300 cal)
-Viernes:  Swimming - 1h (720 cal)
-──────────────────────────────────
-Total semanal: 1488 calorías
-Promedio por día: 496 (3 días entrenados)
-──────────────────────────────────
-```
-
-## Funcionalidades
-
-- **Perfil de usuario**: Muestra nombre, edad y nivel de entrenamiento.
-- **Rutina semanal**: Define ejercicios asignados a días específicos de la semana.
-- **Cálculo de calorías**: Calcula calorías por ejercicio y total semanal.
-- **Cálculo de pace**: Muestra el ritmo (min/km) para ejercicios con distancia.
-- **Formato de duración**: Convierte minutos a formato legible (ej: `1h30min`).
-- **Promedio diario**: Calcula el promedio de calorías por día entrenado.
-
-## Types Personalizados
-
-| Type    | Valores                                                           |
-| ------- | ----------------------------------------------------------------- |
-| `Days`  | `"Lunes"` · `"Martes"` · `"Miercoles"` · `"Jueves"` · `"Viernes"` |
-| `Level` | `"Principiante"` · `"Intermedio"` · `"Avanzado"`                  |
+---
