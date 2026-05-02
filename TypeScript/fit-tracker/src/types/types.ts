@@ -1,4 +1,5 @@
 import z from "zod";
+import type { Exercise } from "./interfaces";
 
 const Days = {
   monday: "Lunes",
@@ -7,6 +8,7 @@ const Days = {
   thursday: "Jueves",
   friday: "Viernes",
 } as const;
+export const DAYS_LIST = Object.values(Days) as Days[];
 
 export const FCM_ZONES = ["zone1", "zone2", "zone3", "zone4", "zone5"] as const;
 
@@ -61,10 +63,27 @@ const MET_FLEXIBILITY = {
   intense: 3.0,
 } as const;
 
+export const USER_LEVELS = {
+  BEGINNER: "beginner",
+  INTERMEDIATE: "intermediate",
+  ADVANCED: "advanced",
+};
+export const EXPERIENCE_LEVELS = {
+  JUNIOR: "junior",
+  INTERMEDIATE: "intermediate",
+  SENIOR: "senior",
+  EXPERT: "expert",
+};
+export const experienceSchema = z.enum(EXPERIENCE_LEVELS);
+
 export type Days = (typeof Days)[keyof typeof Days];
-export type Level = "Principiante" | "Intermedio" | "Avanzado";
+export type Level = (typeof USER_LEVELS)[keyof typeof USER_LEVELS];
+export type Experience =
+  (typeof EXPERIENCE_LEVELS)[keyof typeof EXPERIENCE_LEVELS];
 
 export type MET_CARDIO = (typeof MET_CARDIO)[keyof typeof MET_CARDIO];
 export type MET_STRENGTH = (typeof MET_STRENGTH)[keyof typeof MET_STRENGTH];
 export type MET_FLEXIBILITY =
   (typeof MET_FLEXIBILITY)[keyof typeof MET_FLEXIBILITY];
+
+export type DraftRoutine = Partial<Record<Days, Exercise[]>>;

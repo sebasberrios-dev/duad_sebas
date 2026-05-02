@@ -1,4 +1,4 @@
-import { Routine } from "../types/interfaces";
+import { Routine, User } from "../types/interfaces";
 import {
   Days,
   fcmZone,
@@ -29,7 +29,7 @@ export function calculateCalories(duration: number, calPerMin: number): number {
   return Number(calories.toFixed(0));
 }
 
-export function calculateCaloriesByCategory(
+export function calculateAllCalories(
   routine: Routine,
   bodyWeight: number,
   level: Level,
@@ -38,39 +38,48 @@ export function calculateCaloriesByCategory(
   strengthCalories: number;
   flexCalories: number;
   perExercise: { exerciseName: string; calories: number }[];
+  totalCalories: number;
 } {
   let cardioCalories = 0;
   let strengthCalories = 0;
   let flexCalories = 0;
   const perExercise: { exerciseName: string; calories: number }[] = [];
 
-  for (const entry of routine.entries) {
-    const { exerciseName, details, durationMinutes } = entry.exercise;
-    let met: number;
+  for (const entry of routine.workouts) {
+    for (const exercise of entry.exercises) {
+      const { exerciseName, details, durationMinutes } = exercise;
+      let met: number;
 
-    if (details.category === "Cardio") {
-      met = estimateCardioMet(details.fcm);
-    } else if (details.category === "Fuerza") {
-      met = estimateStrengthMet(level);
-    } else {
-      met = estimateFlexMet(level);
-    }
+      if (details.category === "Cardio") {
+        met = estimateCardioMet(details.fcm);
+      } else if (details.category === "Fuerza") {
+        met = estimateStrengthMet(level);
+      } else {
+        met = estimateFlexMet(level);
+      }
 
-    const calPerMin = calculateCaloriesPerMinute(met, bodyWeight);
-    const calories = calculateCalories(durationMinutes, calPerMin);
+      const calPerMin = calculateCaloriesPerMinute(met, bodyWeight);
+      const calories = calculateCalories(durationMinutes, calPerMin);
 
-    perExercise.push({ exerciseName, calories });
+      perExercise.push({ exerciseName, calories });
 
-    if (details.category === "Cardio") {
-      cardioCalories += calories;
-    } else if (details.category === "Fuerza") {
-      strengthCalories += calories;
-    } else {
-      flexCalories += calories;
+      if (details.category === "Cardio") {
+        cardioCalories += calories;
+      } else if (details.category === "Fuerza") {
+        strengthCalories += calories;
+      } else {
+        flexCalories += calories;
+      }
     }
   }
-
-  return { cardioCalories, strengthCalories, flexCalories, perExercise };
+  const totalCalories = cardioCalories + strengthCalories + flexCalories;
+  return {
+    cardioCalories,
+    strengthCalories,
+    flexCalories,
+    perExercise,
+    totalCalories,
+  };
 }
 
 export function calculatePace(duration: number, distance: number): number {
@@ -95,7 +104,7 @@ export function formatDate(date: Date | string): string {
 }
 
 function getUniqueDays(routine: Routine, days: Days[]): string[] {
-  for (const day of routine.entries) {
+  for (const day of routine.workouts) {
     days.push(...day.day);
   }
 
@@ -105,7 +114,7 @@ function getUniqueDays(routine: Routine, days: Days[]): string[] {
 }
 
 export function getTotalExercises(routine: Routine): number {
-  return routine.entries.length;
+  return routine.workouts.length;
 }
 
 export function getTotalExercisesByCategory(routine: Routine): {
@@ -117,14 +126,16 @@ export function getTotalExercisesByCategory(routine: Routine): {
   let totalStrength: number = 0;
   let totalFlex: number = 0;
 
-  for (const entry of routine.entries) {
-    const { category } = entry.exercise.details;
-    if (category === "Cardio") {
-      totalCardio += 1;
-    } else if (category === "Fuerza") {
-      totalStrength += 1;
-    } else {
-      totalFlex += 1;
+  for (const entry of routine.workouts) {
+    for (const exercise of entry.exercises) {
+      const { category } = exercise.details;
+      if (category === "Cardio") {
+        totalCardio += 1;
+      } else if (category === "Fuerza") {
+        totalStrength += 1;
+      } else {
+        totalFlex += 1;
+      }
     }
   }
 
@@ -139,29 +150,41 @@ export function getTotalDuration(routine: Routine): {
   cardioDuration: string;
   strengthDuration: string;
   flexDuration: string;
+  total: number;
+  formatTotalDuration: string;
 } {
   let totalCardio = 0;
   let totalStrength = 0;
   let totalFlex = 0;
 
-  for (const entry of routine.entries) {
-    const { category } = entry.exercise.details;
-    const duration = entry.exercise.durationMinutes;
+  for (const entry of routine.workouts) {
+    for (const exercise of entry.exercises) {
+      const { category } = exercise.details;
+      const duration = exercise.durationMinutes;
 
-    if (category === "Cardio") {
-      totalCardio += duration;
-    } else if (category === "Fuerza") {
-      totalStrength += duration;
-    } else {
-      totalFlex += duration;
+      if (category === "Cardio") {
+        totalCardio += duration;
+      } else if (category === "Fuerza") {
+        totalStrength += duration;
+      } else {
+        totalFlex += duration;
+      }
     }
   }
+  const total = totalCardio + totalStrength + totalFlex;
 
   const cardioDuration = formatDuration(totalCardio);
   const strengthDuration = formatDuration(totalStrength);
   const flexDuration = formatDuration(totalFlex);
+  const formatTotalDuration = formatDuration(total);
 
-  return { cardioDuration, strengthDuration, flexDuration };
+  return {
+    cardioDuration,
+    strengthDuration,
+    flexDuration,
+    total,
+    formatTotalDuration,
+  };
 }
 
 export function calculateWeeklyAvgCalories(
@@ -177,5 +200,30 @@ export function calculateWeeklyAvgCalories(
   return {
     cal: Number(result.toFixed(0)),
     uniqueDays: uniqueDays.length,
+  };
+}
+
+export function genUniqueId(): number {
+  return Date.now() + Math.floor(Math.random() * 1000);
+}
+
+export function getUserInfo(
+  users: User[],
+  userId: User["id"],
+):
+  | {
+      name: string;
+      level: string;
+      bodyWeight: number;
+      routine: Routine;
+    }
+  | undefined {
+  const user = users.find((u) => u.id === userId);
+  if (!user) return undefined;
+  return {
+    name: user.name,
+    level: user.level,
+    bodyWeight: user.bodyWeight,
+    routine: user.routine,
   };
 }

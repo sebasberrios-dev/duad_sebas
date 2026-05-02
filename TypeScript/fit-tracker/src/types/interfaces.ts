@@ -1,10 +1,13 @@
-import { Days, fcmZone, Level } from "./types";
+import { Days, fcmZone, Level, Experience } from "./types";
 
 interface Sets {
   reps: number;
   weightKg: number;
 }
 
+export interface Rest {
+  category: "Descanso";
+}
 export interface Cardio {
   category: "Cardio";
   distanceKm: number;
@@ -19,9 +22,10 @@ export interface Strength {
 export interface Flexibility {
   category: "Flexibilidad";
   poses: number;
+  userCommment?: string;
 }
 
-export type Category = Cardio | Strength | Flexibility;
+export type Category = Cardio | Strength | Flexibility | Rest;
 
 export interface CatalogExercise {
   id: number;
@@ -35,32 +39,57 @@ export interface Exercise {
   exerciseName: string;
   durationMinutes: number;
   details: Category;
+  complete: boolean;
 }
 
-interface RoutineEntry {
+export interface DailyWorkout {
   day: Days[];
-  exercise: Exercise;
+  exercises: Exercise[];
+  comment?: string;
 }
 
 export interface Routine {
   id: number;
   routineName: string;
-  entries: RoutineEntry[];
+  routineStartDate: string;
+  workouts: DailyWorkout[];
 }
 
-interface Membership {
+export interface Membership {
   id: number;
   plan: "Free" | "Premium";
-  start_date: Date;
-  status: "✅ Activo" | "❌ Inactivo";
+  startDate: string;
+  status: "active" | "inactive";
 }
 
-export interface User {
+interface Person {
   id: number;
   name: string;
   age: number;
-  bodyWeight: number;
+  email: string;
+}
+
+export interface User extends Person {
+  role: "User";
   level: Level;
+  bodyWeight: number;
   membership: Membership;
   routine: Routine;
 }
+
+export interface Client {
+  id: number;
+  clientName: string;
+}
+
+export interface Coach extends Person {
+  role: "Coach";
+  experience: Experience;
+  clients: Client[];
+}
+
+export interface Admin extends Person {
+  role: "Admin";
+}
+
+export type AppUser = User | Coach | Admin;

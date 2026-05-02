@@ -3,93 +3,124 @@ import {
   calculatePace,
   formatDuration,
   formatDate,
-  getTotalExercises,
-  getTotalExercisesByCategory,
   getTotalDuration,
-  calculateCaloriesByCategory,
+  calculateAllCalories,
+  calculateWeeklyAvgCalories,
+  getUserInfo,
 } from "../utils/utilities";
 
 export function printUserInfo(user: User): void {
+  const { name, age, bodyWeight, level } = user;
+  const { plan, startDate, status } = user.membership;
   console.log("══════════════════════════════════");
   console.log(
-    `👤 Usuario: ${user.name}, Edad: ${user.age}, Peso: ${user.bodyWeight} kg, Nivel: ${user.level}`,
+    `👤 Usuario: ${name}, Edad: ${age}, Peso: ${bodyWeight} kg, Nivel: ${level}`,
   );
   console.log("──────────────────────────────────");
   console.log(`💎Membresía:`);
   console.log(
-    `Plan: ${user.membership.plan}, Fecha de inicio: ${formatDate(user.membership.start_date)}, Estado: ${user.membership.status}`,
+    `Plan: ${plan}, Fecha de inicio: ${formatDate(startDate)}, Estado: ${status === "active" ? "✅ Activa" : "❌ Inactiva"}`,
   );
   console.log("══════════════════════════════════\n");
 }
 
-export function printWorkoutStats(routine: Routine, user: User): void {
+export function printRoutine(routine: Routine, user: User): void {
   const { bodyWeight, level } = user;
-  const { totalCardio, totalStrength, totalFlex } =
-    getTotalExercisesByCategory(routine);
-  const { cardioDuration, strengthDuration, flexDuration } =
-    getTotalDuration(routine);
-  const { cardioCalories, strengthCalories, flexCalories } =
-    calculateCaloriesByCategory(routine, bodyWeight, level);
-  const { perExercise } = calculateCaloriesByCategory(
-    routine,
-    bodyWeight,
-    level,
-  );
+  const { routineName, routineStartDate, workouts } = routine;
+  const routineCalories = calculateAllCalories(routine, bodyWeight, level);
 
-  console.log("📊 Catálogo de Ejercicios ══════════════════════════════════");
+  printUserInfo(user);
 
-  // Cardio
   console.log(
-    `🏃 Cardio (${totalCardio} ejercicios, ${cardioDuration}, ${cardioCalories} kcal)`,
+    `📋 Rutina: ${routineName} | Inicio: ${formatDate(routineStartDate)}`,
   );
-  for (const entry of routine.entries) {
-    const { exerciseName, details, durationMinutes } = entry.exercise;
-    if (details.category !== "Cardio") continue;
-    const calories = perExercise.find(
-      (e) => e.exerciseName === exerciseName,
-    )?.calories;
-    const pace = calculatePace(durationMinutes, details.distanceKm);
-    console.log(
-      ` ${exerciseName}, ${formatDuration(durationMinutes)} | ${details.distanceKm} km | Ritmo: ${pace} min/km | ${calories} kcal`,
-    );
-  }
-  console.log("\n──────────────────────────────────\n");
+  console.log(" ────────────────────────────────────");
 
-  // Fuerza
-  console.log(
-    `💪 Fuerza (${totalStrength} ejercicios, ${strengthDuration}, ${strengthCalories} kcal)`,
-  );
-  for (const entry of routine.entries) {
-    const { exerciseName, details, durationMinutes } = entry.exercise;
-    if (details.category !== "Fuerza") continue;
-    const calories = perExercise.find(
-      (e) => e.exerciseName === exerciseName,
-    )?.calories;
-    console.log(
-      ` ${exerciseName}, ${details.sets.length} series | ${formatDuration(durationMinutes)} | ${calories} kcal`,
-    );
-    for (const [index, set] of details.sets.entries()) {
-      console.log(
-        `   Serie ${index + 1}: ${set.reps} reps | ${set.weightKg} kg`,
-      );
+  for (const workout of workouts) {
+    console.log(`${workout.day}:`);
+    for (const exercise of workout.exercises) {
+      const { exerciseName, durationMinutes, details, complete } = exercise;
+      const { category } = details;
+      const duration = formatDuration(durationMinutes);
+
+      if (exerciseName === "Descanso") {
+        console.log("(Descanso)");
+      }
+
+      if (category === "Cardio") {
+        const exerciseCalories =
+          routineCalories.perExercise.find(
+            (e) => e.exerciseName === exerciseName,
+          )?.calories ?? 0;
+        const pace = calculatePace(durationMinutes, details.distanceKm);
+        console.log(
+          `${complete ? "✅" : "❌"}  ${exerciseName} [${category}], ${duration}, ${pace}min/km | ${exerciseCalories} kcal quemadas`,
+        );
+      }
+      if (category === "Fuerza") {
+        console.log(
+          `${complete ? "✅" : "❌"}  ${exerciseName} [${category}], ${duration}`,
+        );
+        for (const [index, set] of details.sets.entries()) {
+          console.log(
+            ` - Serie ${index + 1} | ${set.reps} reps | ${set.weightKg} kg`,
+          );
+        }
+      }
+      if (category === "Flexibilidad") {
+        console.log(
+          `${complete ? "✅" : "❌"}  ${exerciseName} [${category}], ${duration}`,
+        );
+      }
     }
+    console.log(`💬 "${workout.comment === undefined ? "" : workout.comment}"`);
+    console.log(" ────────────────────────────────────");
   }
-  console.log("\n──────────────────────────────────\n");
+}
 
-  // Flexibilidad
-  console.log(
-    `🧘 Flexibilidad (${totalFlex} ejercicios, ${flexDuration}, ${flexCalories} kcal)`,
+export function printWeeklyLoad(routine: Routine, user: User): void {
+  const { bodyWeight, level } = user;
+  const {
+    total,
+    formatTotalDuration,
+    cardioDuration,
+    strengthDuration,
+    flexDuration,
+  } = getTotalDuration(routine);
+  const { totalCalories } = calculateAllCalories(routine, bodyWeight, level);
+  const { cal, uniqueDays } = calculateWeeklyAvgCalories(
+    routine,
+    totalCalories,
   );
-  for (const entry of routine.entries) {
-    const { exerciseName, details, durationMinutes } = entry.exercise;
-    if (details.category !== "Flexibilidad") continue;
-    const calories = perExercise.find(
-      (e) => e.exerciseName === exerciseName,
-    )?.calories;
+
+  console.log("📊 Carga semanal");
+  console.log(
+    `${formatTotalDuration} | ${totalCalories} kcal | Promedio: ${cal} kcal (${uniqueDays} días entrenados)`,
+  );
+  console.log(
+    `🏃 Cardio: ${cardioDuration}   💪 Fuerza: ${strengthDuration}  🧘 Flexibilidad: ${flexDuration}`,
+  );
+  if (uniqueDays > 5 || total > 300) {
     console.log(
-      ` ${exerciseName}, ${details.poses} poses | ${formatDuration(durationMinutes)} | ${calories} kcal`,
+      "⚠️ Considera tener un día más de descanso o horas de entrenamiento esta semana.",
+    );
+  } else if (uniqueDays < 3 || total < 150) {
+    console.log(
+      "⚠️ Considera agregar un día más de entrenamiento esta semana.",
     );
   }
-  console.log("\n──────────────────────────────────\n");
-  console.log(`Total: ${getTotalExercises(routine)} ejercicios`);
+}
+
+export function printClientsInfo(users: User[], userId: User["id"]) {
+  const info = getUserInfo(users, userId);
+  if (!info) return;
+  const { name, level, bodyWeight, routine } = info;
+  const { totalCalories } = calculateAllCalories(routine, bodyWeight, level);
+  const { uniqueDays } = calculateWeeklyAvgCalories(routine, totalCalories);
+  const { formatTotalDuration } = getTotalDuration(routine);
+  console.log(`${name} (${level})`);
+  console.log(`Rutina: ${routine.routineName}`);
+  console.log(
+    `Semana: ${uniqueDays} días | ${formatTotalDuration} | ${totalCalories} kcal`,
+  );
 }
