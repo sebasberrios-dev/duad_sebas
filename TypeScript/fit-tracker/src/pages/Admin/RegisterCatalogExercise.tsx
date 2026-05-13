@@ -8,7 +8,6 @@ import RegisterCatalogExerciseFields from "../../features/catalog-exercise/field
 import { useCatalog } from "../../context/CatalogContext";
 import { FormTitle } from "../../components/Title/FormTitle";
 import { FormContainer } from "../../components/Container/FormContainer";
-import { FormSection } from "../../components/Form/FormSection";
 import { Button } from "../../components/Button/Button";
 
 export default function RegisterCatalogExercise() {
@@ -23,14 +22,15 @@ export default function RegisterCatalogExercise() {
   }
 
   return (
-    <FormSection>
-      <FormContainer onSubmit={handleSubmit(onSubmit)}>
-        <FormTitle>Registrar ejercicio al catálogo</FormTitle>
+    <FormContainer
+      onSubmit={handleSubmit(onSubmit)}
+      className="bg-gray-850 shadow-2xl"
+    >
+      <FormTitle>Registrar ejercicio al catálogo</FormTitle>
 
-        <RegisterCatalogExerciseFields control={control} />
+      <RegisterCatalogExerciseFields control={control} />
 
-        <Button type="submit">Guardar en catálogo</Button>
-      </FormContainer>
-    </FormSection>
+      <Button type="submit">Guardar en catálogo</Button>
+    </FormContainer>
   );
 }

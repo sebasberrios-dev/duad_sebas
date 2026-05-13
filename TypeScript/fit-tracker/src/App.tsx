@@ -8,9 +8,7 @@ function App() {
     <UserProvider>
       <SessionProvider>
         <CatalogProvider>
-          <main>
-            <Outlet />
-          </main>
+          <Outlet />
         </CatalogProvider>
       </SessionProvider>
     </UserProvider>

@@ -1,3 +1,4 @@
+import { twMerge } from "tailwind-merge";
 export interface Option {
   id: string;
   displayName: string;
@@ -25,7 +26,10 @@ export default function SelectInput({
     <select
       id={id}
       value={value}
-      className={`w-full bg-gray-800 text-white rounded-lg px-4 py-2.5 border border-gray-700 focus:outline-none focus:ring-2 focus:ring-emerald-700 focus:border-transparent cursor-pointer transition ${className ?? ""}`}
+      className={twMerge(
+        "w-full bg-gray-800 text-white rounded-lg px-4 py-2.5 border border-gray-700 focus:outline-none focus:ring-2 focus:ring-emerald-700 focus:border-transparent cursor-pointer transition ",
+        className,
+      )}
       onChange={(e) => onChange(e.target.value)}
     >
       {placeholder && (

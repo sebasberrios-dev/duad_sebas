@@ -34,7 +34,7 @@ export default function RegisterCoach() {
 
     addCoach(newCoach);
     login(newCoach.id);
-    navigate("/coach/my_clients");
+    navigate("/dashboard");
   }
 
   return (

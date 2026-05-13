@@ -45,7 +45,7 @@ export default function RegisterUser() {
 
     addUser(newUser);
     login(newUser.id);
-    navigate("/routine");
+    navigate("/dashboard");
   }
 
   return (

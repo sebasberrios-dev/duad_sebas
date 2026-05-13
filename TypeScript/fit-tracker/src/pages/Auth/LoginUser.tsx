@@ -33,7 +33,7 @@ export default function LoginUser() {
     }
 
     login(user.id);
-    navigate("/routine");
+    navigate("/dashboard");
   }
 
   return (
@@ -45,7 +45,7 @@ export default function LoginUser() {
         <AuthRedirectLink
           prompt="¿No te has registrado?"
           linkText="Registrate"
-          onClick={() => navigate("/")}
+          onClick={() => navigate("/register")}
         />
       </FormContainer>
     </FormSection>

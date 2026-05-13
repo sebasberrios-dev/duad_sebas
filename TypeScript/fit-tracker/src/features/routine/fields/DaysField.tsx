@@ -16,7 +16,7 @@ export default function DaysField({
   onCommentChange,
 }: Props) {
   return (
-    <div className="w-full flex flex-col gap-3">
+    <div className="w-full grid grid-cols-2 gap-3">
       {DAYS_LIST.map((day) => (
         <div key={day}>
           <Button

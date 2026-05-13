@@ -48,13 +48,14 @@ export default function AssignCoach() {
   }
 
   return (
-    <FormSection>
-      <FormContainer onSubmit={handleSubmit(onSubmit)}>
-        <FormTitle>Asignar Coach</FormTitle>
-        <ClientsField control={control} />
-        <CoachsField control={control} />
-        <Button type="submit">Asignar</Button>
-      </FormContainer>
-    </FormSection>
+    <FormContainer
+      onSubmit={handleSubmit(onSubmit)}
+      className="bg-gray-850 shadow-2xl"
+    >
+      <FormTitle>Asignar Coach</FormTitle>
+      <ClientsField control={control} />
+      <CoachsField control={control} />
+      <Button type="submit">Asignar</Button>
+    </FormContainer>
   );
 }

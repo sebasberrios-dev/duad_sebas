@@ -1,5 +1,6 @@
-import { useForm } from "react-hook-form";
+import { useForm, DefaultValues } from "react-hook-form";
 import { Exercise } from "../../types/interfaces";
+import { CatalogExercise } from "../catalog-exercise/types/catalog-exercise.types";
 import { Days } from "../../types/types";
 import { ExerciseFormData, exerciseSchema } from "./schema/exerciseSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -16,10 +17,11 @@ import CompleteField from "./fields/CompleteField";
 
 interface Props {
   day: Days;
+  preloaded?: CatalogExercise;
   onSuccess: (exercise: Exercise) => void;
 }
 
-export default function RegisterExercise({ day, onSuccess }: Props) {
+export default function RegisterExercise({ day, preloaded, onSuccess }: Props) {
   const { catalog } = useCatalog();
   const catalogOptions = catalog.map((e) => ({
     id: String(e.id),
@@ -28,6 +30,13 @@ export default function RegisterExercise({ day, onSuccess }: Props) {
   const { control, handleSubmit, watch, setValue, reset } =
     useForm<ExerciseFormData>({
       resolver: zodResolver(exerciseSchema),
+      defaultValues: preloaded
+        ? ({
+            catalogExerciseId: preloaded.id,
+            exerciseName: preloaded.exerciseName,
+            category: preloaded.category,
+          } as DefaultValues<ExerciseFormData>)
+        : undefined,
     });
   const category = watch("category");
 
@@ -68,12 +77,16 @@ export default function RegisterExercise({ day, onSuccess }: Props) {
 
   return (
     <FormContainer onSubmit={handleSubmit(onSubmit)} className="border-0">
-      <FormTitle>Sesión de {day.toLowerCase()}</FormTitle>
-      <RegisterExerciseFields
-        control={control}
-        catalogOptions={catalogOptions}
-        setValue={setValue}
-      />
+      <FormTitle>
+        {preloaded ? preloaded.exerciseName : `Sesión de ${day.toLowerCase()}`}
+      </FormTitle>
+      {!preloaded && (
+        <RegisterExerciseFields
+          control={control}
+          catalogOptions={catalogOptions}
+          setValue={setValue}
+        />
+      )}
       <ExerciseBaseFields control={control} />
 
       {category === "Cardio" && <CardioFields control={control} />}
@@ -81,13 +94,15 @@ export default function RegisterExercise({ day, onSuccess }: Props) {
       {category === "Flexibilidad" && <FlexFields control={control} />}
       <CompleteField control={control} />
       <Button type="submit">Guardar ejercicio</Button>
-      <Button
-        type="button"
-        onClick={handleRest}
-        className="bg-red-700 hover:bg-red-600 active:bg-red-800"
-      >
-        Marcar como descanso
-      </Button>
+      {!preloaded && (
+        <Button
+          type="button"
+          onClick={handleRest}
+          className="bg-red-700 hover:bg-red-600 active:bg-red-800"
+        >
+          Marcar como descanso
+        </Button>
+      )}
     </FormContainer>
   );
 }

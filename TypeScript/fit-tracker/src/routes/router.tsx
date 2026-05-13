@@ -6,55 +6,78 @@ import LoginUser from "../pages/Auth/LoginUser";
 import RegisterRoutine from "../pages/RegisterRoutine/RegisterRoutine";
 import RegisterCoach from "../pages/Auth/CoachRegister";
 import LoginCoach from "../pages/Auth/CoachLogin";
-import RegisterAdmin from "../pages/Auth/AdminRegister";
-import LoginAdmin from "../pages/Auth/AdminLogin";
+import RegisterAdmin from "../pages/Admin/Auth/AdminRegister";
+import LoginAdmin from "../pages/Admin/Auth/AdminLogin";
 import CoachView from "../pages/CoachView/CoachView";
 import AssignCoach from "../pages/Admin/AssignCoach";
+import Catalog from "../pages/Catalog/Catalog";
+import Dashboard from "../pages/Dashboard/Dashboard";
 
 const routes: RouteObject[] = [
   {
     path: "/",
     element: <App />,
     children: [
-      {
-        path: "register",
-        element: <RegisterUser />,
-      },
+      // Auth routes (no sidebar)
       {
         path: "login",
         element: <LoginUser />,
       },
       {
-        path: "coach/register",
-        element: <RegisterCoach />,
+        path: "register",
+        element: <RegisterUser />,
       },
       {
         path: "coach/login",
         element: <LoginCoach />,
       },
       {
-        path: "admin/register",
-        element: <RegisterAdmin />,
+        path: "coach/register",
+        element: <RegisterCoach />,
       },
       {
         path: "admin/login",
         element: <LoginAdmin />,
       },
       {
-        path: "/routine",
-        element: <RegisterRoutine />,
+        path: "admin/register",
+        element: <RegisterAdmin />,
       },
+
+      // Dashboard (with sidebar)
       {
-        path: "admin/exercise",
-        element: <RegisterCatalogExercise />,
-      },
-      {
-        path: "coach/my_clients",
-        element: <CoachView />,
-      },
-      {
-        path: "admin/assign_coach",
-        element: <AssignCoach />,
+        path: "dashboard",
+        element: <Dashboard />,
+        children: [
+          // User
+          {
+            path: "routine",
+            element: <RegisterRoutine />,
+          },
+          {
+            path: "my_routines",
+            element: <></>, // placeholder
+          },
+          // Admin
+          {
+            path: "admin/register_exercise",
+            element: <RegisterCatalogExercise />,
+          },
+          {
+            path: "admin/assign_coach",
+            element: <AssignCoach />,
+          },
+          // Coach
+          {
+            path: "coach/my_clients",
+            element: <CoachView />,
+          },
+          // All roles
+          {
+            path: "catalog",
+            element: <Catalog />,
+          },
+        ],
       },
     ],
   },

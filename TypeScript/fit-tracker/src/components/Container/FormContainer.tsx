@@ -17,7 +17,7 @@ export const FormContainer = ({
     <form
       onSubmit={onSubmit}
       className={twMerge(
-        "text-white bg-gray-950 flex flex-col items-center gap-5 p-8 rounded-2xl shadow-xl w-full max-w-md border border-gray-800 animate-slide-up-fade",
+        "text-white bg-gray-950 flex flex-col items-center gap-8 p-8 rounded-2xl shadow-xl w-full max-w-md border border-gray-800 animate-slide-up-fade",
         className,
       )}
     >

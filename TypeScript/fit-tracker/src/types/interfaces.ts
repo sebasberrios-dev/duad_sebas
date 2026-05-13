@@ -22,17 +22,9 @@ export interface Strength {
 export interface Flexibility {
   category: "Flexibilidad";
   poses: number;
-  userCommment?: string;
 }
 
 export type Category = Cardio | Strength | Flexibility | Rest;
-
-export interface CatalogExercise {
-  id: number;
-  exerciseName: string;
-  category: Category["category"];
-  description: string;
-}
 
 export interface Exercise {
   id: number;
