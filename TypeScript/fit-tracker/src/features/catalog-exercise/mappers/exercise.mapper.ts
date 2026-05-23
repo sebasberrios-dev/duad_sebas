@@ -13,7 +13,7 @@ export function mapTypeToCategory(type: string): CatalogExercise["category"] {
       return "Flexibilidad";
 
     default:
-      return "Fuerza";
+      return undefined;
   }
 }
 
@@ -27,5 +27,6 @@ export function mapApiExercisetoCatalogExercise(
     category: mapTypeToCategory(dto.type),
     muscle: dto.muscle,
     description: dto.instructions,
+    source: "api",
   };
 }

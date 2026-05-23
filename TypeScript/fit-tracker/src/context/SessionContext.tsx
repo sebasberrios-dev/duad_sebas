@@ -2,13 +2,7 @@ import { AppUser, User, Coach, Admin } from "../types/interfaces";
 import { useUsers } from "./UserContext";
 import { useContext, useState, createContext } from "react";
 import React from "react";
-
-interface SessionContextValue {
-  currentUser: AppUser | null;
-  login: (userId: number) => void;
-  logout: () => void;
-  updateCurrentUser: (user: AppUser) => void;
-}
+import { SessionContextValue } from "./types/session-context-types";
 
 const SessionContext = createContext<SessionContextValue | null>(null);
 
@@ -23,6 +17,16 @@ export function SessionProvider({ children }: { children: React.ReactNode }) {
   const allUsers: AppUser[] = [...users, ...coachs, ...admins];
   const currentUser = allUsers.find((u) => u.id === currentUserId) ?? null;
 
+  function isUser(u: AppUser): u is User {
+    return u.role === "User";
+  }
+  function isCoach(u: AppUser): u is Coach {
+    return u.role === "Coach";
+  }
+  function isAdmin(u: AppUser): u is Admin {
+    return u.role === "Admin";
+  }
+
   function login(userId: number) {
     setCurrentUserId(userId);
     localStorage.setItem("fit-tracker-session", String(userId));
@@ -34,14 +38,22 @@ export function SessionProvider({ children }: { children: React.ReactNode }) {
   }
 
   function updateCurrentUser(user: AppUser) {
-    if (user.role === "User") updateUser(user as User);
-    else if (user.role === "Coach") updateCoach(user as Coach);
-    else updateAdmin(user as Admin);
+    if (isUser(user)) updateUser(user);
+    else if (isCoach(user)) updateCoach(user);
+    else if (isAdmin(user)) updateAdmin(user);
   }
 
   return (
     <SessionContext.Provider
-      value={{ currentUser, login, logout, updateCurrentUser }}
+      value={{
+        currentUser,
+        login,
+        logout,
+        updateCurrentUser,
+        isUser,
+        isCoach,
+        isAdmin,
+      }}
     >
       {children}
     </SessionContext.Provider>

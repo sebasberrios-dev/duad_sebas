@@ -1,20 +1,14 @@
-import { Days, DAYS_LIST, DraftRoutine } from "../../../types/types";
+import { DAYS_LIST } from "../../../types/types";
+import { DaysFieldProps } from "../props/days-field-props";
 import { Button } from "../../../components/Button/Button";
 import TextInput from "../../../components/Form/Input/TextInput";
-
-interface Props {
-  draft: DraftRoutine;
-  draftComments: Partial<Record<Days, string>>;
-  onClick: (day: Days) => void;
-  onCommentChange: (day: Days, value: string) => void;
-}
 
 export default function DaysField({
   draft,
   draftComments,
   onClick,
   onCommentChange,
-}: Props) {
+}: DaysFieldProps) {
   return (
     <div className="w-full grid grid-cols-2 gap-3">
       {DAYS_LIST.map((day) => (

@@ -1,26 +1,23 @@
-import { Controller, Control } from "react-hook-form";
-import { UseFormSetValue } from "react-hook-form";
-import { ExerciseFormData } from "../schema/exerciseSchema";
+import { Controller } from "react-hook-form";
 import { FormLabel } from "../../../components/Form/FormLabel";
 import { FieldContainer } from "../../../components/Form/FieldContainer";
 import SelectInput from "../../../components/Form/Input/SelectInput";
 import { useCatalog } from "../../../context/CatalogContext";
-
-interface Props {
-  control: Control<ExerciseFormData>;
-  catalogOptions: {
-    id: string;
-    displayName: string;
-  }[];
-  setValue: UseFormSetValue<ExerciseFormData>;
-}
+import { RegisterExerciseProps } from "../props/register-exercises-props";
+import { ExerciseCategory, EXERCISES_CATEGORIES } from "../../../types/types";
 
 export default function RegisterExerciseFields({
   control,
   catalogOptions,
   setValue,
-}: Props) {
+}: RegisterExerciseProps) {
   const { catalog } = useCatalog();
+
+  function isExerciseCategory(
+    val: string | undefined,
+  ): val is ExerciseCategory {
+    return EXERCISES_CATEGORIES.some((cat) => cat === val);
+  }
   return (
     <Controller
       name="catalogExerciseId"
@@ -37,7 +34,9 @@ export default function RegisterExerciseFields({
               if (!exercise) return;
               field.onChange(Number(id));
               setValue("exerciseName", exercise.exerciseName);
-              setValue("category", exercise.category);
+              if (isExerciseCategory(exercise.category)) {
+                setValue("category", exercise.category);
+              }
             }}
             placeholder="Seleccionar ejercicio"
           />

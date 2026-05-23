@@ -213,7 +213,7 @@ export function getUserInfo(
 ):
   | {
       name: string;
-      level: string;
+      level: Level;
       bodyWeight: number;
       routine: Routine;
     }

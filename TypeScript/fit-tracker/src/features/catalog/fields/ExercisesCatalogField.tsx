@@ -1,19 +1,14 @@
 import ExerciseCard from "../ExerciseCard";
-import { CatalogExercise } from "../../catalog-exercise/types/catalog-exercise.types";
+import { ExerciseCatalogProps } from "../props/exercise-catalog-props";
 import Loader from "../../../components/Loader/Loader";
 import { IconWarning } from "../icons";
-
-interface Props {
-  exercises: CatalogExercise[];
-  error?: boolean;
-  loading?: boolean;
-}
 
 export default function ExercisesCatalogField({
   exercises,
   error,
   loading,
-}: Props) {
+  onAdd,
+}: ExerciseCatalogProps) {
   const incompleteExercises = exercises.filter(
     (ex) => !ex.category || !ex.description,
   );
@@ -33,7 +28,9 @@ export default function ExercisesCatalogField({
     );
   if (exercises.length === 0) {
     return (
-      <p className="text-gray-500 mt-9 ml-26">No se encontraron ejercicios</p>
+      <p className="text-gray-500 mt-9 mb-3 ml-26">
+        No se encontraron ejercicios
+      </p>
     );
   }
 
@@ -49,7 +46,7 @@ export default function ExercisesCatalogField({
       )}
       <div className="grid grid-cols-3 gap-x-4 gap-y-8 place-items-start">
         {completeExercises.map((exercise) => (
-          <ExerciseCard key={exercise.id} exercise={exercise} />
+          <ExerciseCard key={exercise.id} exercise={exercise} onAdd={onAdd} />
         ))}
       </div>
     </div>

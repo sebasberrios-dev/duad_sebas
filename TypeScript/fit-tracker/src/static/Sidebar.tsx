@@ -12,11 +12,7 @@ import {
 } from "../features/sidebar/icons";
 import { NavItem } from "../features/sidebar/NavItem";
 import { AppUser } from "../types/interfaces";
-
-interface SidebarProps {
-  collapsed: boolean;
-  onToggle: () => void;
-}
+import { SidebarProps } from "../features/sidebar/props/sidebar-props";
 
 function formatRole(role: AppUser["role"]): string {
   const normalizedRole = role.toLowerCase().trim();
@@ -117,24 +113,31 @@ export function Sidebar({ collapsed, onToggle }: SidebarProps): JSX.Element {
               label="Añadir ejercicio"
               collapsed={collapsed}
             />
+            <NavItem
+              to="/dashboard/catalog"
+              icon={<IconCatalog />}
+              label="Catálogo"
+              collapsed={collapsed}
+            />
           </>
         )}
 
         {role === "Coach" && (
-          <NavItem
-            to="/dashboard/coach/my_clients"
-            icon={<IconMyClients />}
-            label="Mis clientes"
-            collapsed={collapsed}
-          />
+          <>
+            <NavItem
+              to="/dashboard/coach/my_clients"
+              icon={<IconMyClients />}
+              label="Mis clientes"
+              collapsed={collapsed}
+            />
+            <NavItem
+              to="/dashboard/catalog"
+              icon={<IconCatalog />}
+              label="Catálogo"
+              collapsed={collapsed}
+            />
+          </>
         )}
-
-        <NavItem
-          to="/dashboard/catalog"
-          icon={<IconCatalog />}
-          label="Catálogo"
-          collapsed={collapsed}
-        />
       </nav>
 
       {/* User info + logout */}

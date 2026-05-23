@@ -1,20 +1,13 @@
-import React from "react";
 import { JSX } from "react";
 import { twMerge } from "tailwind-merge";
-
-interface Props {
-  children: React.ReactNode;
-  type: "submit" | "reset" | "button" | undefined;
-  onClick?: () => void;
-  className?: string;
-}
+import { ButtonProps } from "./props";
 
 export const Button = ({
   children,
   type,
   onClick,
   className,
-}: Props): JSX.Element => {
+}: ButtonProps): JSX.Element => {
   return (
     <button
       type={type}

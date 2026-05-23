@@ -1,12 +1,11 @@
 import { JSX } from "react";
 import { twMerge } from "tailwind-merge";
+import { LoaderProps } from "./props";
 
-interface Props {
-  message: string;
-  className?: string;
-}
-
-export default function Loader({ message, className }: Props): JSX.Element {
+export default function Loader({
+  message,
+  className,
+}: LoaderProps): JSX.Element {
   return (
     <div className={twMerge("inline-flex items-center", className)}>
       <svg

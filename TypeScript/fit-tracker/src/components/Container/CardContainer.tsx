@@ -1,12 +1,11 @@
-import React, { JSX } from "react";
+import { JSX } from "react";
 import { twMerge } from "tailwind-merge";
+import { GeneralProps } from "../general-props";
 
-interface Props {
-  className?: string;
-  children: React.ReactNode;
-}
-
-export const CardContainer = ({ className, children }: Props): JSX.Element => {
+export const CardContainer = ({
+  className,
+  children,
+}: GeneralProps): JSX.Element => {
   return (
     <div
       className={twMerge(

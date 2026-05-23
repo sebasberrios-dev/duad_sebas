@@ -1,12 +1,11 @@
 import { twMerge } from "tailwind-merge";
-import React, { JSX } from "react";
+import { JSX } from "react";
+import { GeneralProps } from "../general-props";
 
-interface Props {
-  className?: string;
-  children: React.ReactNode;
-}
-
-export default function Main({ className, children }: Props): JSX.Element {
+export default function Main({
+  className,
+  children,
+}: GeneralProps): JSX.Element {
   return (
     <main className={twMerge("flex-1 overflow-y-auto bg-gray-950", className)}>
       {children}

@@ -1,12 +1,12 @@
 import { z } from "zod";
-import { fcmZoneSchema } from "../../../types/types";
+import { fcmZoneSchema, WORKOUT_STATUSES } from "../../../types/types";
 
 // Entradas por ejercicio base
 const exerciseBaseSchema = z.object({
   catalogExerciseId: z.number().positive(),
   exerciseName: z.string().min(1),
   durationMinutes: z.number().min(0, "La duración debe ser mayor a 0"),
-  complete: z.boolean(),
+  status: z.enum(WORKOUT_STATUSES).default("pending"),
 });
 
 // Cardio
@@ -21,8 +21,8 @@ const cardioExerciseSchema = exerciseBaseSchema.extend({
 
 // Fuerza
 const setSchema = z.object({
-  reps: z.number().min(1),
-  weightKg: z.number(),
+  reps: z.number({ error: "Ingresa un número" }).min(1).optional(),
+  weightKg: z.number({ error: "Ingresa un número" }).optional(),
 });
 const strengthSchema = z.object({
   sets: z.array(setSchema),

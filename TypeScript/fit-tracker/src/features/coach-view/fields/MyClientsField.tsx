@@ -1,12 +1,7 @@
-import { Client, User } from "../../../types/interfaces";
+import { MyClientsProps } from "../props/my-clients-props";
 import { ClientCard } from "../ClientCard";
 
-interface Props {
-  clients: Client[];
-  users: User[];
-}
-
-export function MyClientsField({ clients, users }: Props) {
+export function MyClientsField({ clients, users }: MyClientsProps) {
   if (clients.length === 0) {
     return <p className="text-gray-500">No tienes clientes</p>;
   }

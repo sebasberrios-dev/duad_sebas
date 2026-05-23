@@ -1,6 +1,11 @@
 {
   "files": [],
-  "include": ["src/main.ts", "src/**/*.ts", "src/utils/utilities.tsx"],
+  "include": [
+    "src/main.ts",
+    "src/**/*.ts",
+    "src/utils/utilities.tsx",
+    "src/features/catalog/props/catalog-props.tsx"
+  ],
   "references": [
     { "path": "./tsconfig.app.json" },
     { "path": "./tsconfig.node.json" }

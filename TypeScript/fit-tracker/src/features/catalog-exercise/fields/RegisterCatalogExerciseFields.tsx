@@ -4,13 +4,10 @@ import TextInput from "../../../components/Form/Input/TextInput";
 import { FieldContainer } from "../../../components/Form/FieldContainer";
 import { FormLabel } from "../../../components/Form/FormLabel";
 import { CatalogExerciseFormData } from "../schema/catalogSchema";
-import { muscleOptions as catalogOptions } from "../types/muscle-options";
-
-export const categoryOptions = [
-  { id: "Cardio", displayName: "Cardio" },
-  { id: "Fuerza", displayName: "Fuerza" },
-  { id: "Flexibilidad", displayName: "Flexibilidad" },
-];
+import {
+  muscleOptions as catalogOptions,
+  categoryOptions,
+} from "../types/options";
 
 export function ExerciseNameField({
   control,

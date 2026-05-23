@@ -1,10 +1,10 @@
-interface Props {
-  prompt: string;
-  linkText: string;
-  onClick: () => void;
-}
+import { AuthRedirectProps } from "./form-props";
 
-export function AuthRedirectLink({ prompt, linkText, onClick }: Props) {
+export function AuthRedirectLink({
+  prompt,
+  linkText,
+  onClick,
+}: AuthRedirectProps) {
   return (
     <div className="flex flex-row gap-2">
       <span>{prompt}</span>

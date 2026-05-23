@@ -1,4 +1,4 @@
-import { Days, fcmZone, Level, Experience } from "./types";
+import { Days, fcmZone, Level, Experience, WorkoutStatus } from "./types";
 
 interface Sets {
   reps: number;
@@ -31,7 +31,7 @@ export interface Exercise {
   exerciseName: string;
   durationMinutes: number;
   details: Category;
-  complete: boolean;
+  status: WorkoutStatus;
 }
 
 export interface DailyWorkout {

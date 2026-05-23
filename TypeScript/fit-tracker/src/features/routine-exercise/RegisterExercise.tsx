@@ -1,4 +1,4 @@
-import { useForm, DefaultValues } from "react-hook-form";
+import { useForm, DefaultValues, Resolver } from "react-hook-form";
 import { Exercise } from "../../types/interfaces";
 import { CatalogExercise } from "../catalog-exercise/types/catalog-exercise.types";
 import { Days } from "../../types/types";
@@ -29,12 +29,13 @@ export default function RegisterExercise({ day, preloaded, onSuccess }: Props) {
   }));
   const { control, handleSubmit, watch, setValue, reset } =
     useForm<ExerciseFormData>({
-      resolver: zodResolver(exerciseSchema),
+      resolver: zodResolver(exerciseSchema) as Resolver<ExerciseFormData>,
       defaultValues: preloaded
         ? ({
             catalogExerciseId: preloaded.id,
             exerciseName: preloaded.exerciseName,
             category: preloaded.category,
+            status: "pending",
           } as DefaultValues<ExerciseFormData>)
         : undefined,
     });
@@ -55,7 +56,7 @@ export default function RegisterExercise({ day, preloaded, onSuccess }: Props) {
       id: Date.now(),
       exerciseName: data.exerciseName,
       durationMinutes: data.durationMinutes,
-      complete: data.complete,
+      status: data.status,
       details,
     };
 
@@ -68,7 +69,7 @@ export default function RegisterExercise({ day, preloaded, onSuccess }: Props) {
       id: Date.now(),
       exerciseName: "Descanso",
       durationMinutes: 0,
-      complete: false,
+      status: "pending",
       details: { category: "Descanso" },
     };
     onSuccess(restExercise);

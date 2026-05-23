@@ -1,18 +1,5 @@
 import { twMerge } from "tailwind-merge";
-export interface Option {
-  id: string;
-  displayName: string;
-  className?: string;
-}
-
-interface SelectInputProps {
-  id: string;
-  value: string;
-  onChange: (optionId: Option["id"]) => void;
-  options: Option[];
-  placeholder?: string;
-  className?: string;
-}
+import { SelectInputProps } from "../form-props";
 
 export default function SelectInput({
   id,

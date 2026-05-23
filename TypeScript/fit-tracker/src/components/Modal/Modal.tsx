@@ -1,10 +1,5 @@
 import { createPortal } from "react-dom";
-
-interface ModalProps {
-  isOpen: boolean;
-  onClose: () => void;
-  children: React.ReactNode;
-}
+import { ModalProps } from "./props";
 
 export default function Modal({ isOpen, onClose, children }: ModalProps) {
   if (!isOpen) return null;

@@ -1,16 +1,11 @@
 import { JSX } from "react";
-
-interface Props {
-  children: React.ReactNode;
-  htmlFor: string;
-  className?: string;
-}
+import { FormLabelProps } from "./form-props";
 
 export const FormLabel = ({
   children,
   className,
   htmlFor,
-}: Props): JSX.Element => {
+}: FormLabelProps): JSX.Element => {
   return (
     <label
       htmlFor={htmlFor}

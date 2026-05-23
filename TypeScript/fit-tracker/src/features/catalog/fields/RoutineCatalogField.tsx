@@ -1,21 +1,7 @@
-import { CatalogExercise } from "../../catalog-exercise/types/catalog-exercise.types";
+import { RoutineCatalogProps } from "../props/routine-catalog-props";
 import ExerciseCard from "../ExerciseCard";
 import Loader from "../../../components/Loader/Loader";
 import { twMerge } from "tailwind-merge";
-
-interface className {
-  layout?: string;
-  errorMessage?: string;
-  emptyMessage?: string;
-}
-
-interface Props {
-  exercises: CatalogExercise[];
-  onAdd: (exercise: CatalogExercise) => void;
-  loading?: boolean;
-  error?: boolean;
-  className?: className;
-}
 
 export default function RoutineCatalogField({
   exercises,
@@ -23,7 +9,7 @@ export default function RoutineCatalogField({
   loading,
   error,
   className,
-}: Props) {
+}: RoutineCatalogProps) {
   if (loading) {
     return <Loader message="Cargando ejercicios" className="mt-9 ml-26" />;
   }

@@ -8,6 +8,7 @@ import {
   calculateWeeklyAvgCalories,
   getUserInfo,
 } from "../utils/utilities";
+import { CatalogReport } from "./types";
 
 export function printUserInfo(user: User): void {
   const { name, age, bodyWeight, level } = user;
@@ -39,7 +40,7 @@ export function printRoutine(routine: Routine, user: User): void {
   for (const workout of workouts) {
     console.log(`${workout.day}:`);
     for (const exercise of workout.exercises) {
-      const { exerciseName, durationMinutes, details, complete } = exercise;
+      const { exerciseName, durationMinutes, details, status } = exercise;
       const { category } = details;
       const duration = formatDuration(durationMinutes);
 
@@ -54,12 +55,12 @@ export function printRoutine(routine: Routine, user: User): void {
           )?.calories ?? 0;
         const pace = calculatePace(durationMinutes, details.distanceKm);
         console.log(
-          `${complete ? "✅" : "❌"}  ${exerciseName} [${category}], ${duration}, ${pace}min/km | ${exerciseCalories} kcal quemadas`,
+          `${status === "completed" ? "✅" : status === "skipped" ? "❌" : "⏳"}  ${exerciseName} [${category}], ${duration}, ${pace}min/km | ${exerciseCalories} kcal quemadas`,
         );
       }
       if (category === "Fuerza") {
         console.log(
-          `${complete ? "✅" : "❌"}  ${exerciseName} [${category}], ${duration}`,
+          `${status === "completed" ? "✅" : status === "skipped" ? "❌" : "⏳"}  ${exerciseName} [${category}], ${duration}`,
         );
         for (const [index, set] of details.sets.entries()) {
           console.log(
@@ -69,7 +70,7 @@ export function printRoutine(routine: Routine, user: User): void {
       }
       if (category === "Flexibilidad") {
         console.log(
-          `${complete ? "✅" : "❌"}  ${exerciseName} [${category}], ${duration}`,
+          `${status === "completed" ? "✅" : status === "skipped" ? "❌" : "⏳"}  ${exerciseName} [${category}], ${duration}`,
         );
       }
     }
@@ -123,4 +124,35 @@ export function printClientsInfo(users: User[], userId: User["id"]) {
   console.log(
     `Semana: ${uniqueDays} días | ${formatTotalDuration} | ${totalCalories} kcal`,
   );
+}
+
+export function printCatalogReport(
+  report: CatalogReport,
+  filter?: { kind: "muscle" | "type"; value: string },
+): void {
+  const filterLabel = filter ? `, ${filter.kind}: ${filter.value}` : "";
+
+  console.log(`\n📊 Resultados de búsqueda${filterLabel}`);
+  console.log(" ────────────────────────────────────");
+  console.log(`✅ Agregados al catálogo (${report.totals.total})`);
+  for (const group of report.byCategory) {
+    for (const ex of group.exercises) {
+      const name = ex.exerciseName.padEnd(16);
+      const category = (ex.category ?? "").toLowerCase().padEnd(10);
+      console.log(`    ${name}, ${category}| validado`);
+    }
+  }
+  if (report.incomplete.length > 0) {
+    console.log("");
+    console.log(`⚠️ Datos incompletos (${report.incomplete.length})`);
+    for (const ex of report.incomplete) {
+      const name = (ex.exerciseName || "(sin nombre)").padEnd(16);
+      console.log(`    ${name}, campos requeridos faltantes`);
+    }
+  }
+  console.log("");
+  console.log(
+    `Catálogo local: ${report.totals.local} ejercicios | Desde API: ${report.totals.api} ejercicios`,
+  );
+  console.log("══════════════════════════════════\n");
 }

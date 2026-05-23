@@ -1,12 +1,6 @@
 import { JSX } from "react";
 import { NavLink } from "react-router";
-
-interface NavItemProps {
-  to: string;
-  icon: JSX.Element;
-  label: string;
-  collapsed: boolean;
-}
+import { NavItemProps } from "./props/nav-item-props";
 
 export function NavItem({
   to,

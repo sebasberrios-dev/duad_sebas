@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useSession } from "../../context/SessionContext";
 import { useCatalog } from "../../context/CatalogContext";
-import { Exercise, User } from "../../types/interfaces";
+import { Exercise } from "../../types/interfaces";
 import { Days, DAYS_LIST, DraftRoutine } from "../../types/types";
 import { CatalogExercise } from "../../features/catalog-exercise/types/catalog-exercise.types";
 import Modal from "../../components/Modal/Modal";
@@ -17,22 +17,11 @@ import {
 import { printRoutine, printWeeklyLoad } from "../../utils/console";
 import SelectInput from "../../components/Form/Input/SelectInput";
 import RoutineCatalogField from "../../features/catalog/fields/RoutineCatalogField";
-import { BigTitle } from "../../components/Title/BigTitle";
-import { muscleOptions } from "../../features/catalog-exercise/types/muscle-options";
-
-const daysOptions = DAYS_LIST.map((day) => ({ id: day, displayName: day }));
-
-const categoryOptions = [
-  { id: "Cardio", displayName: "Cardio" },
-  { id: "Fuerza", displayName: "Fuerza" },
-  { id: "Flexibilidad", displayName: "Flexibilidad" },
-];
-
-const categoryToApiType: Record<string, string> = {
-  Cardio: "cardio",
-  Fuerza: "strength",
-  Flexibilidad: "stretching",
-};
+import {
+  muscleOptions,
+  categoryOptions,
+} from "../../features/catalog-exercise/types/options";
+import { daysOptions } from "../../features/routine/types/options";
 
 export default function RegisterRoutine() {
   const [draft, setDraft] = useState<DraftRoutine>({});
@@ -46,9 +35,8 @@ export default function RegisterRoutine() {
   const [catalogExerciseToAdd, setCatalogExerciseToAdd] =
     useState<CatalogExercise | null>(null);
 
-  const { currentUser, updateCurrentUser } = useSession();
-  const { catalog, apiCatalog, loading, error, getMuscle, getType } =
-    useCatalog();
+  const { currentUser, updateCurrentUser, isUser } = useSession();
+  const { catalog } = useCatalog();
   const { control, handleSubmit } = useForm<RegisterRoutineFormData>({
     resolver: zodResolver(registerRoutineSchema),
   });
@@ -61,15 +49,17 @@ export default function RegisterRoutine() {
     return matchesCategory && matchesMuscle;
   });
 
+  function isDays(val: string): val is Days {
+    return DAYS_LIST.some((day) => day === val);
+  }
+
   function handleCategoryChange(category: string) {
     setSelectedCategory(category);
     setSelectedMuscle("");
-    getType(categoryToApiType[category]);
   }
 
   function handleMuscleChange(muscle: string) {
     setSelectedMuscle(muscle);
-    getMuscle(muscle);
   }
 
   function handleExerciseAdded(exercise: Exercise) {
@@ -82,7 +72,7 @@ export default function RegisterRoutine() {
   }
 
   function handleAddFromCatalog(exercise: CatalogExercise) {
-    if (!selectedDay) return;
+    if (!selectedDay || !exercise.category) return;
     setCatalogExerciseToAdd(exercise);
     setIsModalOpen(true);
   }
@@ -90,11 +80,10 @@ export default function RegisterRoutine() {
   function handleSaveRoutine(data: RegisterRoutineFormData) {
     if (!currentUser) return;
 
-    const workouts = Object.entries(draft).map(([day, exercises]) => ({
-      day: [day as Days],
-      exercises: exercises,
-      comment: draftComments[day as Days],
-    }));
+    const workouts = Object.entries(draft).flatMap(([day, exercises]) => {
+      if (!isDays(day) || !exercises) return [];
+      return [{ day: [day], exercises, comment: draftComments[day] }];
+    });
 
     const updatedUser = {
       ...currentUser,
@@ -117,11 +106,10 @@ export default function RegisterRoutine() {
   }
 
   function handleSeeRoutine() {
-    const user = currentUser as User;
-    const routine = user.routine;
+    if (!currentUser || !isUser(currentUser)) return;
 
-    printRoutine(routine, user);
-    printWeeklyLoad(routine, user);
+    printRoutine(currentUser.routine, currentUser);
+    printWeeklyLoad(currentUser.routine, currentUser);
   }
 
   return (
@@ -142,7 +130,9 @@ export default function RegisterRoutine() {
           <SelectInput
             id="day-select"
             value={selectedDay ?? ""}
-            onChange={(val) => setSelectedDay(val as Days)}
+            onChange={(val) => {
+              if (isDays(val)) setSelectedDay(val);
+            }}
             options={daysOptions}
             placeholder="Seleccionar día"
             className="bg-gray-900 border-none"
@@ -214,25 +204,10 @@ export default function RegisterRoutine() {
             )}
           </div>
 
-          <div className="flex flex-col mt-4">
-            <BigTitle className="text-xl self-start ml-6">Locales</BigTitle>
+          <div className="flex flex-col">
             <RoutineCatalogField
               exercises={filteredExercises}
               onAdd={handleAddFromCatalog}
-              className={{
-                layout: "ml-6",
-                errorMessage: "ml-6",
-                emptyMessage: "ml-6",
-              }}
-            />
-          </div>
-          <div className="flex flex-col mt-14">
-            <BigTitle className="text-xl self-start ml-6">Externos</BigTitle>
-            <RoutineCatalogField
-              exercises={apiCatalog}
-              onAdd={handleAddFromCatalog}
-              loading={loading}
-              error={error}
               className={{
                 layout: "ml-6",
                 errorMessage: "ml-6",

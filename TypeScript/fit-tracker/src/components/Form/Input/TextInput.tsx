@@ -1,11 +1,4 @@
-interface TextInputProps {
-  id: string;
-  type?: "text" | "number" | "email";
-  value: string | number;
-  onChange: (value: string) => void;
-  placeholder: string;
-  className?: string;
-}
+import { TextInputProps } from "../form-props";
 
 export default function TextInput({
   id,

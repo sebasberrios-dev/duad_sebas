@@ -8,6 +8,8 @@ const Days = {
   thursday: "Jueves",
   friday: "Viernes",
 } as const;
+export type Days = (typeof Days)[keyof typeof Days];
+
 export const DAYS_LIST = Object.values(Days) as Days[];
 
 export const FCM_ZONES = ["zone1", "zone2", "zone3", "zone4", "zone5"] as const;
@@ -64,23 +66,31 @@ const MET_FLEXIBILITY = {
 } as const;
 
 export const USER_LEVELS = {
-  BEGINNER: "beginner",
-  INTERMEDIATE: "intermediate",
-  ADVANCED: "advanced",
-};
+  BEGINNER: "Principiante",
+  INTERMEDIATE: "Intermedio",
+  ADVANCED: "Avanzado",
+} as const;
 export const EXPERIENCE_LEVELS = {
   JUNIOR: "junior",
   INTERMEDIATE: "intermediate",
   SENIOR: "senior",
   EXPERT: "expert",
 };
+
+export const EXERCISES_CATEGORIES = [
+  "Cardio",
+  "Fuerza",
+  "Flexbilidad",
+] as const;
+export const WORKOUT_STATUSES = ["pending", "completed", "skipped"] as const;
+
 export const experienceSchema = z.enum(EXPERIENCE_LEVELS);
 
-export type Days = (typeof Days)[keyof typeof Days];
 export type Level = (typeof USER_LEVELS)[keyof typeof USER_LEVELS];
 export type Experience =
   (typeof EXPERIENCE_LEVELS)[keyof typeof EXPERIENCE_LEVELS];
-
+export type ExerciseCategory = (typeof EXERCISES_CATEGORIES)[number];
+export type WorkoutStatus = (typeof WORKOUT_STATUSES)[number];
 export type MET_CARDIO = (typeof MET_CARDIO)[keyof typeof MET_CARDIO];
 export type MET_STRENGTH = (typeof MET_STRENGTH)[keyof typeof MET_STRENGTH];
 export type MET_FLEXIBILITY =

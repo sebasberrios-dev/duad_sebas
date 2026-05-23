@@ -11,13 +11,13 @@ import { FormContainer } from "../../components/Container/FormContainer";
 import { Button } from "../../components/Button/Button";
 
 export default function RegisterCatalogExercise() {
-  const { catalog, addExercise } = useCatalog();
+  const { addExercise } = useCatalog();
   const { control, handleSubmit, reset } = useForm<CatalogExerciseFormData>({
     resolver: zodResolver(catalogExerciseSchema),
   });
 
   function onSubmit(data: CatalogExerciseFormData) {
-    addExercise({ ...data, id: catalog.length + 1 });
+    addExercise(data);
     reset();
   }
 

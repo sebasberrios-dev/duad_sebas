@@ -19,3 +19,9 @@ export const muscleOptions = [
   { id: "traps", displayName: "Trapecio" },
   { id: "triceps", displayName: "Triceps" },
 ];
+
+export const categoryOptions = [
+  { id: "Cardio", displayName: "Cardio" },
+  { id: "Fuerza", displayName: "Fuerza" },
+  { id: "Flexibilidad", displayName: "Flexibilidad" },
+];

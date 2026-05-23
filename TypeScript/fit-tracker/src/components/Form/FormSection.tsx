@@ -1,13 +1,11 @@
-import React from "react";
 import { JSX } from "react";
 import { twMerge } from "tailwind-merge";
+import { GeneralProps } from "../general-props";
 
-interface Props {
-  children: React.ReactNode;
-  className?: string;
-}
-
-export const FormSection = ({ children, className }: Props): JSX.Element => {
+export const FormSection = ({
+  children,
+  className,
+}: GeneralProps): JSX.Element => {
   return (
     <section
       className={twMerge(

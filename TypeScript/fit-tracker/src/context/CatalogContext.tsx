@@ -4,44 +4,20 @@ import {
   getExternalExercisesByMuscle,
   getExternalExercisesByType,
 } from "../features/catalog-exercise/services/externalExerciseApi";
-
-const STORAGE_KEY = "fit-tracker-catalog";
-
-function loadCatalog(): CatalogExercise[] {
-  try {
-    const stored = localStorage.getItem(STORAGE_KEY);
-    if (stored) return JSON.parse(stored) as CatalogExercise[];
-  } catch {
-    // si el JSON está corrupto, retornamos lista vacía
-  }
-  return [];
-}
-
-function saveCatalog(catalog: CatalogExercise[]) {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(catalog));
-}
-
-type ExternalFilter =
-  | { kind: "muscle"; value: string }
-  | { kind: "type"; value: string };
-
-interface CatalogContextValue {
-  catalog: CatalogExercise[];
-  apiCatalog: CatalogExercise[];
-  loading: boolean;
-  error: boolean;
-  addExercise: (exercise: CatalogExercise) => void;
-  getMuscle: (muscle: string) => void;
-  getType: (type: string) => void;
-}
+import { loadCatalog, saveCatalog } from "./utils/catalog-context-utils";
+import {
+  ExternalFilter,
+  CatalogContextValue,
+} from "./types/catalog-context-types";
 
 const CatalogContext = createContext<CatalogContextValue | null>(null);
 
 export function CatalogProvider({ children }: { children: React.ReactNode }) {
   const [catalog, setCatalog] = useState<CatalogExercise[]>(loadCatalog);
   const [apiCatalog, setApiCatalog] = useState<CatalogExercise[]>([]);
-  const [externalFilter, setExternalFilter] =
-    useState<ExternalFilter | null>(null);
+  const [externalFilter, setExternalFilter] = useState<ExternalFilter | null>(
+    null,
+  );
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<boolean>(false);
 
@@ -71,15 +47,35 @@ export function CatalogProvider({ children }: { children: React.ReactNode }) {
       .finally(() => setLoading(false));
   }, [externalFilter]);
 
-  function addExercise(exercise: CatalogExercise) {
-    const updated = [...catalog, exercise];
+  function addExercise(
+    exercise: Omit<CatalogExercise, "id" | "source">,
+    fromApi = false,
+  ) {
+    if (!exercise.category) return;
+    const alreadyExists = catalog.some(
+      (ex) =>
+        ex.exerciseName.toLowerCase() === exercise.exerciseName.toLowerCase(),
+    );
+    if (alreadyExists) return;
+
+    const source = fromApi ? ("api" as const) : ("local" as const);
+    const withMeta = { ...exercise, id: Date.now(), source };
+    const updated = [...catalog, withMeta];
     setCatalog(updated);
     saveCatalog(updated);
   }
 
   return (
     <CatalogContext.Provider
-      value={{ catalog, apiCatalog, loading, error, addExercise, getMuscle, getType }}
+      value={{
+        catalog,
+        apiCatalog,
+        loading,
+        error,
+        addExercise,
+        getMuscle,
+        getType,
+      }}
     >
       {children}
     </CatalogContext.Provider>

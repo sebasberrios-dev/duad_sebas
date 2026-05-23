@@ -1,14 +1,9 @@
 import { Button } from "../../components/Button/Button";
 import { CardContainer } from "../../components/Container/CardContainer";
-import { Client, User } from "../../types/interfaces";
+import { ClientCardProps } from "./props/client-card-props";
 import { printClientsInfo } from "../../utils/console";
 
-interface Props {
-  client: Client;
-  users: User[];
-}
-
-export function ClientCard({ client, users }: Props) {
+export function ClientCard({ client, users }: ClientCardProps) {
   return (
     <CardContainer>
       <p className="text-lg font-semibold text-white truncate">

@@ -1,23 +1,22 @@
 import { useState } from "react";
+import { Navigate } from "react-router";
 import SelectInput from "../../components/Form/Input/SelectInput";
 import { BigTitle } from "../../components/Title/BigTitle";
+import { Button } from "../../components/Button/Button";
 import { useCatalog } from "../../context/CatalogContext";
+import { useSession } from "../../context/SessionContext";
 import ExercisesCatalogField from "../../features/catalog/fields/ExercisesCatalogField";
-import { muscleOptions } from "../../features/catalog-exercise/types/muscle-options";
-
-const categoryOptions = [
-  { id: "Cardio", displayName: "Cardio" },
-  { id: "Fuerza", displayName: "Fuerza" },
-  { id: "Flexibilidad", displayName: "Flexibilidad" },
-];
-
-const categoryToApiType: Record<string, string> = {
-  Cardio: "cardio",
-  Fuerza: "strength",
-  Flexibilidad: "stretching",
-};
+import { muscleOptions } from "../../features/catalog-exercise/types/options";
+import { CatalogExercise } from "../../features/catalog-exercise/types/catalog-exercise.types";
+import { generateCatalogReport } from "../../utils/catalog-report";
+import { printCatalogReport } from "../../utils/console";
+import { categoryOptions } from "../../features/catalog-exercise/types/options";
+import { categoryToApiType } from "../../features/catalog/types/catalog-types";
 
 export default function Catalog() {
+  const [selectedCategory, setSelectedCategory] = useState("");
+  const [selectedMuscle, setSelectedMuscle] = useState("");
+
   const {
     catalog: localExercises,
     apiCatalog: externalExercises,
@@ -25,27 +24,57 @@ export default function Catalog() {
     loading,
     getMuscle,
     getType,
+    addExercise,
   } = useCatalog();
+  const { currentUser, isAdmin, isUser } = useSession();
 
-  const [selectedCategory, setSelectedCategory] = useState("");
-  const [selectedMuscle, setSelectedMuscle] = useState("");
+  if (currentUser && isUser(currentUser)) {
+    return <Navigate to="/dashboard/routine" replace />;
+  }
+
+  const isAdminUser = !!currentUser && isAdmin(currentUser);
+
+  const filteredLocalExercises = localExercises.filter((e) => {
+    const matchesCategory = selectedCategory
+      ? e.category === selectedCategory
+      : true;
+    const matchesMuscle = selectedMuscle ? e.muscle === selectedMuscle : true;
+    return matchesCategory && matchesMuscle;
+  });
+
+  function handleAddExternalExercise(exercise: CatalogExercise) {
+    addExercise(
+      {
+        exerciseName: exercise.exerciseName,
+        category: exercise.category,
+        muscle: exercise.muscle,
+        description: exercise.description,
+      },
+      true,
+    );
+  }
 
   function handleCategoryChange(category: string) {
     setSelectedCategory(category);
     setSelectedMuscle("");
-    getType(categoryToApiType[category]);
+    if (isAdminUser) getType(categoryToApiType[category]);
   }
 
   function handleMuscleChange(muscle: string) {
     setSelectedMuscle(muscle);
-    getMuscle(muscle);
+    if (isAdminUser) getMuscle(muscle);
   }
 
-  const filteredLocalExercises = localExercises.filter((e) => {
-    const matchesCategory = selectedCategory ? e.category === selectedCategory : true;
-    const matchesMuscle = selectedMuscle ? e.muscle === selectedMuscle : true;
-    return matchesCategory && matchesMuscle;
-  });
+  function handleGenerateReport() {
+    const filter = selectedMuscle
+      ? { kind: "muscle" as const, value: selectedMuscle }
+      : selectedCategory
+        ? { kind: "type" as const, value: categoryToApiType[selectedCategory] }
+        : undefined;
+
+    const report = generateCatalogReport(localExercises);
+    printCatalogReport(report, filter);
+  }
 
   return (
     <div className="p-8 w-full h-full mt-7 animate-slide-up-fade">
@@ -70,18 +99,33 @@ export default function Catalog() {
         )}
         <BigTitle className="text-center">Catálogo de ejercicios</BigTitle>
       </div>
-      <div className="flex flex-col mt-14">
-        <BigTitle className="text-xl ml-26 self-start">Locales</BigTitle>
+      {isAdminUser && externalExercises.length > 0 && (
+        <div className="flex justify-start ml-26 mt-6">
+          <Button
+            type="button"
+            onClick={handleGenerateReport}
+            className="w-auto px-7 py-3  mt-0"
+          >
+            Generar reporte
+          </Button>
+        </div>
+      )}
+      <div className="flex flex-col mt-6">
         <ExercisesCatalogField exercises={filteredLocalExercises} />
       </div>
-      <div className="flex flex-col mt-14">
-        <BigTitle className="text-xl ml-26 self-start">Externos</BigTitle>
-        <ExercisesCatalogField
-          exercises={externalExercises}
-          error={error}
-          loading={loading}
-        />
-      </div>
+      {isAdminUser && (
+        <div className="flex flex-col mt-14">
+          <BigTitle className="text-xl ml-26 self-start">
+            API Exercises
+          </BigTitle>
+          <ExercisesCatalogField
+            exercises={externalExercises}
+            error={error}
+            loading={loading}
+            onAdd={handleAddExternalExercise}
+          />
+        </div>
+      )}
     </div>
   );
 }

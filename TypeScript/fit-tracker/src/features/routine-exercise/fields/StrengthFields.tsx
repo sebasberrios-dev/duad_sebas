@@ -81,12 +81,7 @@ export default function StrengthFields({
       ))}
       <button
         type="button"
-        onClick={() =>
-          append({
-            reps: undefined as unknown as number,
-            weightKg: undefined as unknown as number,
-          })
-        }
+        onClick={() => append({ reps: undefined, weightKg: undefined })}
         className="w-full border border-green-700 text-emerald-600 rounded-lg py-2 text-sm hover:bg-green-900/30 transition cursor-pointer"
       >
         + Agregar set

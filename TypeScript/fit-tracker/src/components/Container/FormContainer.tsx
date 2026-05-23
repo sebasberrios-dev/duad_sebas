@@ -1,18 +1,12 @@
-import React from "react";
 import { JSX } from "react";
 import { twMerge } from "tailwind-merge";
-
-interface Props {
-  children: React.ReactNode;
-  onSubmit?: () => void;
-  className?: string;
-}
+import { FormContainerProps } from "./props/form-container-props";
 
 export const FormContainer = ({
   children,
   onSubmit,
   className,
-}: Props): JSX.Element => {
+}: FormContainerProps): JSX.Element => {
   return (
     <form
       onSubmit={onSubmit}

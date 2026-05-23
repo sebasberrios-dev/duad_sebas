@@ -1,15 +1,10 @@
 import { Controller, Control } from "react-hook-form";
-import { FCM_ZONES, FCM_ZONE_LABELS } from "../../../types/types";
+import { fcmOptions } from "../types/options";
 import TextInput from "../../../components/Form/Input/TextInput";
 import SelectInput from "../../../components/Form/Input/SelectInput";
 import { ExerciseFormData } from "../schema/exerciseSchema";
 import { FieldContainer } from "../../../components/Form/FieldContainer";
 import { FormLabel } from "../../../components/Form/FormLabel";
-
-const fcmOptions = FCM_ZONES.map((zone) => ({
-  id: zone,
-  displayName: FCM_ZONE_LABELS[zone],
-}));
 
 export function DistanceField({
   control,
