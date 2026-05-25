@@ -21,8 +21,8 @@ const cardioExerciseSchema = exerciseBaseSchema.extend({
 
 // Fuerza
 const setSchema = z.object({
-  reps: z.number({ error: "Ingresa un número" }).min(1).optional(),
-  weightKg: z.number({ error: "Ingresa un número" }).optional(),
+  reps: z.number({ error: "Ingresa un número" }).min(1),
+  weightKg: z.number({ error: "Ingresa un número" }),
 });
 const strengthSchema = z.object({
   sets: z.array(setSchema),

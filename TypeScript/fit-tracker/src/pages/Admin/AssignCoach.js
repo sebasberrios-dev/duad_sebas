@@ -1,0 +1,40 @@
+import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
+import { FormContainer } from "../../components/Container/FormContainer";
+import { FormTitle } from "../../components/Title/FormTitle";
+import { Button } from "../../components/Button/Button";
+import { ClientsField } from "../../features/assign-coach/fields/ClientsField";
+import { CoachsField } from "../../features/assign-coach/fields/CoachsField";
+import { useUsers } from "../../context/UserContext";
+import { useForm } from "react-hook-form";
+import { assignCoachSchema, } from "../../features/assign-coach/schema/assignCoachSchema";
+import { zodResolver } from "@hookform/resolvers/zod";
+export default function AssignCoach() {
+    const { users, coachs, updateCoach } = useUsers();
+    const { control, handleSubmit, setError, reset } = useForm({
+        resolver: zodResolver(assignCoachSchema),
+    });
+    function onSubmit(data) {
+        console.log("Asignando coach...");
+        const coach = coachs.find((c) => c.id === data.coachId);
+        const user = users.find((u) => u.id === data.clientId);
+        if (!coach) {
+            setError("coachId", { message: "Coach no encontrado" });
+            return;
+        }
+        if (!user) {
+            setError("clientId", { message: "Usuario no encontrado" });
+            return;
+        }
+        const newClient = {
+            id: user.id,
+            clientName: user.name,
+        };
+        const updatedCoach = {
+            ...coach,
+            clients: [...coach.clients, newClient],
+        };
+        updateCoach(updatedCoach);
+        reset();
+    }
+    return (_jsxs(FormContainer, { onSubmit: handleSubmit(onSubmit), className: "bg-gray-850 shadow-2xl", children: [_jsx(FormTitle, { children: "Asignar Coach" }), _jsx(ClientsField, { control: control }), _jsx(CoachsField, { control: control }), _jsx(Button, { type: "submit", children: "Asignar" })] }));
+}
