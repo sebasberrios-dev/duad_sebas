@@ -1,1 +1,1 @@
-export default function AssignCoach(): import("react/jsx-runtime").JSX.Element;
+export default function AssignCoach(): import("react/jsx-runtime").JSX.Element | null;

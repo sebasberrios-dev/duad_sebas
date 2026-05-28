@@ -4,5 +4,5 @@ export declare function useStoredList<T extends {
 }>(storageKey: string, schema: z.ZodType<T[]>): {
     items: T[];
     add: (item: T) => void;
-    update: (item: T) => void;
+    update: (id: number, partial: Partial<Omit<T, "id">>) => void;
 };

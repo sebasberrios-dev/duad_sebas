@@ -1,18 +1,30 @@
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
+import { useEffect } from "react";
+import { useNavigate } from "react-router";
 import { FormContainer } from "../../components/Container/FormContainer";
 import { FormTitle } from "../../components/Title/FormTitle";
 import { Button } from "../../components/Button/Button";
 import { ClientsField } from "../../features/assign-coach/fields/ClientsField";
 import { CoachsField } from "../../features/assign-coach/fields/CoachsField";
 import { useUsers } from "../../context/UserContext";
+import { useSession } from "../../context/SessionContext";
 import { useForm } from "react-hook-form";
 import { assignCoachSchema, } from "../../features/assign-coach/schema/assignCoachSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
 export default function AssignCoach() {
     const { users, coachs, updateCoach } = useUsers();
+    const { currentUser, isAdmin } = useSession();
+    const navigate = useNavigate();
     const { control, handleSubmit, setError, reset } = useForm({
         resolver: zodResolver(assignCoachSchema),
     });
+    useEffect(() => {
+        if (!currentUser || !isAdmin(currentUser)) {
+            navigate("/admin/login", { replace: true });
+        }
+    }, [currentUser]);
+    if (!currentUser || !isAdmin(currentUser))
+        return null;
     function onSubmit(data) {
         console.log("Asignando coach...");
         const coach = coachs.find((c) => c.id === data.coachId);
@@ -33,7 +45,8 @@ export default function AssignCoach() {
             ...coach,
             clients: [...coach.clients, newClient],
         };
-        updateCoach(updatedCoach);
+        const { id, ...partial } = updatedCoach;
+        updateCoach(id, partial);
         reset();
     }
     return (_jsxs(FormContainer, { onSubmit: handleSubmit(onSubmit), className: "bg-gray-850 shadow-2xl", children: [_jsx(FormTitle, { children: "Asignar Coach" }), _jsx(ClientsField, { control: control }), _jsx(CoachsField, { control: control }), _jsx(Button, { type: "submit", children: "Asignar" })] }));

@@ -1,24 +1,36 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
+import { EntityStore } from "./EntityStore";
 export function useStoredList(storageKey, schema) {
+    const storeRef = useRef(new EntityStore());
     const [items, setItems] = useState(() => {
         try {
             const stored = localStorage.getItem(storageKey);
             if (!stored)
                 return [];
             const result = schema.safeParse(JSON.parse(stored));
-            return result.success ? result.data : [];
+            if (!result.success)
+                return [];
+            result.data.forEach((item) => storeRef.current.add(item));
+            return storeRef.current.getAll();
         }
         catch {
             return [];
         }
     });
-    function save(updated) {
+    function sync() {
+        const updated = storeRef.current.getAll();
         setItems(updated);
         localStorage.setItem(storageKey, JSON.stringify(updated));
     }
     return {
         items,
-        add: (item) => save([...items, item]),
-        update: (item) => save(items.map((i) => (i.id === item.id ? item : i))),
+        add: (item) => {
+            storeRef.current.add(item);
+            sync();
+        },
+        update: (id, partial) => {
+            storeRef.current.update(id, partial);
+            sync();
+        },
     };
 }

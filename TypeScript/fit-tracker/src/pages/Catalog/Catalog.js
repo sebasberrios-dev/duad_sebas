@@ -1,6 +1,6 @@
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
-import { useState } from "react";
-import { Navigate } from "react-router";
+import { useState, useEffect } from "react";
+import { useNavigate } from "react-router";
 import SelectInput from "../../components/Form/Input/SelectInput";
 import { BigTitle } from "../../components/Title/BigTitle";
 import { Button } from "../../components/Button/Button";
@@ -16,10 +16,15 @@ export default function Catalog() {
     const [selectedCategory, setSelectedCategory] = useState("");
     const [selectedMuscle, setSelectedMuscle] = useState("");
     const { catalog: localExercises, apiCatalog: externalExercises, error, loading, getMuscle, getType, addExercise, } = useCatalog();
-    const { currentUser, isAdmin, isUser } = useSession();
-    if (currentUser && isUser(currentUser)) {
-        return _jsx(Navigate, { to: "/dashboard/routine", replace: true });
-    }
+    const { currentUser, isAdmin, isCoach } = useSession();
+    const navigate = useNavigate();
+    useEffect(() => {
+        if (!currentUser || (!isAdmin(currentUser) && !isCoach(currentUser))) {
+            navigate("/login", { replace: true });
+        }
+    }, [currentUser]);
+    if (!currentUser || (!isAdmin(currentUser) && !isCoach(currentUser)))
+        return null;
     const isAdminUser = !!currentUser && isAdmin(currentUser);
     const filteredLocalExercises = localExercises.filter((e) => {
         const matchesCategory = selectedCategory

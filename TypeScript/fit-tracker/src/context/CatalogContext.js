@@ -1,10 +1,16 @@
 import { jsx as _jsx } from "react/jsx-runtime";
-import { createContext, useContext, useEffect, useState } from "react";
+import { createContext, useContext, useEffect, useRef, useState } from "react";
 import { getExternalExercisesByMuscle, getExternalExercisesByType, } from "../features/catalog-exercise/services/externalExerciseApi";
 import { loadCatalog, saveCatalog } from "./utils/catalog-context-utils";
+import { EntityStore } from "./utils/EntityStore";
 const CatalogContext = createContext(null);
 export function CatalogProvider({ children }) {
-    const [catalog, setCatalog] = useState(loadCatalog);
+    const storeRef = useRef(new EntityStore());
+    const [catalog, setCatalog] = useState(() => {
+        const loaded = loadCatalog();
+        loaded.forEach((ex) => storeRef.current.add(ex));
+        return storeRef.current.getAll();
+    });
     const [apiCatalog, setApiCatalog] = useState([]);
     const [externalFilter, setExternalFilter] = useState(null);
     const [loading, setLoading] = useState(false);
@@ -34,12 +40,12 @@ export function CatalogProvider({ children }) {
     function addExercise(exercise, fromApi = false) {
         if (!exercise.category)
             return;
-        const alreadyExists = catalog.some((ex) => ex.exerciseName.toLowerCase() === exercise.exerciseName.toLowerCase());
+        const alreadyExists = storeRef.current.findBy((ex) => ex.exerciseName.toLowerCase() === exercise.exerciseName.toLowerCase()).length > 0;
         if (alreadyExists)
             return;
         const source = fromApi ? "api" : "local";
-        const withMeta = { ...exercise, id: Date.now(), source };
-        const updated = [...catalog, withMeta];
+        storeRef.current.add({ ...exercise, id: Date.now(), source });
+        const updated = storeRef.current.getAll();
         setCatalog(updated);
         saveCatalog(updated);
     }

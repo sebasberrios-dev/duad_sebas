@@ -25,7 +25,7 @@ export default function LoginUser() {
             return;
         }
         login(user.id);
-        navigate("/dashboard");
+        navigate("/dashboard/my_routines");
     }
     return (_jsx(FormSection, { children: _jsxs(FormContainer, { onSubmit: handleSubmit(onSubmit), children: [_jsx(FormTitle, { children: "Iniciar Sesi\u00F3n" }), _jsx(LoginUserFields, { control: control }), _jsx(Button, { type: "submit", children: "Ingresar" }), _jsx(AuthRedirectLink, { prompt: "\u00BFNo te has registrado?", linkText: "Registrate", onClick: () => navigate("/register") })] }) }));
 }

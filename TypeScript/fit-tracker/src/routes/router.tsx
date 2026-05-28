@@ -12,6 +12,8 @@ import CoachView from "../pages/CoachView/CoachView";
 import AssignCoach from "../pages/Admin/AssignCoach";
 import Catalog from "../pages/Catalog/Catalog";
 import Dashboard from "../pages/Dashboard/Dashboard";
+import SystemDashboard from "../pages/Dashboard/SystemDashboard";
+import MyRoutines from "../pages/MyRoutines/MyRoutines";
 
 const routes: RouteObject[] = [
   {
@@ -49,34 +51,13 @@ const routes: RouteObject[] = [
         path: "dashboard",
         element: <Dashboard />,
         children: [
-          // User
-          {
-            path: "routine",
-            element: <RegisterRoutine />,
-          },
-          {
-            path: "my_routines",
-            element: <></>, // placeholder
-          },
-          // Admin
-          {
-            path: "admin/register_exercise",
-            element: <RegisterCatalogExercise />,
-          },
-          {
-            path: "admin/assign_coach",
-            element: <AssignCoach />,
-          },
-          // Coach
-          {
-            path: "coach/my_clients",
-            element: <CoachView />,
-          },
-          // All roles
-          {
-            path: "catalog",
-            element: <Catalog />,
-          },
+          { index: true, element: <SystemDashboard /> },
+          { path: "admin/register_exercise", element: <RegisterCatalogExercise /> },
+          { path: "admin/assign_coach", element: <AssignCoach /> },
+          { path: "catalog", element: <Catalog /> },
+          { path: "routine", element: <RegisterRoutine /> },
+          { path: "my_routines", element: <MyRoutines /> },
+          { path: "coach/my_clients", element: <CoachView /> },
         ],
       },
     ],

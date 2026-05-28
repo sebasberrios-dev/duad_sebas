@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useState } from "react";
+import { createContext, useContext, useEffect, useRef, useState } from "react";
 import { CatalogExercise } from "../features/catalog-exercise/types/catalog-exercise.types";
 import {
   getExternalExercisesByMuscle,
@@ -9,11 +9,19 @@ import {
   ExternalFilter,
   CatalogContextValue,
 } from "./types/catalog-context-types";
+import { EntityStore } from "./utils/EntityStore";
 
 const CatalogContext = createContext<CatalogContextValue | null>(null);
 
 export function CatalogProvider({ children }: { children: React.ReactNode }) {
-  const [catalog, setCatalog] = useState<CatalogExercise[]>(loadCatalog);
+  const storeRef = useRef(new EntityStore<CatalogExercise>());
+
+  const [catalog, setCatalog] = useState<CatalogExercise[]>(() => {
+    const loaded = loadCatalog();
+    loaded.forEach((ex) => storeRef.current.add(ex));
+    return storeRef.current.getAll();
+  });
+
   const [apiCatalog, setApiCatalog] = useState<CatalogExercise[]>([]);
   const [externalFilter, setExternalFilter] = useState<ExternalFilter | null>(
     null,
@@ -52,15 +60,18 @@ export function CatalogProvider({ children }: { children: React.ReactNode }) {
     fromApi = false,
   ) {
     if (!exercise.category) return;
-    const alreadyExists = catalog.some(
-      (ex) =>
-        ex.exerciseName.toLowerCase() === exercise.exerciseName.toLowerCase(),
-    );
+
+    const alreadyExists =
+      storeRef.current.findBy(
+        (ex) =>
+          ex.exerciseName.toLowerCase() === exercise.exerciseName.toLowerCase(),
+      ).length > 0;
     if (alreadyExists) return;
 
     const source = fromApi ? ("api" as const) : ("local" as const);
-    const withMeta = { ...exercise, id: Date.now(), source };
-    const updated = [...catalog, withMeta];
+    storeRef.current.add({ ...exercise, id: Date.now(), source });
+
+    const updated = storeRef.current.getAll();
     setCatalog(updated);
     saveCatalog(updated);
   }

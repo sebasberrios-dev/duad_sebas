@@ -38,3 +38,4 @@ export declare function getUserInfo(users: User[], userId: User["id"]): {
     bodyWeight: number;
     routine: Routine;
 } | undefined;
+export declare function getWeeklyRecommendation(routine: Routine, bodyWeight: number, level: Level): string;

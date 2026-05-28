@@ -1,1 +1,1 @@
-export default function CoachView(): import("react/jsx-runtime").JSX.Element | undefined;
+export default function CoachView(): import("react/jsx-runtime").JSX.Element | null;

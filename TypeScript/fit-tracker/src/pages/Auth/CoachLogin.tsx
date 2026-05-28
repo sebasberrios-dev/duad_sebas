@@ -32,7 +32,7 @@ export default function LoginCoach() {
     }
 
     login(coach.id);
-    navigate("/dashboard");
+    navigate("/dashboard/coach/my_clients");
   }
 
   return (

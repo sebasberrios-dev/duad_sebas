@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useNavigate } from "react-router";
 import { useSession } from "../../context/SessionContext";
 import { useCatalog } from "../../context/CatalogContext";
 import { Exercise } from "../../types/interfaces";
@@ -35,11 +36,20 @@ export default function RegisterRoutine() {
   const [catalogExerciseToAdd, setCatalogExerciseToAdd] =
     useState<CatalogExercise | null>(null);
 
-  const { currentUser, updateCurrentUser, isUser } = useSession();
+  const { currentUser, updateCurrentUser, isUser, isAdmin } = useSession();
+  const navigate = useNavigate();
   const { catalog } = useCatalog();
   const { control, handleSubmit } = useForm<RegisterRoutineFormData>({
     resolver: zodResolver(registerRoutineSchema),
   });
+
+  useEffect(() => {
+    if (!currentUser || (!isUser(currentUser) && !isAdmin(currentUser))) {
+      navigate("/login", { replace: true });
+    }
+  }, [currentUser]);
+
+  if (!currentUser || (!isUser(currentUser) && !isAdmin(currentUser))) return null;
 
   const filteredExercises = catalog.filter((ex) => {
     const matchesCategory = selectedCategory

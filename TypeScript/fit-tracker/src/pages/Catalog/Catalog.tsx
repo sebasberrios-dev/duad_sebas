@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { Navigate } from "react-router";
+import { useState, useEffect } from "react";
+import { useNavigate } from "react-router";
 import SelectInput from "../../components/Form/Input/SelectInput";
 import { BigTitle } from "../../components/Title/BigTitle";
 import { Button } from "../../components/Button/Button";
@@ -26,11 +26,16 @@ export default function Catalog() {
     getType,
     addExercise,
   } = useCatalog();
-  const { currentUser, isAdmin, isUser } = useSession();
+  const { currentUser, isAdmin, isCoach } = useSession();
+  const navigate = useNavigate();
 
-  if (currentUser && isUser(currentUser)) {
-    return <Navigate to="/dashboard/routine" replace />;
-  }
+  useEffect(() => {
+    if (!currentUser || (!isAdmin(currentUser) && !isCoach(currentUser))) {
+      navigate("/login", { replace: true });
+    }
+  }, [currentUser]);
+
+  if (!currentUser || (!isAdmin(currentUser) && !isCoach(currentUser))) return null;
 
   const isAdminUser = !!currentUser && isAdmin(currentUser);
 

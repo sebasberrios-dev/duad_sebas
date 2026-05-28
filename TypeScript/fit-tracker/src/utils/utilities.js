@@ -162,3 +162,13 @@ export function getUserInfo(users, userId) {
         routine: user.routine,
     };
 }
+export function getWeeklyRecommendation(routine, bodyWeight, level) {
+    const { total } = getTotalDuration(routine);
+    const { totalCalories } = calculateAllCalories(routine, bodyWeight, level);
+    const { uniqueDays } = calculateWeeklyAvgCalories(routine, totalCalories);
+    if (uniqueDays > 5 || total > 300)
+        return "Considerá tener un día más de descanso esta semana.";
+    if (uniqueDays < 3 || total < 150)
+        return "Considerá agregar un día más de entrenamiento esta semana.";
+    return "Carga semanal equilibrada";
+}

@@ -1,1 +1,1 @@
-export default function RegisterCatalogExercise(): import("react/jsx-runtime").JSX.Element;
+export default function RegisterCatalogExercise(): import("react/jsx-runtime").JSX.Element | null;

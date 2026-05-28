@@ -11,13 +11,13 @@ export function SessionProvider({ children }) {
     const allUsers = [...users, ...coachs, ...admins];
     const currentUser = allUsers.find((u) => u.id === currentUserId) ?? null;
     function isUser(u) {
-        return u.role === "User";
+        return u?.role === "User";
     }
     function isCoach(u) {
-        return u.role === "Coach";
+        return u?.role === "Coach";
     }
     function isAdmin(u) {
-        return u.role === "Admin";
+        return u?.role === "Admin";
     }
     function login(userId) {
         setCurrentUserId(userId);
@@ -28,12 +28,18 @@ export function SessionProvider({ children }) {
         localStorage.removeItem("fit-tracker-session");
     }
     function updateCurrentUser(user) {
-        if (isUser(user))
-            updateUser(user);
-        else if (isCoach(user))
-            updateCoach(user);
-        else if (isAdmin(user))
-            updateAdmin(user);
+        if (isUser(user)) {
+            const { id, ...partial } = user;
+            updateUser(id, partial);
+        }
+        else if (isCoach(user)) {
+            const { id, ...partial } = user;
+            updateCoach(id, partial);
+        }
+        else if (isAdmin(user)) {
+            const { id, ...partial } = user;
+            updateAdmin(id, partial);
+        }
     }
     return (_jsx(SessionContext.Provider, { value: {
             currentUser,

@@ -18,13 +18,13 @@ export function SessionProvider({ children }: { children: React.ReactNode }) {
   const currentUser = allUsers.find((u) => u.id === currentUserId) ?? null;
 
   function isUser(u: AppUser): u is User {
-    return u.role === "User";
+    return u?.role === "User";
   }
   function isCoach(u: AppUser): u is Coach {
-    return u.role === "Coach";
+    return u?.role === "Coach";
   }
   function isAdmin(u: AppUser): u is Admin {
-    return u.role === "Admin";
+    return u?.role === "Admin";
   }
 
   function login(userId: number) {
@@ -38,9 +38,16 @@ export function SessionProvider({ children }: { children: React.ReactNode }) {
   }
 
   function updateCurrentUser(user: AppUser) {
-    if (isUser(user)) updateUser(user);
-    else if (isCoach(user)) updateCoach(user);
-    else if (isAdmin(user)) updateAdmin(user);
+    if (isUser(user)) {
+      const { id, ...partial } = user;
+      updateUser(id, partial);
+    } else if (isCoach(user)) {
+      const { id, ...partial } = user;
+      updateCoach(id, partial);
+    } else if (isAdmin(user)) {
+      const { id, ...partial } = user;
+      updateAdmin(id, partial);
+    }
   }
 
   return (

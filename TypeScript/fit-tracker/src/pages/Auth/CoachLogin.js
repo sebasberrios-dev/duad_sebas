@@ -24,7 +24,7 @@ export default function LoginCoach() {
             return;
         }
         login(coach.id);
-        navigate("/dashboard");
+        navigate("/dashboard/coach/my_clients");
     }
     return (_jsx(FormSection, { children: _jsxs(FormContainer, { onSubmit: handleSubmit(onSubmit), children: [_jsx(FormTitle, { children: "Iniciar Sesi\u00F3n" }), _jsx(LoginCoachFields, { control: control }), _jsx(Button, { type: "submit", children: "Ingresar" })] }) }));
 }

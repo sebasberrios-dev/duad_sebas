@@ -37,7 +37,7 @@ export default function StrengthFields({
                   <TextInput
                     id={`reps-${index}`}
                     type="number"
-                    value={field.value ?? ""}
+                    value={Number.isNaN(field.value) ? "" : (field.value ?? "")}
                     onChange={(v) =>
                       field.onChange(v === "" ? undefined : Number(v))
                     }
@@ -60,7 +60,7 @@ export default function StrengthFields({
                   <TextInput
                     id={`weight-${index}`}
                     type="number"
-                    value={field.value ?? ""}
+                    value={Number.isNaN(field.value) ? "" : (field.value ?? "")}
                     onChange={(v) =>
                       field.onChange(v === "" ? undefined : Number(v))
                     }
@@ -81,7 +81,7 @@ export default function StrengthFields({
       ))}
       <button
         type="button"
-        onClick={() => append({ reps: 0, weightKg: 0 })}
+        onClick={() => append({ reps: NaN, weightKg: NaN })}
         className="w-full border border-green-700 text-emerald-600 rounded-lg py-2 text-sm hover:bg-green-900/30 transition cursor-pointer"
       >
         + Agregar set

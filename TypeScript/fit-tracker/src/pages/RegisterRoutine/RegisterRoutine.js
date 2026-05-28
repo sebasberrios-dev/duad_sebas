@@ -1,5 +1,6 @@
 import { jsx as _jsx, jsxs as _jsxs, Fragment as _Fragment } from "react/jsx-runtime";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useNavigate } from "react-router";
 import { useSession } from "../../context/SessionContext";
 import { useCatalog } from "../../context/CatalogContext";
 import { DAYS_LIST } from "../../types/types";
@@ -23,11 +24,19 @@ export default function RegisterRoutine() {
     const [selectedCategory, setSelectedCategory] = useState("");
     const [selectedMuscle, setSelectedMuscle] = useState("");
     const [catalogExerciseToAdd, setCatalogExerciseToAdd] = useState(null);
-    const { currentUser, updateCurrentUser, isUser } = useSession();
+    const { currentUser, updateCurrentUser, isUser, isAdmin } = useSession();
+    const navigate = useNavigate();
     const { catalog } = useCatalog();
     const { control, handleSubmit } = useForm({
         resolver: zodResolver(registerRoutineSchema),
     });
+    useEffect(() => {
+        if (!currentUser || (!isUser(currentUser) && !isAdmin(currentUser))) {
+            navigate("/login", { replace: true });
+        }
+    }, [currentUser]);
+    if (!currentUser || (!isUser(currentUser) && !isAdmin(currentUser)))
+        return null;
     const filteredExercises = catalog.filter((ex) => {
         const matchesCategory = selectedCategory
             ? ex.category === selectedCategory

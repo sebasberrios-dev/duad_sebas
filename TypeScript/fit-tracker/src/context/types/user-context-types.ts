@@ -7,7 +7,7 @@ export interface UserContextValue {
   addUser: (user: User) => void;
   addCoach: (coach: Coach) => void;
   addAdmin: (admin: Admin) => void;
-  updateUser: (user: User) => void;
-  updateCoach: (coach: Coach) => void;
-  updateAdmin: (admin: Admin) => void;
+  updateUser: (id: number, partial: Partial<Omit<User, "id">>) => void;
+  updateCoach: (id: number, partial: Partial<Omit<Coach, "id">>) => void;
+  updateAdmin: (id: number, partial: Partial<Omit<Admin, "id">>) => void;
 }

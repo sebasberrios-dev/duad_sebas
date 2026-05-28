@@ -33,7 +33,7 @@ export default function LoginUser() {
     }
 
     login(user.id);
-    navigate("/dashboard");
+    navigate("/dashboard/my_routines");
   }
 
   return (
