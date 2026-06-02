@@ -1,4 +1,4 @@
-import { Routine, User } from "../types/interfaces";
+import { Routine } from "../types/interfaces";
 import {
   Days,
   fcmZone,
@@ -207,26 +207,6 @@ export function genUniqueId(): number {
   return Date.now() + Math.floor(Math.random() * 1000);
 }
 
-export function getUserInfo(
-  users: User[],
-  userId: User["id"],
-):
-  | {
-      name: string;
-      level: Level;
-      bodyWeight: number;
-      routine: Routine;
-    }
-  | undefined {
-  const user = users.find((u) => u.id === userId);
-  if (!user) return undefined;
-  return {
-    name: user.name,
-    level: user.level,
-    bodyWeight: user.bodyWeight,
-    routine: user.routine,
-  };
-}
 
 export function getWeeklyRecommendation(
   routine: Routine,

@@ -20,6 +20,13 @@ export class EntityStore<T extends { id: number }> {
     return true;
   }
 
+  replace(entity: T): boolean {
+    const index = this.items.findIndex((item) => item.id === entity.id);
+    if (index === -1) return false;
+    this.items[index] = { ...entity };
+    return true;
+  }
+
   update(id: number, partial: Partial<Omit<T, "id">>): T | undefined {
     const item = this.items.find((item) => item.id === id);
     if (!item) return undefined;

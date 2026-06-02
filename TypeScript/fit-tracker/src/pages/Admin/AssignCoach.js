@@ -12,8 +12,8 @@ import { useForm } from "react-hook-form";
 import { assignCoachSchema, } from "../../features/assign-coach/schema/assignCoachSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
 export default function AssignCoach() {
-    const { users, coachs, updateCoach } = useUsers();
-    const { currentUser, isAdmin } = useSession();
+    const { findById, replace } = useUsers();
+    const { currentUser, isAdmin, isCoach } = useSession();
     const navigate = useNavigate();
     const { control, handleSubmit, setError, reset } = useForm({
         resolver: zodResolver(assignCoachSchema),
@@ -26,9 +26,9 @@ export default function AssignCoach() {
     if (!currentUser || !isAdmin(currentUser))
         return null;
     function onSubmit(data) {
-        console.log("Asignando coach...");
-        const coach = coachs.find((c) => c.id === data.coachId);
-        const user = users.find((u) => u.id === data.clientId);
+        const found = findById(data.coachId);
+        const coach = found && isCoach(found) ? found : undefined;
+        const user = findById(data.clientId);
         if (!coach) {
             setError("coachId", { message: "Coach no encontrado" });
             return;
@@ -45,8 +45,7 @@ export default function AssignCoach() {
             ...coach,
             clients: [...coach.clients, newClient],
         };
-        const { id, ...partial } = updatedCoach;
-        updateCoach(id, partial);
+        replace(updatedCoach);
         reset();
     }
     return (_jsxs(FormContainer, { onSubmit: handleSubmit(onSubmit), className: "bg-gray-850 shadow-2xl", children: [_jsx(FormTitle, { children: "Asignar Coach" }), _jsx(ClientsField, { control: control }), _jsx(CoachsField, { control: control }), _jsx(Button, { type: "submit", children: "Asignar" })] }));

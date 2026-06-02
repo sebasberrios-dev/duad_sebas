@@ -6,7 +6,6 @@ import {
   getTotalDuration,
   calculateAllCalories,
   calculateWeeklyAvgCalories,
-  getUserInfo,
 } from "../utils/utilities";
 import { CatalogReport } from "./types";
 
@@ -112,19 +111,6 @@ export function printWeeklyLoad(routine: Routine, user: User): void {
   }
 }
 
-export function printClientsInfo(users: User[], userId: User["id"]) {
-  const info = getUserInfo(users, userId);
-  if (!info) return;
-  const { name, level, bodyWeight, routine } = info;
-  const { totalCalories } = calculateAllCalories(routine, bodyWeight, level);
-  const { uniqueDays } = calculateWeeklyAvgCalories(routine, totalCalories);
-  const { formatTotalDuration } = getTotalDuration(routine);
-  console.log(`${name} (${level})`);
-  console.log(`Rutina: ${routine.routineName}`);
-  console.log(
-    `Semana: ${uniqueDays} días | ${formatTotalDuration} | ${totalCalories} kcal`,
-  );
-}
 
 export function printCatalogReport(
   report: CatalogReport,

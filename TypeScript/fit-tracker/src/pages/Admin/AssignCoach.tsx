@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+﻿import { useEffect } from "react";
 import { useNavigate } from "react-router";
 import { FormContainer } from "../../components/Container/FormContainer";
 import { FormTitle } from "../../components/Title/FormTitle";
@@ -15,8 +15,8 @@ import {
 import { zodResolver } from "@hookform/resolvers/zod";
 
 export default function AssignCoach() {
-  const { users, coachs, updateCoach } = useUsers();
-  const { currentUser, isAdmin } = useSession();
+  const { findById, replace } = useUsers();
+  const { currentUser, isAdmin, isCoach } = useSession();
   const navigate = useNavigate();
   const { control, handleSubmit, setError, reset } =
     useForm<assignCoachFormData>({
@@ -32,9 +32,9 @@ export default function AssignCoach() {
   if (!currentUser || !isAdmin(currentUser)) return null;
 
   function onSubmit(data: assignCoachFormData) {
-    console.log("Asignando coach...");
-    const coach = coachs.find((c) => c.id === data.coachId);
-    const user = users.find((u) => u.id === data.clientId);
+    const found = findById(data.coachId);
+    const coach = found && isCoach(found) ? found : undefined;
+    const user = findById(data.clientId);
 
     if (!coach) {
       setError("coachId", { message: "Coach no encontrado" });
@@ -55,8 +55,7 @@ export default function AssignCoach() {
       clients: [...coach.clients, newClient],
     };
 
-    const { id, ...partial } = updatedCoach;
-    updateCoach(id, partial);
+    replace(updatedCoach);
     reset();
   }
 
@@ -72,3 +71,4 @@ export default function AssignCoach() {
     </FormContainer>
   );
 }
+

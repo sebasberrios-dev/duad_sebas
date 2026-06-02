@@ -7,15 +7,14 @@ import { SessionContextValue } from "./types/session-context-types";
 const SessionContext = createContext<SessionContextValue | null>(null);
 
 export function SessionProvider({ children }: { children: React.ReactNode }) {
-  const { users, coachs, admins, updateUser, updateCoach, updateAdmin } =
-    useUsers();
+  const { replace, findById } = useUsers();
   const [currentUserId, setCurrentUserId] = useState<number | null>(() => {
     const stored = localStorage.getItem("fit-tracker-session");
     return stored ? Number(stored) : null;
   });
 
-  const allUsers: AppUser[] = [...users, ...coachs, ...admins];
-  const currentUser = allUsers.find((u) => u.id === currentUserId) ?? null;
+  const currentUser =
+    currentUserId !== null ? (findById(currentUserId) ?? null) : null;
 
   function isUser(u: AppUser): u is User {
     return u?.role === "User";
@@ -38,16 +37,7 @@ export function SessionProvider({ children }: { children: React.ReactNode }) {
   }
 
   function updateCurrentUser(user: AppUser) {
-    if (isUser(user)) {
-      const { id, ...partial } = user;
-      updateUser(id, partial);
-    } else if (isCoach(user)) {
-      const { id, ...partial } = user;
-      updateCoach(id, partial);
-    } else if (isAdmin(user)) {
-      const { id, ...partial } = user;
-      updateAdmin(id, partial);
-    }
+    replace(user);
   }
 
   return (

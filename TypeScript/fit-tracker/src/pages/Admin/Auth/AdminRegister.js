@@ -11,20 +11,19 @@ import { FormContainer } from "../../../components/Container/FormContainer";
 import { FormTitle } from "../../../components/Title/FormTitle";
 import { Button } from "../../../components/Button/Button";
 export default function RegisterAdmin() {
-    const { addAdmin } = useUsers();
+    const { add } = useUsers();
     const { login } = useSession();
     const navigate = useNavigate();
     const { control, handleSubmit } = useForm({
         resolver: zodResolver(registerAdminSchema),
     });
     function onSubmit(data) {
-        console.log("Registrando admin...");
         const newAdmin = {
             id: Date.now(),
             role: "Admin",
             ...data,
         };
-        addAdmin(newAdmin);
+        add(newAdmin);
         login(newAdmin.id);
         navigate("/dashboard");
     }

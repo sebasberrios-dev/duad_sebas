@@ -1,4 +1,4 @@
-import { useUsers } from "../../context/UserContext";
+﻿import { useUsers } from "../../context/UserContext";
 import { useSession } from "../../context/SessionContext";
 import { useForm } from "react-hook-form";
 import {
@@ -16,7 +16,7 @@ import { genUniqueId } from "../../utils/utilities";
 import { Coach } from "../../types/interfaces";
 
 export default function RegisterCoach() {
-  const { addCoach } = useUsers();
+  const { add } = useUsers();
   const { login } = useSession();
   const navigate = useNavigate();
   const { control, handleSubmit } = useForm<registerCoachFormData>({
@@ -24,7 +24,6 @@ export default function RegisterCoach() {
   });
 
   function onSubmit(data: registerCoachFormData) {
-    console.log("Registrando coach...");
     const newCoach: Coach = {
       id: genUniqueId(),
       role: "Coach",
@@ -32,7 +31,7 @@ export default function RegisterCoach() {
       clients: [],
     };
 
-    addCoach(newCoach);
+    add(newCoach);
     login(newCoach.id);
     navigate("/dashboard");
   }
@@ -47,3 +46,4 @@ export default function RegisterCoach() {
     </FormSection>
   );
 }
+

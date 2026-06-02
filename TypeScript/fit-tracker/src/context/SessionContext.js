@@ -3,13 +3,12 @@ import { useUsers } from "./UserContext";
 import { useContext, useState, createContext } from "react";
 const SessionContext = createContext(null);
 export function SessionProvider({ children }) {
-    const { users, coachs, admins, updateUser, updateCoach, updateAdmin } = useUsers();
+    const { replace, findById } = useUsers();
     const [currentUserId, setCurrentUserId] = useState(() => {
         const stored = localStorage.getItem("fit-tracker-session");
         return stored ? Number(stored) : null;
     });
-    const allUsers = [...users, ...coachs, ...admins];
-    const currentUser = allUsers.find((u) => u.id === currentUserId) ?? null;
+    const currentUser = currentUserId !== null ? (findById(currentUserId) ?? null) : null;
     function isUser(u) {
         return u?.role === "User";
     }
@@ -28,18 +27,7 @@ export function SessionProvider({ children }) {
         localStorage.removeItem("fit-tracker-session");
     }
     function updateCurrentUser(user) {
-        if (isUser(user)) {
-            const { id, ...partial } = user;
-            updateUser(id, partial);
-        }
-        else if (isCoach(user)) {
-            const { id, ...partial } = user;
-            updateCoach(id, partial);
-        }
-        else if (isAdmin(user)) {
-            const { id, ...partial } = user;
-            updateAdmin(id, partial);
-        }
+        replace(user);
     }
     return (_jsx(SessionContext.Provider, { value: {
             currentUser,

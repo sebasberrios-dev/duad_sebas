@@ -55,7 +55,7 @@ export interface User extends Person {
     level: Level;
     bodyWeight: number;
     membership: Membership;
-    routine: Routine;
+    routineId: number;
 }
 export interface Client {
     id: number;

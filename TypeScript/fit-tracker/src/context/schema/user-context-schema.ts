@@ -1,14 +1,6 @@
 import { z } from "zod";
-import {
-  Admin,
-  Coach,
-  DailyWorkout,
-  Exercise,
-  Membership,
-  Routine,
-  User,
-} from "../../types/interfaces";
-import { fcmZoneSchema, experienceSchema, WORKOUT_STATUSES } from "../../types/types";
+import { Admin, Coach, Membership, User } from "../../types/interfaces";
+import { experienceSchema } from "../../types/types";
 
 const membershipSchema: z.ZodType<Membership> = z.object({
   id: z.number(),
@@ -17,42 +9,7 @@ const membershipSchema: z.ZodType<Membership> = z.object({
   status: z.enum(["active", "inactive"]),
 });
 
-const categorySchema = z.discriminatedUnion("category", [
-  z.object({
-    category: z.literal("Cardio"),
-    distanceKm: z.number(),
-    fcm: fcmZoneSchema,
-  }),
-  z.object({
-    category: z.literal("Fuerza"),
-    sets: z.array(z.object({ reps: z.number(), weightKg: z.number() })),
-  }),
-  z.object({ category: z.literal("Flexibilidad"), poses: z.number() }),
-  z.object({ category: z.literal("Descanso") }),
-]);
-
-const exerciseStorageSchema: z.ZodType<Exercise> = z.object({
-  id: z.number(),
-  exerciseName: z.string(),
-  durationMinutes: z.number(),
-  details: categorySchema,
-  status: z.enum(WORKOUT_STATUSES),
-});
-
-const dailyWorkoutSchema: z.ZodType<DailyWorkout> = z.object({
-  day: z.array(z.enum(["Lunes", "Martes", "Miercoles", "Jueves", "Viernes"])),
-  exercises: z.array(exerciseStorageSchema),
-  comment: z.string().optional(),
-});
-
-const routineStorageSchema: z.ZodType<Routine> = z.object({
-  id: z.number(),
-  routineName: z.string(),
-  routineStartDate: z.string(),
-  workouts: z.array(dailyWorkoutSchema),
-});
-
-export const userStorageSchema: z.ZodType<User> = z.object({
+export const userStorageSchema = z.object({
   id: z.number(),
   name: z.string(),
   age: z.number(),
@@ -61,10 +18,10 @@ export const userStorageSchema: z.ZodType<User> = z.object({
   level: z.enum(["Principiante", "Intermedio", "Avanzado"]),
   bodyWeight: z.number(),
   membership: membershipSchema,
-  routine: routineStorageSchema,
-});
+  routineId: z.number(),
+}) satisfies z.ZodType<User>;
 
-export const coachStorageSchema: z.ZodType<Coach> = z.object({
+export const coachStorageSchema = z.object({
   id: z.number(),
   name: z.string(),
   age: z.number(),
@@ -72,12 +29,18 @@ export const coachStorageSchema: z.ZodType<Coach> = z.object({
   role: z.literal("Coach"),
   experience: experienceSchema,
   clients: z.array(z.object({ id: z.number(), clientName: z.string() })),
-});
+}) satisfies z.ZodType<Coach>;
 
-export const adminStorageSchema: z.ZodType<Admin> = z.object({
+export const adminStorageSchema = z.object({
   id: z.number(),
   name: z.string(),
   age: z.number(),
   email: z.string(),
   role: z.literal("Admin"),
-});
+}) satisfies z.ZodType<Admin>;
+
+export const appUserStorageSchema = z.discriminatedUnion("role", [
+  userStorageSchema,
+  coachStorageSchema,
+  adminStorageSchema,
+]);

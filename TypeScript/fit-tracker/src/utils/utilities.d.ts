@@ -1,4 +1,4 @@
-import { Routine, User } from "../types/interfaces";
+import { Routine } from "../types/interfaces";
 import { Level } from "../types/types";
 export declare function calculateCalories(duration: number, calPerMin: number): number;
 export declare function calculateAllCalories(routine: Routine, bodyWeight: number, level: Level): {
@@ -32,10 +32,4 @@ export declare function calculateWeeklyAvgCalories(routine: Routine, totalCalori
     uniqueDays: number;
 };
 export declare function genUniqueId(): number;
-export declare function getUserInfo(users: User[], userId: User["id"]): {
-    name: string;
-    level: Level;
-    bodyWeight: number;
-    routine: Routine;
-} | undefined;
 export declare function getWeeklyRecommendation(routine: Routine, bodyWeight: number, level: Level): string;

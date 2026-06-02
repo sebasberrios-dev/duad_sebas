@@ -1,16 +1,11 @@
 import { jsx as _jsx } from "react/jsx-runtime";
-import { createContext, useContext, useEffect, useRef, useState } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
 import { getExternalExercisesByMuscle, getExternalExercisesByType, } from "../features/catalog-exercise/services/externalExerciseApi";
-import { loadCatalog, saveCatalog } from "./utils/catalog-context-utils";
-import { EntityStore } from "./utils/EntityStore";
+import { storedCatalogSchema } from "./schema/catalog-context-schema";
+import { useStoredList } from "./utils/user-context-utils";
 const CatalogContext = createContext(null);
 export function CatalogProvider({ children }) {
-    const storeRef = useRef(new EntityStore());
-    const [catalog, setCatalog] = useState(() => {
-        const loaded = loadCatalog();
-        loaded.forEach((ex) => storeRef.current.add(ex));
-        return storeRef.current.getAll();
-    });
+    const store = useStoredList("fit-tracker-catalog", storedCatalogSchema);
     const [apiCatalog, setApiCatalog] = useState([]);
     const [externalFilter, setExternalFilter] = useState(null);
     const [loading, setLoading] = useState(false);
@@ -40,17 +35,14 @@ export function CatalogProvider({ children }) {
     function addExercise(exercise, fromApi = false) {
         if (!exercise.category)
             return;
-        const alreadyExists = storeRef.current.findBy((ex) => ex.exerciseName.toLowerCase() === exercise.exerciseName.toLowerCase()).length > 0;
+        const alreadyExists = store.items.some((ex) => ex.exerciseName.toLowerCase() === exercise.exerciseName.toLowerCase());
         if (alreadyExists)
             return;
         const source = fromApi ? "api" : "local";
-        storeRef.current.add({ ...exercise, id: Date.now(), source });
-        const updated = storeRef.current.getAll();
-        setCatalog(updated);
-        saveCatalog(updated);
+        store.add({ ...exercise, id: Date.now(), source });
     }
     return (_jsx(CatalogContext.Provider, { value: {
-            catalog,
+            catalog: store.items,
             apiCatalog,
             loading,
             error,

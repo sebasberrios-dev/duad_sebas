@@ -151,17 +151,6 @@ export function calculateWeeklyAvgCalories(routine, totalCalories) {
 export function genUniqueId() {
     return Date.now() + Math.floor(Math.random() * 1000);
 }
-export function getUserInfo(users, userId) {
-    const user = users.find((u) => u.id === userId);
-    if (!user)
-        return undefined;
-    return {
-        name: user.name,
-        level: user.level,
-        bodyWeight: user.bodyWeight,
-        routine: user.routine,
-    };
-}
 export function getWeeklyRecommendation(routine, bodyWeight, level) {
     const { total } = getTotalDuration(routine);
     const { totalCalories } = calculateAllCalories(routine, bodyWeight, level);

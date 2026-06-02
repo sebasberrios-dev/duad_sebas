@@ -1,4 +1,4 @@
-import { useUsers } from "../../../context/UserContext";
+﻿import { useUsers } from "../../../context/UserContext";
 import { useSession } from "../../../context/SessionContext";
 import { useForm } from "react-hook-form";
 import {
@@ -15,7 +15,7 @@ import { Button } from "../../../components/Button/Button";
 import { Admin } from "../../../types/interfaces";
 
 export default function RegisterAdmin() {
-  const { addAdmin } = useUsers();
+  const { add } = useUsers();
   const { login } = useSession();
   const navigate = useNavigate();
   const { control, handleSubmit } = useForm<registerAdminFormData>({
@@ -23,14 +23,13 @@ export default function RegisterAdmin() {
   });
 
   function onSubmit(data: registerAdminFormData) {
-    console.log("Registrando admin...");
     const newAdmin: Admin = {
       id: Date.now(),
       role: "Admin",
       ...data,
     };
 
-    addAdmin(newAdmin);
+    add(newAdmin);
     login(newAdmin.id);
     navigate("/dashboard");
   }
@@ -45,3 +44,4 @@ export default function RegisterAdmin() {
     </FormSection>
   );
 }
+

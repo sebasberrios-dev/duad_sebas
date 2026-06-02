@@ -13,7 +13,7 @@ export function NameField<T extends { name: string }>({
     <Controller
       name={"name" as Path<T>}
       control={control}
-      render={({ field }) => (
+      render={({ field, fieldState }) => (
         <FieldContainer>
           <FormLabel htmlFor="name">
             <TextInput
@@ -24,6 +24,9 @@ export function NameField<T extends { name: string }>({
               placeholder="Nombre"
             />
           </FormLabel>
+          {fieldState.error && (
+            <p className="text-red-500 text-xs">{fieldState.error.message}</p>
+          )}
         </FieldContainer>
       )}
     />
@@ -39,7 +42,7 @@ export function AgeField<T extends { age: number }>({
     <Controller
       name={"age" as Path<T>}
       control={control}
-      render={({ field }) => (
+      render={({ field, fieldState }) => (
         <FieldContainer>
           <FormLabel htmlFor="age">
             <TextInput
@@ -50,6 +53,9 @@ export function AgeField<T extends { age: number }>({
               placeholder="Edad"
             />
           </FormLabel>
+          {fieldState.error && (
+            <p className="text-red-500 text-xs">{fieldState.error.message}</p>
+          )}
         </FieldContainer>
       )}
     />
@@ -65,7 +71,7 @@ export function EmailField<T extends { email: string }>({
     <Controller
       name={"email" as Path<T>}
       control={control}
-      render={({ field }) => (
+      render={({ field, fieldState }) => (
         <FieldContainer>
           <FormLabel htmlFor="email">
             <TextInput
@@ -76,6 +82,9 @@ export function EmailField<T extends { email: string }>({
               placeholder="Correo Electrónico"
             />
           </FormLabel>
+          {fieldState.error && (
+            <p className="text-red-500 text-xs">{fieldState.error.message}</p>
+          )}
         </FieldContainer>
       )}
     />

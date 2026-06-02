@@ -1,4 +1,4 @@
-import { calculatePace, formatDuration, formatDate, getTotalDuration, calculateAllCalories, calculateWeeklyAvgCalories, getUserInfo, } from "../utils/utilities";
+import { calculatePace, formatDuration, formatDate, getTotalDuration, calculateAllCalories, calculateWeeklyAvgCalories, } from "../utils/utilities";
 export function printUserInfo(user) {
     const { name, age, bodyWeight, level } = user;
     const { plan, startDate, status } = user.membership;
@@ -58,18 +58,6 @@ export function printWeeklyLoad(routine, user) {
     else if (uniqueDays < 3 || total < 150) {
         console.log("⚠️ Considera agregar un día más de entrenamiento esta semana.");
     }
-}
-export function printClientsInfo(users, userId) {
-    const info = getUserInfo(users, userId);
-    if (!info)
-        return;
-    const { name, level, bodyWeight, routine } = info;
-    const { totalCalories } = calculateAllCalories(routine, bodyWeight, level);
-    const { uniqueDays } = calculateWeeklyAvgCalories(routine, totalCalories);
-    const { formatTotalDuration } = getTotalDuration(routine);
-    console.log(`${name} (${level})`);
-    console.log(`Rutina: ${routine.routineName}`);
-    console.log(`Semana: ${uniqueDays} días | ${formatTotalDuration} | ${totalCalories} kcal`);
 }
 export function printCatalogReport(report, filter) {
     const filterLabel = filter ? `, ${filter.kind}: ${filter.value}` : "";

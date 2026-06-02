@@ -1,11 +1,13 @@
 import { useEffect } from "react";
 import { useNavigate } from "react-router";
 import { useSession } from "../../context/SessionContext";
+import { useRoutines } from "../../context/RoutineContext";
 import { BigTitle } from "../../components/Title/BigTitle";
 import { WorkoutDaySection } from "../../features/my-routines/WorkoutDaySection";
 
 export default function MyRoutines() {
   const { currentUser, isUser } = useSession();
+  const { findRoutineById } = useRoutines();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -16,7 +18,7 @@ export default function MyRoutines() {
 
   if (!currentUser || !isUser(currentUser)) return null;
 
-  const { routine } = currentUser;
+  const routine = findRoutineById(currentUser.routineId);
 
   return (
     <div className="p-8 w-full h-full mt-7 animate-slide-up-fade">

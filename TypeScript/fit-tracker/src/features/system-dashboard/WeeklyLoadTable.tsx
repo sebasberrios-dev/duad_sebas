@@ -1,3 +1,4 @@
+import { useRoutines } from "../../context/RoutineContext";
 import { WeeklyLoadTableProps } from "./props/weekly-load-table-props";
 import {
   getTotalDuration,
@@ -6,7 +7,16 @@ import {
   getWeeklyRecommendation,
 } from "../../utils/utilities";
 
-export function WeeklyLoadTable({ users, firstColumnLabel = "Usuario", showAge = false, showWeight = false }: WeeklyLoadTableProps) {
+export function WeeklyLoadTable({
+  users,
+  firstColumnLabel = "Usuario",
+  showAge = false,
+  showWeight = false,
+  showMinutes = false,
+  showCalories = false,
+}: WeeklyLoadTableProps) {
+  const { findRoutineById } = useRoutines();
+
   if (users.length === 0)
     return (
       <p className="text-sm text-gray-600">
@@ -24,35 +34,49 @@ export function WeeklyLoadTable({ users, firstColumnLabel = "Usuario", showAge =
           <th className="pb-2 font-medium">Nivel</th>
           <th className="pb-2 font-medium">Rutina</th>
           <th className="pb-2 font-medium">Duración</th>
+          {showMinutes && <th className="pb-2 font-medium">Minutos</th>}
+          {showCalories && <th className="pb-2 font-medium">Calorías</th>}
           <th className="pb-2 font-medium">Días</th>
           <th className="pb-2 font-medium">Recomendación</th>
         </tr>
       </thead>
       <tbody>
         {users.map((u) => {
-          const { formatTotalDuration } = getTotalDuration(u.routine);
+          const routine = findRoutineById(u.routineId);
+          if (!routine) return null;
+
+          const { formatTotalDuration, total } = getTotalDuration(routine);
           const { totalCalories } = calculateAllCalories(
-            u.routine,
+            routine,
             u.bodyWeight,
             u.level,
           );
           const { uniqueDays } = calculateWeeklyAvgCalories(
-            u.routine,
+            routine,
             totalCalories,
           );
           const recommendation = getWeeklyRecommendation(
-            u.routine,
+            routine,
             u.bodyWeight,
             u.level,
           );
+
           return (
             <tr key={u.id} className="border-b border-gray-800 last:border-0">
               <td className="py-3">{u.name}</td>
               {showAge && <td className="py-3 text-gray-400">{u.age}</td>}
-              {showWeight && <td className="py-3 text-gray-400">{u.bodyWeight} kg</td>}
+              {showWeight && (
+                <td className="py-3 text-gray-400">{u.bodyWeight} kg</td>
+              )}
               <td className="py-3 text-gray-400">{u.level}</td>
-              <td className="py-3 text-gray-400">{u.routine.routineName}</td>
+              <td className="py-3 text-gray-400">{routine.routineName}</td>
               <td className="py-3 text-gray-400">{formatTotalDuration}</td>
+              {showMinutes && (
+                <td className="py-3 text-gray-400">{total} min</td>
+              )}
+              {showCalories && (
+                <td className="py-3 text-gray-400">{totalCalories} kcal</td>
+              )}
               <td className="py-3 text-gray-400">{uniqueDays}</td>
               <td className="py-3 text-gray-400">{recommendation}</td>
             </tr>

@@ -6,36 +6,55 @@ export function useStoredList<T extends { id: number }>(
   storageKey: string,
   schema: z.ZodType<T[]>,
 ) {
-  const storeRef = useRef(new EntityStore<T>());
+  const storeRef = useRef<EntityStore<T> | null>(null);
 
-  const [items, setItems] = useState<T[]>(() => {
+  function getStore(): EntityStore<T> {
+    if (storeRef.current) return storeRef.current;
+    const store = new EntityStore<T>();
     try {
       const stored = localStorage.getItem(storageKey);
-      if (!stored) return [];
-      const result = schema.safeParse(JSON.parse(stored));
-      if (!result.success) return [];
-      result.data.forEach((item) => storeRef.current.add(item));
-      return storeRef.current.getAll();
-    } catch {
-      return [];
-    }
-  });
+      if (stored) {
+        const result = schema.safeParse(JSON.parse(stored));
+        if (result.success) {
+          result.data.forEach((item) => store.add(item));
+        }
+      }
+    } catch {}
+    storeRef.current = store;
+    return store;
+  }
+
+  const [items, setItems] = useState<T[]>(() => getStore().getAll());
 
   function sync() {
-    const updated = storeRef.current.getAll();
+    const updated = getStore().getAll();
     setItems(updated);
     localStorage.setItem(storageKey, JSON.stringify(updated));
+  }
+
+  function findBy(predicate: (entity: T) => boolean): T[] {
+    return getStore().findBy(predicate);
   }
 
   return {
     items,
     add: (item: T) => {
-      storeRef.current.add(item);
+      getStore().add(item);
+      sync();
+    },
+    replace: (entity: T) => {
+      getStore().replace(entity);
       sync();
     },
     update: (id: number, partial: Partial<Omit<T, "id">>) => {
-      storeRef.current.update(id, partial);
+      getStore().update(id, partial);
       sync();
     },
+    deleteById: (id: number) => {
+      getStore().deleteById(id);
+      sync();
+    },
+    findById: (id: number): T | undefined => getStore().findById(id),
+    findBy,
   };
 }

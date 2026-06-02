@@ -1,15 +1,19 @@
 import { useEffect } from "react";
 import { useCatalog } from "../../context/CatalogContext";
 import { useUsers } from "../../context/UserContext";
+import { useRoutines } from "../../context/RoutineContext";
 import { useSession } from "../../context/SessionContext";
 import { useNavigate } from "react-router";
 import { BigTitle } from "../../components/Title/BigTitle";
 import { StatsCard } from "../../features/system-dashboard/StatsCard";
 import { WeeklyLoadTable } from "../../features/system-dashboard/WeeklyLoadTable";
 import { QuickNav } from "../../features/system-dashboard/QuickNav";
+import { CategoryBreakdown } from "../../features/system-dashboard/CategoryBreakdown";
+import { RecentActivity } from "../../features/system-dashboard/RecentActivity";
 
 export default function SystemDashboard() {
   const { users, coachs, admins } = useUsers();
+  const { findRoutineById } = useRoutines();
   const { catalog } = useCatalog();
   const { currentUser, isAdmin } = useSession();
   const navigate = useNavigate();
@@ -20,13 +24,14 @@ export default function SystemDashboard() {
     }
   }, [currentUser]);
 
-  if (!currentUser || !isAdmin(currentUser)) {
-    return null;
-  }
+  if (!currentUser || !isAdmin(currentUser)) return null;
 
   const localCount = catalog.filter((ex) => ex.source === "local").length;
   const apiCount = catalog.filter((ex) => ex.source === "api").length;
-  const activeUsers = users.filter((u) => u.routine.workouts.length > 0);
+  const activeUsers = users.filter((u) => {
+    const routine = findRoutineById(u.routineId);
+    return routine !== undefined && routine.workouts.length > 0;
+  });
 
   return (
     <div className="p-8 w-full h-full overflow-y-auto animate-slide-up-fade">
@@ -35,7 +40,7 @@ export default function SystemDashboard() {
       <div className="grid grid-cols-3 gap-4 mb-10">
         <StatsCard
           title="Usuarios registrados"
-          value={users.length + coachs.length + admins.length}
+          value={users.length}
           detail={`${users.length} usuarios | ${coachs.length} coaches | ${admins.length} admins`}
         />
         <StatsCard
@@ -54,7 +59,22 @@ export default function SystemDashboard() {
         <p className="text-sm font-semibold text-gray-300 mb-4">
           Carga semanal por usuario
         </p>
-        <WeeklyLoadTable users={activeUsers} />
+        <WeeklyLoadTable users={activeUsers} showMinutes showCalories />
+      </div>
+
+      <div className="grid grid-cols-2 gap-6 mb-10">
+        <div className="bg-gray-900 rounded-xl p-5">
+          <p className="text-sm font-semibold text-gray-300 mb-4">
+            Ejercicios por categoría
+          </p>
+          <CategoryBreakdown users={activeUsers} />
+        </div>
+        <div className="bg-gray-900 rounded-xl p-5">
+          <p className="text-sm font-semibold text-gray-300 mb-4">
+            Actividad reciente
+          </p>
+          <RecentActivity users={activeUsers} />
+        </div>
       </div>
 
       <div className="bg-gray-900 rounded-xl p-5">

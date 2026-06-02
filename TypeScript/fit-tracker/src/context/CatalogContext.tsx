@@ -1,26 +1,23 @@
-import { createContext, useContext, useEffect, useRef, useState } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
 import { CatalogExercise } from "../features/catalog-exercise/types/catalog-exercise.types";
 import {
   getExternalExercisesByMuscle,
   getExternalExercisesByType,
 } from "../features/catalog-exercise/services/externalExerciseApi";
-import { loadCatalog, saveCatalog } from "./utils/catalog-context-utils";
+import { storedCatalogSchema } from "./schema/catalog-context-schema";
 import {
   ExternalFilter,
   CatalogContextValue,
 } from "./types/catalog-context-types";
-import { EntityStore } from "./utils/EntityStore";
+import { useStoredList } from "./utils/user-context-utils";
 
 const CatalogContext = createContext<CatalogContextValue | null>(null);
 
 export function CatalogProvider({ children }: { children: React.ReactNode }) {
-  const storeRef = useRef(new EntityStore<CatalogExercise>());
-
-  const [catalog, setCatalog] = useState<CatalogExercise[]>(() => {
-    const loaded = loadCatalog();
-    loaded.forEach((ex) => storeRef.current.add(ex));
-    return storeRef.current.getAll();
-  });
+  const store = useStoredList<CatalogExercise>(
+    "fit-tracker-catalog",
+    storedCatalogSchema,
+  );
 
   const [apiCatalog, setApiCatalog] = useState<CatalogExercise[]>([]);
   const [externalFilter, setExternalFilter] = useState<ExternalFilter | null>(
@@ -61,25 +58,20 @@ export function CatalogProvider({ children }: { children: React.ReactNode }) {
   ) {
     if (!exercise.category) return;
 
-    const alreadyExists =
-      storeRef.current.findBy(
-        (ex) =>
-          ex.exerciseName.toLowerCase() === exercise.exerciseName.toLowerCase(),
-      ).length > 0;
+    const alreadyExists = store.items.some(
+      (ex) =>
+        ex.exerciseName.toLowerCase() === exercise.exerciseName.toLowerCase(),
+    );
     if (alreadyExists) return;
 
     const source = fromApi ? ("api" as const) : ("local" as const);
-    storeRef.current.add({ ...exercise, id: Date.now(), source });
-
-    const updated = storeRef.current.getAll();
-    setCatalog(updated);
-    saveCatalog(updated);
+    store.add({ ...exercise, id: Date.now(), source });
   }
 
   return (
     <CatalogContext.Provider
       value={{
-        catalog,
+        catalog: store.items,
         apiCatalog,
         loading,
         error,

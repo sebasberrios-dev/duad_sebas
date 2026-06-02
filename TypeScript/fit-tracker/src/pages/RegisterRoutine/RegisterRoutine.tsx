@@ -1,8 +1,9 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router";
 import { useSession } from "../../context/SessionContext";
+import { useRoutines } from "../../context/RoutineContext";
 import { useCatalog } from "../../context/CatalogContext";
-import { Exercise } from "../../types/interfaces";
+import { Exercise, Routine } from "../../types/interfaces";
 import { Days, DAYS_LIST, DraftRoutine } from "../../types/types";
 import { CatalogExercise } from "../../features/catalog-exercise/types/catalog-exercise.types";
 import Modal from "../../components/Modal/Modal";
@@ -36,7 +37,8 @@ export default function RegisterRoutine() {
   const [catalogExerciseToAdd, setCatalogExerciseToAdd] =
     useState<CatalogExercise | null>(null);
 
-  const { currentUser, updateCurrentUser, isUser, isAdmin } = useSession();
+  const { currentUser, isUser, isAdmin } = useSession();
+  const { findRoutineById, replaceRoutine } = useRoutines();
   const navigate = useNavigate();
   const { catalog } = useCatalog();
   const { control, handleSubmit } = useForm<RegisterRoutineFormData>({
@@ -88,24 +90,21 @@ export default function RegisterRoutine() {
   }
 
   function handleSaveRoutine(data: RegisterRoutineFormData) {
-    if (!currentUser) return;
+    if (!currentUser || !isUser(currentUser)) return;
 
     const workouts = Object.entries(draft).flatMap(([day, exercises]) => {
       if (!isDays(day) || !exercises) return [];
-      return [{ day: [day], exercises, comment: draftComments[day] }];
+      return [{ day: [day] as Days[], exercises, comment: draftComments[day] }];
     });
 
-    const updatedUser = {
-      ...currentUser,
-      routine: {
-        id: Date.now(),
-        routineName: data.routineName,
-        routineStartDate: new Date().toISOString(),
-        workouts,
-      },
+    const routine: Routine = {
+      id: currentUser.routineId,
+      routineName: data.routineName,
+      routineStartDate: new Date().toISOString(),
+      workouts,
     };
 
-    updateCurrentUser(updatedUser);
+    replaceRoutine(routine);
     setDraft({});
     setDraftComments({});
   }
@@ -117,9 +116,10 @@ export default function RegisterRoutine() {
 
   function handleSeeRoutine() {
     if (!currentUser || !isUser(currentUser)) return;
-
-    printRoutine(currentUser.routine, currentUser);
-    printWeeklyLoad(currentUser.routine, currentUser);
+    const routine = findRoutineById(currentUser.routineId);
+    if (!routine) return;
+    printRoutine(routine, currentUser);
+    printWeeklyLoad(routine, currentUser);
   }
 
   return (
@@ -154,10 +154,7 @@ export default function RegisterRoutine() {
                 <p className="text-sm font-semibold text-white mb-1">{day}</p>
                 {draft[day]?.length ? (
                   draft[day]!.map((ex) => (
-                    <p
-                      key={ex.id}
-                      className="text-xs text-gray-400 pl-1 py-0.5"
-                    >
+                    <p key={ex.id} className="text-xs text-gray-400 pl-1 py-0.5">
                       {ex.exerciseName}
                     </p>
                   ))

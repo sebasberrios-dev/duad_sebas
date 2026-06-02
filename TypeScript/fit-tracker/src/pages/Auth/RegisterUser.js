@@ -1,5 +1,6 @@
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { useUsers } from "../../context/UserContext";
+import { useRoutines } from "../../context/RoutineContext";
 import { useSession } from "../../context/SessionContext";
 import { useForm } from "react-hook-form";
 import { registerUserSchema, } from "../../features/auth/user/schema/userSchema";
@@ -12,14 +13,21 @@ import { FormTitle } from "../../components/Title/FormTitle";
 import { Button } from "../../components/Button/Button";
 import { AuthRedirectLink } from "../../components/Form/AuthRedirectLink";
 export default function RegisterUser() {
-    const { addUser } = useUsers();
+    const { add } = useUsers();
+    const { addRoutine } = useRoutines();
     const { login } = useSession();
     const navigate = useNavigate();
     const { control, handleSubmit } = useForm({
         resolver: zodResolver(registerUserSchema),
     });
     function onSubmit(data) {
-        console.log("Registrando usuario...");
+        const routineId = Date.now() + 2;
+        const emptyRoutine = {
+            id: routineId,
+            routineName: "",
+            routineStartDate: "",
+            workouts: [],
+        };
         const newUser = {
             id: Date.now(),
             role: "User",
@@ -30,14 +38,10 @@ export default function RegisterUser() {
                 status: "active",
                 startDate: new Date().toISOString(),
             },
-            routine: {
-                id: Date.now() + 2,
-                routineName: "",
-                routineStartDate: "",
-                workouts: [],
-            },
+            routineId,
         };
-        addUser(newUser);
+        addRoutine(emptyRoutine);
+        add(newUser);
         login(newUser.id);
         navigate("/dashboard");
     }

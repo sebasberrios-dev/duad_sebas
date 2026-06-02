@@ -39,6 +39,14 @@ export default function Catalog() {
 
   const isAdminUser = !!currentUser && isAdmin(currentUser);
 
+  const availableExternalExercises = externalExercises.filter(
+    (api) =>
+      !localExercises.some(
+        (local) =>
+          local.exerciseName.toLowerCase() === api.exerciseName.toLowerCase(),
+      ),
+  );
+
   const filteredLocalExercises = localExercises.filter((e) => {
     const matchesCategory = selectedCategory
       ? e.category === selectedCategory
@@ -104,7 +112,7 @@ export default function Catalog() {
         )}
         <BigTitle className="text-center">Catálogo de ejercicios</BigTitle>
       </div>
-      {isAdminUser && externalExercises.length > 0 && (
+      {isAdminUser && availableExternalExercises.length > 0 && (
         <div className="flex justify-start ml-26 mt-6">
           <Button
             type="button"
@@ -124,7 +132,7 @@ export default function Catalog() {
             API Exercises
           </BigTitle>
           <ExercisesCatalogField
-            exercises={externalExercises}
+            exercises={availableExternalExercises}
             error={error}
             loading={loading}
             onAdd={handleAddExternalExercise}

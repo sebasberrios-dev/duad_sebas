@@ -12,21 +12,20 @@ import { FormTitle } from "../../components/Title/FormTitle";
 import { Button } from "../../components/Button/Button";
 import { genUniqueId } from "../../utils/utilities";
 export default function RegisterCoach() {
-    const { addCoach } = useUsers();
+    const { add } = useUsers();
     const { login } = useSession();
     const navigate = useNavigate();
     const { control, handleSubmit } = useForm({
         resolver: zodResolver(registerCoachSchema),
     });
     function onSubmit(data) {
-        console.log("Registrando coach...");
         const newCoach = {
             id: genUniqueId(),
             role: "Coach",
             ...data,
             clients: [],
         };
-        addCoach(newCoach);
+        add(newCoach);
         login(newCoach.id);
         navigate("/dashboard");
     }

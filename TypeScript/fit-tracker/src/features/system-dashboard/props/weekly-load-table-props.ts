@@ -5,4 +5,6 @@ export interface WeeklyLoadTableProps {
   firstColumnLabel?: string;
   showAge?: boolean;
   showWeight?: boolean;
+  showMinutes?: boolean;
+  showCalories?: boolean;
 }
