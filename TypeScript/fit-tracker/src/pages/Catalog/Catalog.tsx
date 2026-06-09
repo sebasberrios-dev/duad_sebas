@@ -3,7 +3,7 @@ import { useNavigate } from "react-router";
 import SelectInput from "../../components/Form/Input/SelectInput";
 import { BigTitle } from "../../components/Title/BigTitle";
 import { Button } from "../../components/Button/Button";
-import { useCatalog } from "../../context/CatalogContext";
+import { useCatalog } from "../../context/AppStore";
 import { useSession } from "../../context/SessionContext";
 import ExercisesCatalogField from "../../features/catalog/fields/ExercisesCatalogField";
 import { muscleOptions } from "../../features/catalog-exercise/types/options";
@@ -35,7 +35,8 @@ export default function Catalog() {
     }
   }, [currentUser]);
 
-  if (!currentUser || (!isAdmin(currentUser) && !isCoach(currentUser))) return null;
+  if (!currentUser || (!isAdmin(currentUser) && !isCoach(currentUser)))
+    return null;
 
   const isAdminUser = !!currentUser && isAdmin(currentUser);
 

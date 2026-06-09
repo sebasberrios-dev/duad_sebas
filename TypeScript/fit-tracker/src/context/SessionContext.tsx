@@ -1,5 +1,5 @@
 import { AppUser, User, Coach, Admin } from "../types/interfaces";
-import { useUsers } from "./UserContext";
+import { useUsers } from "./AppStore";
 import { useContext, useState, createContext } from "react";
 import React from "react";
 import { SessionContextValue } from "./types/session-context-types";

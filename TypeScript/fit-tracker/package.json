@@ -14,6 +14,7 @@
     "@hookform/resolvers": "^5.2.2",
     "@tailwindcss/cli": "^4.2.4",
     "@tailwindcss/vite": "^4.2.4",
+    "jspdf": "^4.2.1",
     "react": "^19.2.5",
     "react-dom": "^19.2.5",
     "react-hook-form": "^7.73.1",

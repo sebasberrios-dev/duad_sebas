@@ -1,8 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router";
 import { useSession } from "../../context/SessionContext";
-import { useRoutines } from "../../context/RoutineContext";
-import { useCatalog } from "../../context/CatalogContext";
+import { useRoutines, useCatalog } from "../../context/AppStore";
 import { Exercise, Routine } from "../../types/interfaces";
 import { Days, DAYS_LIST, DraftRoutine } from "../../types/types";
 import { CatalogExercise } from "../../features/catalog-exercise/types/catalog-exercise.types";
@@ -51,7 +50,8 @@ export default function RegisterRoutine() {
     }
   }, [currentUser]);
 
-  if (!currentUser || (!isUser(currentUser) && !isAdmin(currentUser))) return null;
+  if (!currentUser || (!isUser(currentUser) && !isAdmin(currentUser)))
+    return null;
 
   const filteredExercises = catalog.filter((ex) => {
     const matchesCategory = selectedCategory
@@ -154,7 +154,10 @@ export default function RegisterRoutine() {
                 <p className="text-sm font-semibold text-white mb-1">{day}</p>
                 {draft[day]?.length ? (
                   draft[day]!.map((ex) => (
-                    <p key={ex.id} className="text-xs text-gray-400 pl-1 py-0.5">
+                    <p
+                      key={ex.id}
+                      className="text-xs text-gray-400 pl-1 py-0.5"
+                    >
                       {ex.exerciseName}
                     </p>
                   ))

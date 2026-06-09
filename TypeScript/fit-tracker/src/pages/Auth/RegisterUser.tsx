@@ -1,5 +1,4 @@
-import { useUsers } from "../../context/UserContext";
-import { useRoutines } from "../../context/RoutineContext";
+import { useUsers, useRoutines } from "../../context/AppStore";
 import { useSession } from "../../context/SessionContext";
 import { useForm } from "react-hook-form";
 import {
@@ -51,7 +50,7 @@ export default function RegisterUser() {
     addRoutine(emptyRoutine);
     add(newUser);
     login(newUser.id);
-    navigate("/dashboard");
+    navigate("/dashboard/my_routines");
   }
 
   return (

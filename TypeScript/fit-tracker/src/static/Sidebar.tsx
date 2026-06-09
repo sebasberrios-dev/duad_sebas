@@ -9,6 +9,7 @@ import {
   IconLogout,
   IconMyRoutines,
   IconRoutine,
+  IconSystem,
 } from "../features/sidebar/icons";
 import { NavItem } from "../features/sidebar/NavItem";
 import { AppUser } from "../types/interfaces";
@@ -101,6 +102,13 @@ export function Sidebar({ collapsed, onToggle }: SidebarProps): JSX.Element {
 
         {role === "Admin" && (
           <>
+            <NavItem
+              to="/dashboard"
+              icon={<IconSystem />}
+              label="Sistema"
+              collapsed={collapsed}
+              end
+            />
             <NavItem
               to="/dashboard/admin/assign_coach"
               icon={<IconAssign />}

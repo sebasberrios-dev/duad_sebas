@@ -5,7 +5,7 @@ import { FormTitle } from "../../components/Title/FormTitle";
 import { Button } from "../../components/Button/Button";
 import { ClientsField } from "../../features/assign-coach/fields/ClientsField";
 import { CoachsField } from "../../features/assign-coach/fields/CoachsField";
-import { useUsers } from "../../context/UserContext";
+import { useUsers } from "../../context/AppStore";
 import { useSession } from "../../context/SessionContext";
 import { useForm } from "react-hook-form";
 import {
@@ -71,4 +71,3 @@ export default function AssignCoach() {
     </FormContainer>
   );
 }
-

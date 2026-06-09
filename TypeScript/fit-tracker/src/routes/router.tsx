@@ -1,4 +1,6 @@
-import { createBrowserRouter, RouteObject } from "react-router";
+import { createBrowserRouter, RouteObject, useNavigate } from "react-router";
+import { useEffect } from "react";
+import { useSession } from "../context/SessionContext";
 import App from "../App";
 import RegisterCatalogExercise from "../pages/Admin/RegisterCatalogExercise";
 import RegisterUser from "../pages/Auth/RegisterUser";
@@ -15,11 +17,31 @@ import Dashboard from "../pages/Dashboard/Dashboard";
 import SystemDashboard from "../pages/Dashboard/SystemDashboard";
 import MyRoutines from "../pages/MyRoutines/MyRoutines";
 
+function RootRedirect() {
+  const { currentUser, isUser, isCoach, isAdmin } = useSession();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!currentUser) {
+      navigate("/login", { replace: true });
+    } else if (isUser(currentUser)) {
+      navigate("/dashboard/my_routines", { replace: true });
+    } else if (isCoach(currentUser)) {
+      navigate("/dashboard/coach/my_clients", { replace: true });
+    } else if (isAdmin(currentUser)) {
+      navigate("/dashboard", { replace: true });
+    }
+  }, [currentUser]);
+
+  return null;
+}
+
 const routes: RouteObject[] = [
   {
     path: "/",
     element: <App />,
     children: [
+      { index: true, element: <RootRedirect /> },
       // Auth routes (no sidebar)
       {
         path: "login",

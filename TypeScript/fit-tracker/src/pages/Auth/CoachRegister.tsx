@@ -1,4 +1,4 @@
-﻿import { useUsers } from "../../context/UserContext";
+﻿import { useUsers } from "../../context/AppStore";
 import { useSession } from "../../context/SessionContext";
 import { useForm } from "react-hook-form";
 import {
@@ -33,7 +33,7 @@ export default function RegisterCoach() {
 
     add(newCoach);
     login(newCoach.id);
-    navigate("/dashboard");
+    navigate("/dashboard/coach/my_clients");
   }
 
   return (
@@ -46,4 +46,3 @@ export default function RegisterCoach() {
     </FormSection>
   );
 }
-

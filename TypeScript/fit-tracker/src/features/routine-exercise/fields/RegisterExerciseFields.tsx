@@ -2,7 +2,7 @@ import { Controller } from "react-hook-form";
 import { FormLabel } from "../../../components/Form/FormLabel";
 import { FieldContainer } from "../../../components/Form/FieldContainer";
 import SelectInput from "../../../components/Form/Input/SelectInput";
-import { useCatalog } from "../../../context/CatalogContext";
+import { useCatalog } from "../../../context/AppStore";
 import { RegisterExerciseProps } from "../props/register-exercises-props";
 import { ExerciseCategory, EXERCISES_CATEGORIES } from "../../../types/types";
 

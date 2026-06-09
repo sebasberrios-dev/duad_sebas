@@ -1,4 +1,4 @@
-import { useRoutines } from "../../context/RoutineContext";
+import { useRoutines } from "../../context/AppStore";
 import { WeeklyLoadTableProps } from "./props/weekly-load-table-props";
 import {
   getTotalDuration,

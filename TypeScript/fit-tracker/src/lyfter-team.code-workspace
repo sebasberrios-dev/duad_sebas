@@ -1,9 +1,7 @@
 {
   "folders": [
-	{
-		"name": "lyfter-team",
-		"path": "../../../.."
-	}
-],
-  "settings": {}
+    {
+      "path": "../../..",
+    },
+  ],
 }

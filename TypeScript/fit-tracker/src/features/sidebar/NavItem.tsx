@@ -7,10 +7,12 @@ export function NavItem({
   icon,
   label,
   collapsed,
+  end,
 }: NavItemProps): JSX.Element {
   return (
     <NavLink
       to={to}
+      end={end}
       title={collapsed ? label : undefined}
       className={({ isActive }) =>
         `flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors duration-150 ${

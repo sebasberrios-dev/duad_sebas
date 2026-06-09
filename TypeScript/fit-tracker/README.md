@@ -1,76 +1,131 @@
-# Fit Tracker
+# FitTracker
 
-Aplicación web de seguimiento de rutinas de ejercicio construida con React, TypeScript y Vite.
-
-## Descripción
-
-Fit Tracker permite a los usuarios registrarse, iniciar sesión y gestionar su rutina de ejercicios. Los usuarios pueden armar un catálogo de ejercicios y asociarlos a su perfil con detalles específicos según la categoría (Cardio, Fuerza o Flexibilidad). Al finalizar, pueden ver un resumen completo de su rutina con estadísticas de calorías, duración y ritmo.
+Aplicación web de seguimiento de rutinas de ejercicio construida con React 19, TypeScript y Vite. Soporta tres roles de usuario (Usuario, Coach, Administrador) con dashboards independientes y persistencia en `localStorage`.
 
 ## Tecnologías
 
-- **React 19** + **TypeScript**
+- **React 19** + **TypeScript** (modo estricto)
 - **Vite** como bundler
-- **React Hook Form** + **Zod** para manejo y validación de formularios
-- **React Router** para navegación
-- **Tailwind CSS** para estilos
+- **React Router v7** (data router) para navegación y guardas de ruta
+- **React Hook Form v7** + **Zod v4** para manejo y validación de formularios
+- **Tailwind CSS v4** para estilos
+- **jsPDF** para exportación de reportes en PDF
 
-## Arquitectura de datos (sin API)
+## Arquitectura de datos
 
-Al no contar con una API ni base de datos real, la persistencia se resuelve con **`localStorage`** como capa de almacenamiento. Toda la lógica de lectura y escritura está centralizada en tres contextos de React:
+La persistencia se resuelve con `localStorage` como capa de almacenamiento. Toda la lógica está centralizada en un único proveedor global.
 
-### `UserContext`
+### `EntityStore<T>`
 
-Actúa como la "base de datos" de usuarios. Almacena el array completo de usuarios registrados en `localStorage` y expone funciones para agregar (`addUser`) y actualizar (`updateUser`) usuarios. Cualquier componente que necesite leer o modificar datos de usuarios consume este contexto.
+Clase genérica que implementa las operaciones CRUD básicas: `add`, `getAll`, `findById`, `replace`, `update`, `deleteById`, `findBy`. Opera en memoria y es serializable a JSON.
+
+### `useStoredList<T>`
+
+Hook de React que envuelve `EntityStore<T>` con sincronización automática a `localStorage` y validación con Zod al cargar. Incluye una guarda de inicialización lazy para evitar duplicados en React Strict Mode.
+
+### `AppStoreProvider`
+
+Proveedor único que compone tres instancias de `useStoredList` (usuarios, rutinas, catálogo) y expone el estado global a través de `AppStoreContext`. Exporta hooks de acceso por dominio: `useUsers()`, `useRoutines()`, `useCatalog()`.
 
 ### `SessionContext`
 
-Maneja la sesión activa. En lugar de guardar todo el objeto del usuario en sesión, guarda únicamente el `id` del usuario activo en `localStorage`. Para obtener el `currentUser` completo, busca ese `id` dentro del array que provee `UserContext`. Esto garantiza que si el usuario es actualizado (por ejemplo al agregar un ejercicio a su rutina), la sesión siempre refleja los datos más recientes sin necesidad de sincronización manual.
+Maneja la sesión activa guardando únicamente el `id` del usuario en `localStorage`. Obtiene el objeto completo desde `AppStore` en cada render, garantizando que la sesión siempre refleje datos actualizados.
 
-> Aclaración: `SessionContext` no es un almacén de datos — es una capa de acceso que depende de `UserContext`. Por eso vive anidado dentro de `UserProvider` en el árbol de providers.
+### Catálogo de ejercicios
 
-### `CatalogContext`
+El catálogo se carga desde la API pública de ExerciseDB (RapidAPI) al iniciar la aplicación. Si la API no está disponible, se usa el catálogo local guardado en `localStorage` como fallback.
 
-Almacena el catálogo de ejercicios disponibles para seleccionar al registrar una rutina. También persiste en `localStorage`. El catálogo no está asociado a ningún usuario — es un recurso compartido que cualquier usuario puede consultar.
+## Roles y funcionalidades
+
+### Usuario
+
+- Registrar y visualizar su rutina semanal de ejercicios
+- Ver estadísticas: calorías estimadas, duración total, recomendación semanal
+
+### Coach
+
+- Ver el listado de sus clientes asignados
+- Acceder al catálogo de ejercicios
+
+### Administrador
+
+- Dashboard del estado del sistema: usuarios registrados, catálogo, rutinas activas, carga semanal, actividad reciente
+- Asignar coaches a usuarios
+- Agregar ejercicios locales al catálogo
+- Exportar reporte completo del sistema en PDF (catálogo + perfiles de usuario)
 
 ## Estructura del proyecto
 
 ```
 src/
-├── components/        # Componentes reutilizables (inputs, etc.)
-├── context/           # UserContext, SessionContext, CatalogContext
+├── components/          # Componentes UI reutilizables (inputs, labels, títulos)
+├── context/
+│   ├── AppStore.tsx     # Proveedor global único + hooks de acceso por dominio
+│   ├── SessionContext.tsx
+│   ├── types/           # Interfaces de los valores de contexto
+│   └── utils/           # EntityStore, useStoredList, schemas Zod
+├── features/            # Componentes organizados por feature
+│   ├── auth/            # Campos de formulario reutilizables (email, password, etc.)
+│   ├── catalog-exercise/# Tipos y schemas del catálogo
+│   ├── sidebar/         # Sidebar, NavItem, iconos
+│   └── system-dashboard/# StatsCard, WeeklyLoadTable, CategoryBreakdown, etc.
 ├── pages/
-│   ├── Admin/         # Registro de ejercicios al catálogo
-│   ├── RegisterExercise/  # Registro de ejercicios en la rutina del usuario
-│   └── User/          # Registro e inicio de sesión de usuarios
-├── routes/            # Configuración de React Router
-├── types/             # Interfaces y tipos TypeScript
-└── utils/             # Funciones de cálculo y formato (calorías, duración, ritmo, etc.)
+│   ├── Admin/           # RegisterCatalogExercise, AssignCoach, auth de admin
+│   ├── Auth/            # LoginUser, RegisterUser, CoachLogin, CoachRegister
+│   ├── Catalog/         # Vista del catálogo de ejercicios
+│   ├── CoachView/       # Vista de clientes del coach
+│   ├── Dashboard/       # Dashboard layout + SystemDashboard
+│   ├── MyRoutines/      # Historial de rutinas del usuario
+│   └── RegisterRoutine/ # Formulario de registro de rutina
+├── routes/              # Configuración de React Router + RootRedirect
+├── static/              # Sidebar (componente con estado de colapso)
+├── types/               # Interfaces globales (User, Coach, Admin, Routine, etc.)
+└── utils/               # Utilidades: cálculo de calorías, formateo, reporte, exportación PDF
 ```
 
 ## Rutas
 
-| Ruta              | Página                           |
-| ----------------- | -------------------------------- |
-| `/`               | Registro de usuario              |
-| `/login`          | Inicio de sesión                 |
-| `/exercise`       | Registrar ejercicio en la rutina |
-| `/admin/exercise` | Agregar ejercicio al catálogo    |
+| Ruta                              | Acceso    | Página                          |
+| --------------------------------- | --------- | ------------------------------- |
+| `/`                               | Todos     | Redirige según rol activo       |
+| `/login`                          | Público   | Inicio de sesión de usuario     |
+| `/register`                       | Público   | Registro de usuario             |
+| `/coach/login`                    | Público   | Inicio de sesión de coach       |
+| `/coach/register`                 | Público   | Registro de coach               |
+| `/admin/login`                    | Público   | Inicio de sesión de admin       |
+| `/admin/register`                 | Público   | Registro de admin               |
+| `/dashboard`                      | Admin     | Estado del sistema              |
+| `/dashboard/admin/assign_coach`   | Admin     | Asignar coach a usuarios        |
+| `/dashboard/admin/register_exercise` | Admin  | Agregar ejercicio al catálogo   |
+| `/dashboard/catalog`              | Admin/Coach | Catálogo de ejercicios        |
+| `/dashboard/routine`              | Usuario   | Registrar rutina                |
+| `/dashboard/my_routines`          | Usuario   | Ver mis rutinas                 |
+| `/dashboard/coach/my_clients`     | Coach     | Ver mis clientes                |
 
 ## Instrucciones para correr el proyecto
 
 ```bash
-npm install
-npm run dev
+pnpm install
+pnpm dev
 ```
 
-### Flujo de uso
+## Flujo de uso por rol
 
-1. Ir a `/admin/exercise` y agregar al menos un ejercicio al catálogo (nombre, categoría y descripción).
-2. Registrarse en `/` con nombre, edad, peso, nivel y plan de membresía. Al registrarse, se crea la sesión automáticamente y redirige a `/exercise`.
-3. En `/exercise`, seleccionar un ejercicio del catálogo, completar los detalles según la categoría y guardar. El ejercicio se guarda en la rutina del usuario activo.
-4. Hacer click en **"Ver mi rutina"** para imprimir en consola el resumen completo de la rutina con estadísticas.
-5. Para cambiar de usuario, ir a `/login` e ingresar el nombre de un usuario ya registrado.
+### Administrador
+1. Registrarse en `/admin/register` e ingresar en `/admin/login`.
+2. Desde el sidebar: ir a **Añadir ejercicio** para poblar el catálogo local.
+3. Ir a **Asignar Coach** para vincular coaches con usuarios registrados.
+4. El dashboard principal muestra el estado global del sistema.
+5. Hacer clic en **Descargar reporte PDF** para exportar el reporte completo.
+
+### Usuario
+1. Registrarse en `/register` e ingresar en `/login`.
+2. En **Registrar rutina**, seleccionar ejercicios del catálogo y completar los detalles según la categoría (Cardio, Fuerza o Flexibilidad).
+3. En **Ver mis rutinas**, consultar el historial con estadísticas de calorías, duración y recomendación semanal.
+
+### Coach
+1. Registrarse en `/coach/register` e ingresar en `/coach/login`.
+2. En **Mis clientes**, ver el listado de usuarios asignados.
+3. En **Catálogo**, consultar los ejercicios disponibles.
 
 > Los datos persisten en `localStorage`, por lo que se mantienen al recargar la página.
-
----

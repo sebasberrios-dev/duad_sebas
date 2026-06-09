@@ -7,7 +7,7 @@ import {
   CatalogExerciseFormData,
 } from "../../features/catalog-exercise/schema/catalogSchema";
 import RegisterCatalogExerciseFields from "../../features/catalog-exercise/fields/RegisterCatalogExerciseFields";
-import { useCatalog } from "../../context/CatalogContext";
+import { useCatalog } from "../../context/AppStore";
 import { useSession } from "../../context/SessionContext";
 import { FormTitle } from "../../components/Title/FormTitle";
 import { FormContainer } from "../../components/Container/FormContainer";

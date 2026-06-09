@@ -1,4 +1,4 @@
-import { useRoutines } from "../../context/RoutineContext";
+import { useRoutines } from "../../context/AppStore";
 import { Routine, User } from "../../types/interfaces";
 import { formatDate } from "../../utils/utilities";
 

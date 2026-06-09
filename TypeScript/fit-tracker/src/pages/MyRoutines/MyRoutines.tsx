@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { useNavigate } from "react-router";
 import { useSession } from "../../context/SessionContext";
-import { useRoutines } from "../../context/RoutineContext";
+import { useRoutines } from "../../context/AppStore";
 import { BigTitle } from "../../components/Title/BigTitle";
 import { WorkoutDaySection } from "../../features/my-routines/WorkoutDaySection";
 

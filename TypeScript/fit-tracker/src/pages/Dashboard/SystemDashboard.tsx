@@ -1,7 +1,5 @@
 import { useEffect } from "react";
-import { useCatalog } from "../../context/CatalogContext";
-import { useUsers } from "../../context/UserContext";
-import { useRoutines } from "../../context/RoutineContext";
+import { useUsers, useCatalog, useRoutines } from "../../context/AppStore";
 import { useSession } from "../../context/SessionContext";
 import { useNavigate } from "react-router";
 import { BigTitle } from "../../components/Title/BigTitle";
@@ -10,6 +8,7 @@ import { WeeklyLoadTable } from "../../features/system-dashboard/WeeklyLoadTable
 import { QuickNav } from "../../features/system-dashboard/QuickNav";
 import { CategoryBreakdown } from "../../features/system-dashboard/CategoryBreakdown";
 import { RecentActivity } from "../../features/system-dashboard/RecentActivity";
+import { downloadPdfReport } from "../../utils/export-pdf";
 
 export default function SystemDashboard() {
   const { users, coachs, admins } = useUsers();
@@ -37,7 +36,7 @@ export default function SystemDashboard() {
     <div className="p-8 w-full h-full overflow-y-auto animate-slide-up-fade">
       <BigTitle className="text-center mb-8">Estado del sistema</BigTitle>
 
-      <div className="grid grid-cols-3 gap-4 mb-10">
+      <div className="grid grid-cols-3 gap-4 mb-6 ml-4">
         <StatsCard
           title="Usuarios registrados"
           value={users.length}
@@ -55,7 +54,16 @@ export default function SystemDashboard() {
         />
       </div>
 
-      <div className="bg-gray-900 rounded-xl p-5 mb-10">
+      <div className="mb-10 ml-4">
+        <button
+          onClick={() => downloadPdfReport(catalog, users)}
+          className="px-5 py-2.5 bg-green-700 hover:bg-green-600 active:bg-green-800 text-white text-sm font-medium rounded-lg transition-colors duration-150"
+        >
+          Descargar reporte PDF
+        </button>
+      </div>
+
+      <div className="bg-gray-900 rounded-xl p-5 mt-1 mb-10">
         <p className="text-sm font-semibold text-gray-300 mb-4">
           Carga semanal por usuario
         </p>

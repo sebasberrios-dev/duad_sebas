@@ -1,4 +1,4 @@
-import { useRoutines } from "../../context/RoutineContext";
+import { useRoutines } from "../../context/AppStore";
 import { User } from "../../types/interfaces";
 import { getTotalExercisesByCategory } from "../../utils/utilities";
 

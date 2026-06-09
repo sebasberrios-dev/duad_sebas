@@ -5,4 +5,5 @@ export interface NavItemProps {
   icon: JSX.Element;
   label: string;
   collapsed: boolean;
+  end?: boolean;
 }

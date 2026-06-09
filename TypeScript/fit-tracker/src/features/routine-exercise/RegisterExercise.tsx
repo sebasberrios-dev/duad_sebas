@@ -8,7 +8,7 @@ import CardioFields from "./fields/CardioFields";
 import StrengthFields from "./fields/StrengthFields";
 import FlexFields from "./fields/FlexFields";
 import ExerciseBaseFields from "./fields/ExerciseBaseFields";
-import { useCatalog } from "../../context/CatalogContext";
+import { useCatalog } from "../../context/AppStore";
 import { FormContainer } from "../../components/Container/FormContainer";
 import { FormTitle } from "../../components/Title/FormTitle";
 import RegisterExerciseFields from "./fields/RegisterExerciseFields";

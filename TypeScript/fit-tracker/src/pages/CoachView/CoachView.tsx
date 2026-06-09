@@ -1,8 +1,7 @@
 import { useEffect } from "react";
 import { useSession } from "../../context/SessionContext";
 import { useNavigate } from "react-router";
-import { useUsers } from "../../context/UserContext";
-import { useRoutines } from "../../context/RoutineContext";
+import { useUsers, useRoutines } from "../../context/AppStore";
 import { User } from "../../types/interfaces";
 import { BigTitle } from "../../components/Title/BigTitle";
 import { WeeklyLoadTable } from "../../features/system-dashboard/WeeklyLoadTable";
