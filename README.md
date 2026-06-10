@@ -1,2 +1,2 @@
 # duad_sebas
-Repositorio para proyectos del DUAD
+Repositorio para proyectos del DUAD Lyfter
