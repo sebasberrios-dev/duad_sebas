@@ -1,0 +1,46 @@
+﻿import { useUsers } from "../../../context/AppStore";
+import { useSession } from "../../../context/SessionContext";
+import { useForm } from "react-hook-form";
+import {
+  registerAdminFormData,
+  registerAdminSchema,
+} from "../../../features/auth/admin/schema/adminSchema";
+import { zodResolver } from "@hookform/resolvers/zod";
+import RegisterAdminFields from "../../../features/auth/admin/fields/RegisterAdminFields";
+import { useNavigate } from "react-router";
+import { FormSection } from "../../../components/Form/FormSection";
+import { FormContainer } from "../../../components/Container/FormContainer";
+import { FormTitle } from "../../../components/Title/FormTitle";
+import { Button } from "../../../components/Button/Button";
+import { Admin } from "../../../types/interfaces";
+
+export default function RegisterAdmin() {
+  const { add } = useUsers();
+  const { login } = useSession();
+  const navigate = useNavigate();
+  const { control, handleSubmit } = useForm<registerAdminFormData>({
+    resolver: zodResolver(registerAdminSchema),
+  });
+
+  function onSubmit(data: registerAdminFormData) {
+    const newAdmin: Admin = {
+      id: Date.now(),
+      role: "Admin",
+      ...data,
+    };
+
+    add(newAdmin);
+    login(newAdmin.id);
+    navigate("/dashboard");
+  }
+
+  return (
+    <FormSection>
+      <FormContainer onSubmit={handleSubmit(onSubmit)}>
+        <FormTitle>Registro de Admin</FormTitle>
+        <RegisterAdminFields control={control} />
+        <Button type="submit">Registrate</Button>
+      </FormContainer>
+    </FormSection>
+  );
+}
